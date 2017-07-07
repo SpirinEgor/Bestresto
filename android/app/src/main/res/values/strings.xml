@@ -1,0 +1,122 @@
+<resources>
+    <string name="app_name">Bestresto</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="dishes">Блюда</string>
+    <string name="restaurants">Рестораны</string>
+    <string name="redaction">От редакции</string>
+    <string name="blog">Блог</string>
+    <string name="contacts">Контакты</string>
+    <string name="enter">Вход</string>
+    <string name="registration">Регистрация</string>
+    <string name="main">Главная</string>
+
+
+    <string name="chi">Китайская</string>
+    <string name="arm">Армянская</string>
+    <string name="ara">Арабская</string>
+    <string name="wes">Восточная кухня</string>
+    <string name="gre">Греческая</string>
+    <string name="geo">Грузинская</string>
+    <string name="ind">Индийская</string>
+    <string name="spa">Испанская</string>
+    <string name="kor">Корейская</string>
+    <string name="veg">Вегетерианская</string>
+    <string name="ita">Итальянская</string>
+    <string name="rus">Русская</string>
+    <string name="jew">Еврейская</string>
+    <string name="eur">Европейская</string>
+    <string name="aut">Авторская</string>
+    <string name="aze">Азербайджанская</string>
+    <string name="asi">Азиатская</string>
+    <string name="usa">Американская</string>
+    <string name="jap">Японская</string>
+    <string name="pan">Паназиатская</string>
+    <string name="fra">Французская</string>
+    <string name="ady">Адыгейская</string>
+    <string name="kav">Кавказская</string>
+    <string name="med">Средиземноморская</string>
+    <string name="per">Перуанская</string>
+    <string name="tur">Турецкая</string>
+    <string name="ska">Скандинавская</string>
+    <string name="irl">Ирландская</string>
+    <string name="sco">Шотландская</string>
+    <string name="ger">Немецкая</string>
+    <string name="fus">Фьюжен</string>
+    <string name="mex">Мексиканская</string>
+    <string name="mar">Мараканская</string>
+
+    <string name="breakfasts">Завтраки</string>
+    <string name="starters">Закуски</string>
+    <string name="soups">Супы</string>
+    <string name="maincourses">Горячие</string>
+    <string name="salads">Салаты</string>
+    <string name="desserts">Десерты</string>
+    <string name="hotstarters">Горячие закуски</string>
+    <string name="grill">Гриль</string>
+    <string name="garnish">Гарниры</string>
+    <string name="toppicture">topPicture</string>
+
+    <string name="cheese">Сыры</string>
+    <string name="other">Прочие</string>
+    <string name="meat">Мясо</string>
+    <string name="bird">Птица</string>
+    <string name="vegetables">Овощные</string>
+    <string name="fish">Рыбные</string>
+    <string name="ofmeat">Мясные</string>
+    <string name="seaproducts">Морепродукты</string>
+    <string name="icecream">Мороженое</string>
+    <string name="cakes">Торты и пирожные</string>
+    <string name="jelly">Желе</string>
+    <string name="price">Цена:</string>
+    <string name="back">назад</string>
+
+    <string name="under1000">до 1000 руб.</string>
+    <string name="from1000">1000 - 2000 руб.</string>
+    <string name="from2000">2000 - 3500 руб.</string>
+    <string name="from3500">3500 - 5000 руб.</string>
+    <string name="over5000">свыше 5000 руб.</string>
+    
+    <string name="restaurant">Ресторан</string>
+    <string name="cafe">Кафе</string>
+    <string name="bar">Бар</string>
+    <string name="pub">Паб</string>
+    <string name="gastropub">Гастропаб</string>
+    <string name="vinotheque">Винотека</string>
+    <string name="fastfood">Фастфуд</string>
+    <string name="streetfood">СтритФуд</string>
+    <string name="beerrest">Пивной ресторан</string>
+    <string name="steakhouse">Стейк-хаус</string>
+    <string name="beerbar">Пивбар</string>
+    <string name="gastrobar">Гастробар</string>
+    <string name="confectionary">Кондитерская</string>
+    <string name="coffeehouse">Кофейня</string>
+    <string name="bakery">Пекарня</string>
+    <string name="fishrest">Рыбный ресторан</string>
+    <string name="cookery">Кулинария</string>
+
+    <string name="delivery">Доставка</string>
+    <string name="banquet">Банкет</string>
+    <string name="roundtheclock">Круглосуточно</string>
+    <string name="panorama">Панорамный</string>
+    <string name="veranda">Веранда</string>
+    <string name="wifi">WiFi</string>
+    <string name="livemusic">Живая музыка</string>
+    <string name="coffeetogo">Кофе с собой</string>
+    <string name="breakfast">Завтрак</string>
+    <string name="kidsanimation">Детская анимация</string>
+    <string name="businesslunch">Бизнес ланч</string>
+    <string name="hookah">Кальян</string>
+    <string name="karaoke">Караоке</string>
+    <string name="livesports">Спортивные трансляции</string>
+    <string name="homecuisine">Домашняя кухня</string>
+
+    
+
+    <string name="connect_to_server">Соединяем с сервером…</string>
+    <string name="refresh_dishes">Обновляем список блюд…</string>
+    <string name="refresh_restaurants">Обновляем список ресторанов…</string>
+</resources>

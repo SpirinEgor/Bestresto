@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_splash">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/restaurant_title"
+            android:layout_width="275sp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:hint="Название ресторана"/>
+
+        <Button
+            android:id="@+id/rest_button_find"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="Найти!"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/rest_cuisine_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Выберите кухню"/>
+
+    <ScrollView
+        android:id="@+id/rest_cuisine_view"
+        android:layout_width="match_parent"
+        android:layout_height="275sp"
+        android:visibility="gone"
+        android:background="@drawable/borders">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">/
+
+            <CheckBox
+                android:id="@+id/cuisine_chi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/chi"/>
+            <CheckBox
+                android:id="@+id/cuisine_arm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/arm"/>
+            <CheckBox
+                android:id="@+id/cuisine_ara"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ara"/>
+            <CheckBox
+                android:id="@+id/cuisine_wes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/wes"/>
+
+            <CheckBox
+                android:id="@+id/cuisine_gre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/gre" />
+            <CheckBox
+                android:id="@+id/cuisine_geo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/geo"/>
+            <CheckBox
+                android:id="@+id/cuisine_ind"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ind"/>
+            <CheckBox
+                android:id="@+id/cuisine_spa"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/spa"/>
+            <CheckBox
+                android:id="@+id/cuisine_kor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/kor"/>
+            <CheckBox
+                android:id="@+id/cuisine_veg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/veg"/>
+            <CheckBox
+                android:id="@+id/cuisine_ita"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ita"/>
+            <CheckBox
+                android:id="@+id/cuisine_rus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/rus"/>
+            <CheckBox
+                android:id="@+id/cuisine_jew"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/jew"/>
+            <CheckBox
+                android:id="@+id/cuisine_eur"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eur"/>
+            <CheckBox
+                android:id="@+id/cuisine_aut"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/aut"/>
+            <CheckBox
+                android:id="@+id/cuisine_asi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/asi"/>
+            <CheckBox
+                android:id="@+id/cuisine_aze"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/aze"/>
+            <CheckBox
+                android:id="@+id/cuisine_usa"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/usa"/>
+            <CheckBox
+                android:id="@+id/cuisine_jap"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/jap"/>
+            <CheckBox
+                android:id="@+id/cuisine_pan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/pan"/>
+            <CheckBox
+                android:id="@+id/cuisine_fra"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/fra"/>
+            <CheckBox
+                android:id="@+id/cuisine_ady"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ady"/>
+            <CheckBox
+                android:id="@+id/cuisine_kav"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/kav"/>
+            <CheckBox
+                android:id="@+id/cuisine_med"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/med"/>
+            <CheckBox
+                android:id="@+id/cuisine_per"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/per"/>
+            <CheckBox
+                android:id="@+id/cuisine_tur"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/tur"/>
+            <CheckBox
+                android:id="@+id/cuisine_ska"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ska"/>
+            <CheckBox
+                android:id="@+id/cuisine_irl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/irl"/>
+            <CheckBox
+                android:id="@+id/cuisine_sco"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/sco"/>
+            <CheckBox
+                android:id="@+id/cuisine_ger"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ger"/>
+            <CheckBox
+                android:id="@+id/cuisine_fus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/fus"/>
+            <CheckBox
+                android:id="@+id/cuisine_mex"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/mex"/>
+            <CheckBox
+                android:id="@+id/cuisine_mar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/mar"/>
+        </LinearLayout>
+
+    </ScrollView>
+
+    <Button
+        android:id="@+id/avg_price_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Средний чек"/>
+
+    <ScrollView
+        android:id="@+id/avg_price_view"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/borders"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <CheckBox
+                android:id="@+id/price_under1000"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/under1000" />
+
+            <CheckBox
+                android:id="@+id/price_from1000"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/from1000" />
+
+            <CheckBox
+                android:id="@+id/price_from2000"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/from2000" />
+
+            <CheckBox
+                android:id="@+id/price_from3500"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/from3500" />
+
+            <CheckBox
+                android:id="@+id/price_over5000"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/over5000" />
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:text="Оценка: от"/>
+        <Spinner
+            android:id="@+id/restaurant_rating_from"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"></Spinner>
+
+        <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="true"
+        android:text="до"/>
+
+        <Spinner
+            android:id="@+id/restaurant_rating_to"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"></Spinner>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/rest_type_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Тип заведения"/>
+
+    <ScrollView
+        android:id="@+id/rest_type_view"
+        android:layout_width="match_parent"
+        android:layout_height="275sp"
+        android:visibility="gone"
+        android:background="@drawable/borders">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">/
+
+            <CheckBox
+                android:id="@+id/rest_restaurant"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/restaurant"/>
+            <CheckBox
+                android:id="@+id/rest_cafe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/cafe"/>
+            <CheckBox
+                android:id="@+id/rest_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/bar"/>
+            <CheckBox
+                android:id="@+id/rest_pub"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/pub"/>
+            <CheckBox
+                android:id="@+id/rest_gastropub"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/gastropub"/>
+            <CheckBox
+                android:id="@+id/rest_vinotheque"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/vinotheque"/>
+            <CheckBox
+                android:id="@+id/rest_fastfood"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/fastfood"/>
+            <CheckBox
+                android:id="@+id/rest_streetfood"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/streetfood"/>
+            <CheckBox
+                android:id="@+id/rest_beerrest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/beerrest"/>
+            <CheckBox
+                android:id="@+id/rest_steakhouse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/steakhouse"/>
+            <CheckBox
+                android:id="@+id/rest_beerbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/beerbar"/>
+            <CheckBox
+                android:id="@+id/rest_gastrobar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/gastrobar"/>
+            <CheckBox
+                android:id="@+id/rest_confectionary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/confectionary"/>
+            <CheckBox
+                android:id="@+id/rest_coffehouse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/coffeehouse"/>
+            <CheckBox
+                android:id="@+id/rest_bakery"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/bakery"/>
+            <CheckBox
+                android:id="@+id/rest_fishrest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/fishrest"/>
+            <CheckBox
+                android:id="@+id/rest_cookery"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/cookery"/>
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
+    <Button
+        android:id="@+id/features_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Особенности заведения"/>
+
+    <ScrollView
+        android:id="@+id/features_view"
+        android:layout_width="match_parent"
+        android:layout_height="275sp"
+        android:visibility="gone"
+        android:background="@drawable/borders">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">/
+
+            <CheckBox
+                android:id="@+id/features_delivery"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/delivery"/>
+            <CheckBox
+                android:id="@+id/features_banquet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/banquet"/>
+            <CheckBox
+                android:id="@+id/features_roundtheclock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/roundtheclock"/>
+            <CheckBox
+                android:id="@+id/features_panorama"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/panorama"/>
+            <CheckBox
+                android:id="@+id/features_veranda"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/veranda"/>
+            <CheckBox
+                android:id="@+id/features_wifi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/wifi"/>
+            <CheckBox
+                android:id="@+id/features_livemusic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/livemusic"/>
+            <CheckBox
+                android:id="@+id/features_coffetogo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/coffeetogo"/>
+            <CheckBox
+                android:id="@+id/features_breakfast"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/breakfast"/>
+            <CheckBox
+                android:id="@+id/features_kidsanimation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/kidsanimation"/>
+            <CheckBox
+                android:id="@+id/features_businesslunch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/businesslunch"/>
+            <CheckBox
+                android:id="@+id/features_hookah"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/hookah"/>
+            <CheckBox
+                android:id="@+id/features_karaoke"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/karaoke"/>
+            <CheckBox
+                android:id="@+id/features_livesports"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/livesports"/>
+            <CheckBox
+                android:id="@+id/features_homecuisine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/homecuisine"/>
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
+
+</LinearLayout>
