@@ -208,6 +208,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/mar"/>
+            <CheckBox
+                android:id="@+id/cuisine_ukr"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ukr"/>
+            <CheckBox
+                android:id="@+id/cuisine_eng"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eng"/>
         </LinearLayout>
 
     </ScrollView>
@@ -281,10 +291,10 @@
             android:layout_height="wrap_content"></Spinner>
 
         <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAllCaps="true"
-        android:text="до"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:text="до"/>
 
         <Spinner
             android:id="@+id/restaurant_rating_to"

@@ -33,7 +33,7 @@ public class DishFilter extends Fragment {
     CheckBox desserts;
     Button dish_type_button, dish_cuisine_button;
     CheckBox chi, arm, ara, wes, gre, geo, ind, spa, kor, veg, ita, rus, jew, eur, aut, aze, asi, usa, jap, pan, fra, ady, kav, med, per,
-            tur, ska, irl, sco, ger, fus, mex, mar;
+            tur, ska, irl, sco, ger, fus, mex, mar, ukr, eng;
 
     ScrollView dish_cuisine_view, dish_type_view;
     EditText dish_title;
@@ -64,7 +64,7 @@ public class DishFilter extends Fragment {
         dish_title = (EditText)view.findViewById(R.id.dish_title);
         dish_price = (EditText)view.findViewById(R.id.dish_price);
         dish_cuisine_view = (ScrollView)view.findViewById(R.id.dish_cuisine_view);
-        dish_type_view = (ScrollView)view.findViewById(R.id.dish_type_view); 
+        dish_type_view = (ScrollView)view.findViewById(R.id.dish_type_view);
         ///////////////////////////////////////////////////////////////////////////
         dish_cuisine_button = (Button)view.findViewById(R.id.dish_cuisine_button);
         dish_cuisine_button.setOnClickListener(new View.OnClickListener() {
@@ -79,7 +79,7 @@ public class DishFilter extends Fragment {
                 }
             }
         });
-        
+
         dish_type_button = (Button)view.findViewById(R.id.dish_type_button);
         dish_type_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,7 +93,7 @@ public class DishFilter extends Fragment {
                 }
             }
         });
-        
+
 
         chi = (CheckBox)view.findViewById(R.id.cuisine_chi);
         arm = (CheckBox)view.findViewById(R.id.cuisine_arm);
@@ -128,6 +128,8 @@ public class DishFilter extends Fragment {
         fus = (CheckBox)view.findViewById(R.id.cuisine_fus);
         mex = (CheckBox)view.findViewById(R.id.cuisine_mex);
         mar = (CheckBox)view.findViewById(R.id.cuisine_mar);
+        ukr = (CheckBox)view.findViewById(R.id.cuisine_ukr);
+        eng = (CheckBox)view.findViewById(R.id.cuisine_eng);
 
         //OnCheckedListeners for cuisine section
         chi.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -328,6 +330,18 @@ public class DishFilter extends Fragment {
                 CuisineReset(dish_cuisine_button);
             }
         });
+        ukr.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                CuisineReset(dish_cuisine_button);
+            }
+        });
+        eng.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                CuisineReset(dish_cuisine_button);
+            }
+        });
         ///////////////////////////////////////////////////////////////////////
 
 
@@ -342,102 +356,104 @@ public class DishFilter extends Fragment {
         grill = (CheckBox)view.findViewById(R.id.grill);
 
         Button b2 = (Button)view.findViewById(R.id.filter_button_find);
-//        b2.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String title = dish_title.getText().toString();
-//                int price;
-//                try {
-//                   price = Integer.parseInt(dish_price.getText().toString());
-//                }
-//                catch (NumberFormatException e){
-//                    price=-1;
-//                }
-//                ArrayList<String> cuisine_params = new ArrayList<String>();
-//                if (chi.isChecked()) cuisine_params.add(getString(R.string.chi));
-//                if (arm.isChecked()) cuisine_params.add(getString(R.string.arm));
-//                if (ara.isChecked()) cuisine_params.add(getString(R.string.ara));
-//                if (wes.isChecked()) cuisine_params.add(getString(R.string.wes));
-//                if (gre.isChecked()) cuisine_params.add(getString(R.string.gre));
-//                if (geo.isChecked()) cuisine_params.add(getString(R.string.geo));
-//                if (ind.isChecked()) cuisine_params.add(getString(R.string.ind));
-//                if (spa.isChecked()) cuisine_params.add(getString(R.string.spa));
-//                if (kor.isChecked()) cuisine_params.add(getString(R.string.kor));
-//                if (veg.isChecked()) cuisine_params.add(getString(R.string.veg));
-//                if (ita.isChecked()) cuisine_params.add(getString(R.string.ita));
-//                if (rus.isChecked()) cuisine_params.add(getString(R.string.rus));
-//                if (jew.isChecked()) cuisine_params.add(getString(R.string.jew));
-//                if (eur.isChecked()) cuisine_params.add(getString(R.string.eur));
-//                if (aut.isChecked()) cuisine_params.add(getString(R.string.aut));
-//                if (aze.isChecked()) cuisine_params.add(getString(R.string.aze));
-//                if (asi.isChecked()) cuisine_params.add(getString(R.string.asi));
-//                if (usa.isChecked()) cuisine_params.add(getString(R.string.usa));
-//                if (jap.isChecked()) cuisine_params.add(getString(R.string.jap));
-//                if (pan.isChecked()) cuisine_params.add(getString(R.string.pan));
-//                if (fra.isChecked()) cuisine_params.add(getString(R.string.fra));
-//                if (ady.isChecked()) cuisine_params.add(getString(R.string.ady));
-//                if (kav.isChecked()) cuisine_params.add(getString(R.string.kav));
-//                if (med.isChecked()) cuisine_params.add(getString(R.string.med));
-//                if (per.isChecked()) cuisine_params.add(getString(R.string.per));
-//                if (tur.isChecked()) cuisine_params.add(getString(R.string.tur));
-//                if (ska.isChecked()) cuisine_params.add(getString(R.string.ska));
-//                if (irl.isChecked()) cuisine_params.add(getString(R.string.irl));
-//                if (sco.isChecked()) cuisine_params.add(getString(R.string.sco));
-//                if (ger.isChecked()) cuisine_params.add(getString(R.string.ger));
-//                if (fus.isChecked()) cuisine_params.add(getString(R.string.fus));
-//                if (mex.isChecked()) cuisine_params.add(getString(R.string.mex));
-//                if (mar.isChecked()) cuisine_params.add(getString(R.string.mar));
-//
-//                ArrayList<String> dish_params = new ArrayList<String>();
-//                if (salads.isChecked()){
-//                    CheckBox salads_vegetables = (CheckBox)view.findViewById(R.id.salads_vegetables);
-//                    CheckBox salads_ofmeat = (CheckBox)view.findViewById(R.id.salads_ofmeat);
-//                    CheckBox salads_fish = (CheckBox)view.findViewById(R.id.salads_fish);
-//                    CheckBox salads_bird = (CheckBox)view.findViewById(R.id.salads_bird);
-//                    CheckBox salads_seaproducts = (CheckBox)view.findViewById(R.id.salads_seaproducts);
-//
-//                }
-//
-//                if (starters.isChecked()){
-//                    CheckBox starters_other = (CheckBox)view.findViewById(R.id.starters_other);
-//                    CheckBox starters_cheese = (CheckBox)view.findViewById(R.id.starters_cheese);
-//                    CheckBox starters_meat = (CheckBox)view.findViewById(R.id.starters_meat);
-//                }
-//
-//                if (soups.isChecked()){
-//                    CheckBox soups_fish = (CheckBox)view.findViewById(R.id.soups_fish);
-//                    CheckBox soups_vegetables = (CheckBox)view.findViewById(R.id.soups_vegetables);
-//                    CheckBox soups_ofmeat = (CheckBox)view.findViewById(R.id.soups_ofmeat);
-//                    CheckBox soups_seaproducts = (CheckBox)view.findViewById(R.id.soups_seaproducts);
-//                }
-//
-//                if (maincourses.isChecked()){
-//                    CheckBox maincourses_meat = (CheckBox)view.findViewById(R.id.maincourses_meat);
-//                    CheckBox maincourses_seaproducts = (CheckBox)view.findViewById(R.id.maincourses_seaproducts);
-//                    CheckBox maincourses_bird = (CheckBox)view.findViewById(R.id.maincourses_bird);
-//                    CheckBox maincourses_fish = (CheckBox)view.findViewById(R.id.maincourses_fish);
-//
-//                }
-//
-//                if (grill.isChecked()){
-//                    CheckBox grill_meat = (CheckBox)view.findViewById(R.id.grill_meat);
-//                    CheckBox grill_fish = (CheckBox)view.findViewById(R.id.grill_fish);
-//                    CheckBox grill_seaproducts = (CheckBox)view.findViewById(R.id.grill_seaproducts);
-//                    CheckBox grill_bird = (CheckBox)view.findViewById(R.id.grill_bird);
-//                }
-//
-//                if (desserts.isChecked()){
-//                    CheckBox desserts_jelly = (CheckBox)view.findViewById(R.id.desserts_jelly);
-//                    CheckBox desserts_icecream = (CheckBox)view.findViewById(R.id.desserts_icecream);
-//                    CheckBox desserts_cakes = (CheckBox)view.findViewById(R.id.desserts_cakes);
-//                    CheckBox desserts_others = (CheckBox)view.findViewById(R.id.desserts_other);
-//
-//                }
-//
-//
-//                mCallback.onFilterSet(title, price, cuisine_params, dish_params);
-//            }
-//        });
+        b2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String title = dish_title.getText().toString();
+                int price;
+                try {
+                    price = Integer.parseInt(dish_price.getText().toString());
+                }
+                catch (NumberFormatException e){
+                    price=-1;
+                }
+                ArrayList<String> cuisine_params = new ArrayList<String>();
+                if (chi.isChecked()) cuisine_params.add(getString(R.string.chi));
+                if (arm.isChecked()) cuisine_params.add(getString(R.string.arm));
+                if (ara.isChecked()) cuisine_params.add(getString(R.string.ara));
+                if (wes.isChecked()) cuisine_params.add(getString(R.string.wes));
+                if (gre.isChecked()) cuisine_params.add(getString(R.string.gre));
+                if (geo.isChecked()) cuisine_params.add(getString(R.string.geo));
+                if (ind.isChecked()) cuisine_params.add(getString(R.string.ind));
+                if (spa.isChecked()) cuisine_params.add(getString(R.string.spa));
+                if (kor.isChecked()) cuisine_params.add(getString(R.string.kor));
+                if (veg.isChecked()) cuisine_params.add(getString(R.string.veg));
+                if (ita.isChecked()) cuisine_params.add(getString(R.string.ita));
+                if (rus.isChecked()) cuisine_params.add(getString(R.string.rus));
+                if (jew.isChecked()) cuisine_params.add(getString(R.string.jew));
+                if (eur.isChecked()) cuisine_params.add(getString(R.string.eur));
+                if (aut.isChecked()) cuisine_params.add(getString(R.string.aut));
+                if (aze.isChecked()) cuisine_params.add(getString(R.string.aze));
+                if (asi.isChecked()) cuisine_params.add(getString(R.string.asi));
+                if (usa.isChecked()) cuisine_params.add(getString(R.string.usa));
+                if (jap.isChecked()) cuisine_params.add(getString(R.string.jap));
+                if (pan.isChecked()) cuisine_params.add(getString(R.string.pan));
+                if (fra.isChecked()) cuisine_params.add(getString(R.string.fra));
+                if (ady.isChecked()) cuisine_params.add(getString(R.string.ady));
+                if (kav.isChecked()) cuisine_params.add(getString(R.string.kav));
+                if (med.isChecked()) cuisine_params.add(getString(R.string.med));
+                if (per.isChecked()) cuisine_params.add(getString(R.string.per));
+                if (tur.isChecked()) cuisine_params.add(getString(R.string.tur));
+                if (ska.isChecked()) cuisine_params.add(getString(R.string.ska));
+                if (irl.isChecked()) cuisine_params.add(getString(R.string.irl));
+                if (sco.isChecked()) cuisine_params.add(getString(R.string.sco));
+                if (ger.isChecked()) cuisine_params.add(getString(R.string.ger));
+                if (fus.isChecked()) cuisine_params.add(getString(R.string.fus));
+                if (mex.isChecked()) cuisine_params.add(getString(R.string.mex));
+                if (mar.isChecked()) cuisine_params.add(getString(R.string.mar));
+                if (ukr.isChecked()) cuisine_params.add(getString(R.string.mar));
+                if (eng.isChecked()) cuisine_params.add(getString(R.string.mar));
+
+                ArrayList<String> dish_params = new ArrayList<String>();
+                if (salads.isChecked()){
+                    CheckBox salads_vegetables = (CheckBox)view.findViewById(R.id.salads_vegetables);
+                    CheckBox salads_ofmeat = (CheckBox)view.findViewById(R.id.salads_ofmeat);
+                    CheckBox salads_fish = (CheckBox)view.findViewById(R.id.salads_fish);
+                    CheckBox salads_bird = (CheckBox)view.findViewById(R.id.salads_bird);
+                    CheckBox salads_seaproducts = (CheckBox)view.findViewById(R.id.salads_seaproducts);
+
+                }
+
+                if (starters.isChecked()){
+                    CheckBox starters_other = (CheckBox)view.findViewById(R.id.starters_other);
+                    CheckBox starters_cheese = (CheckBox)view.findViewById(R.id.starters_cheese);
+                    CheckBox starters_meat = (CheckBox)view.findViewById(R.id.starters_meat);
+                }
+
+                if (soups.isChecked()){
+                    CheckBox soups_fish = (CheckBox)view.findViewById(R.id.soups_fish);
+                    CheckBox soups_vegetables = (CheckBox)view.findViewById(R.id.soups_vegetables);
+                    CheckBox soups_ofmeat = (CheckBox)view.findViewById(R.id.soups_ofmeat);
+                    CheckBox soups_seaproducts = (CheckBox)view.findViewById(R.id.soups_seaproducts);
+                }
+
+                if (maincourses.isChecked()){
+                    CheckBox maincourses_meat = (CheckBox)view.findViewById(R.id.maincourses_meat);
+                    CheckBox maincourses_seaproducts = (CheckBox)view.findViewById(R.id.maincourses_seaproducts);
+                    CheckBox maincourses_bird = (CheckBox)view.findViewById(R.id.maincourses_bird);
+                    CheckBox maincourses_fish = (CheckBox)view.findViewById(R.id.maincourses_fish);
+
+                }
+
+                if (grill.isChecked()){
+                    CheckBox grill_meat = (CheckBox)view.findViewById(R.id.grill_meat);
+                    CheckBox grill_fish = (CheckBox)view.findViewById(R.id.grill_fish);
+                    CheckBox grill_seaproducts = (CheckBox)view.findViewById(R.id.grill_seaproducts);
+                    CheckBox grill_bird = (CheckBox)view.findViewById(R.id.grill_bird);
+                }
+
+                if (desserts.isChecked()){
+                    CheckBox desserts_jelly = (CheckBox)view.findViewById(R.id.desserts_jelly);
+                    CheckBox desserts_icecream = (CheckBox)view.findViewById(R.id.desserts_icecream);
+                    CheckBox desserts_cakes = (CheckBox)view.findViewById(R.id.desserts_cakes);
+                    CheckBox desserts_others = (CheckBox)view.findViewById(R.id.desserts_other);
+
+                }
+
+
+                mCallback.onFilterSet(title, price, cuisine_params, dish_params);
+            }
+        });
 
 
         breakfasts.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -903,6 +919,26 @@ public class DishFilter extends Fragment {
                 count++;
                 if(!result.equals("")) result +=", ";
                 result += getString(R.string.mar);
+            }
+        }
+        if (ukr.isChecked()){
+            if ((count >= 5)){
+                if (!result.endsWith(", ..."))result += ", ...";
+            }
+            else {
+                count++;
+                if(!result.equals("")) result +=", ";
+                result += getString(R.string.ukr);
+            }
+        }
+        if (eng.isChecked()){
+            if ((count >= 5)){
+                if (!result.endsWith(", ..."))result += ", ...";
+            }
+            else {
+                count++;
+                if(!result.equals("")) result +=", ";
+                result += getString(R.string.eng);
             }
         }
         if (result.equals("")) result = "Выберите кухню";

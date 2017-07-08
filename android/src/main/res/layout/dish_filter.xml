@@ -218,15 +218,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/mar"/>
+            <CheckBox
+                android:id="@+id/cuisine_ukr"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ukr"/>
+            <CheckBox
+                android:id="@+id/cuisine_eng"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eng"/>
         </LinearLayout>
 
     </ScrollView>
 
-   <Button
-       android:id="@+id/dish_type_button"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:text="Тип блюда"/>
+    <Button
+        android:id="@+id/dish_type_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Тип блюда"/>
 
     <ScrollView
         android:id="@+id/dish_type_view"

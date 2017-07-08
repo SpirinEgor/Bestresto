@@ -35,9 +35,9 @@ public class RestaurantFilter extends Fragment {
     CheckBox price_from3500;
     CheckBox price_over5000;
     CheckBox chi, arm, ara, wes, gre, geo, ind, spa, kor, veg, ita, rus, jew, eur, aut, aze, asi, usa, jap, pan, fra, ady, kav, med, per,
-                tur, ska, irl, sco, ger, fus, mex, mar;
+            tur, ska, irl, sco, ger, fus, mex, mar, ukr, eng;
     CheckBox rest_restaurant, rest_cafe, rest_bar, rest_pub, rest_gastropub, rest_vinotheque, rest_fastfood, rest_streetfood,
-                rest_beerrest, rest_steakhouse, rest_beerbar, rest_gastrobar, rest_confectionary, rest_coffehouse, rest_bakery, rest_fishrest, rest_cookery;
+            rest_beerrest, rest_steakhouse, rest_beerbar, rest_gastrobar, rest_confectionary, rest_coffehouse, rest_bakery, rest_fishrest, rest_cookery;
     CheckBox features_delivery, features_banquet, features_roundtheclock, features_panorama, features_veranda, features_wifi, features_livemusic, features_coffetogo,
             features_breakfast, features_kidsanimation, features_businesslunch, features_hookah, features_karaoke, features_livesports, features_homecuisine;
 
@@ -93,6 +93,8 @@ public class RestaurantFilter extends Fragment {
         fus = (CheckBox)view.findViewById(R.id.cuisine_fus);
         mex = (CheckBox)view.findViewById(R.id.cuisine_mex);
         mar = (CheckBox)view.findViewById(R.id.cuisine_mar);
+        ukr = (CheckBox)view.findViewById(R.id.cuisine_mar);
+        eng = (CheckBox)view.findViewById(R.id.cuisine_mar);
 
         //OnCheckedListeners for cuisine section
         chi.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -288,6 +290,18 @@ public class RestaurantFilter extends Fragment {
             }
         });
         mar.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                CuisineReset(rest_cuisine_button);
+            }
+        });
+        ukr.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                CuisineReset(rest_cuisine_button);
+            }
+        });
+        eng.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 CuisineReset(rest_cuisine_button);
@@ -1031,7 +1045,7 @@ public class RestaurantFilter extends Fragment {
             if ((count >= 5)){
                 if (!result.endsWith(", ..."))result += ", ...";
             }
-           else {
+            else {
                 count++;
                 if(!result.equals("")) result +=", ";
                 result += getString(R.string.ady);
@@ -1074,7 +1088,7 @@ public class RestaurantFilter extends Fragment {
             else {
                 count++;
                 if(!result.equals("")) result +=", ";
-                result += getString(R.string.tur);                
+                result += getString(R.string.tur);
             }
         }
         if (ska.isChecked()){
@@ -1145,6 +1159,26 @@ public class RestaurantFilter extends Fragment {
                 count++;
                 if(!result.equals("")) result +=", ";
                 result += getString(R.string.mar);
+            }
+        }
+        if (ukr.isChecked()){
+            if ((count >= 5)){
+                if (!result.endsWith(", ..."))result += ", ...";
+            }
+            else {
+                count++;
+                if(!result.equals("")) result +=", ";
+                result += getString(R.string.ukr);
+            }
+        }
+        if (eng.isChecked()){
+            if ((count >= 5)){
+                if (!result.endsWith(", ..."))result += ", ...";
+            }
+            else {
+                count++;
+                if(!result.equals("")) result +=", ";
+                result += getString(R.string.eng);
             }
         }
         if (result.equals("")) result = "Выберите кухню";
