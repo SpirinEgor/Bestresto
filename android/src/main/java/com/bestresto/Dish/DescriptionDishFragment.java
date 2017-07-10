@@ -41,7 +41,9 @@ public class DescriptionDishFragment extends android.support.v4.app.Fragment {
 
         String url = "http://www.bestresto.ru/" + info.get(DatabaseContract.DishesColumns.PICTURE);
         Picasso.with(view.getContext()).load(url).into(picture);
-        String rating = info.get(DatabaseContract.DishesColumns.REITING).toString();
+        String rating = "";
+        if (info.containsKey(DatabaseContract.DishesColumns.REITING))
+            rating = info.get(DatabaseContract.DishesColumns.REITING).toString();
         if (rating.equals(""))
             reiting.setRating(0);
         else

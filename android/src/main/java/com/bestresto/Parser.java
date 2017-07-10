@@ -15,7 +15,7 @@ import java.util.List;
 
 public class Parser {
 
-    List<HashMap<String, Object>> parserSimple(String json){
+    static List<HashMap<String, Object>> parserSimple(String json){
         List<HashMap<String, Object>> data = new ArrayList<>();
         try {
             JSONArray jsonArray = null;
@@ -48,11 +48,21 @@ public class Parser {
         return data;
     }
 
-    List<HashMap<String, Object>> parserJackson(String json) throws IOException {
+    static List<HashMap<String, Object>> parserJackson(String json) throws IOException {
         List<HashMap<String, Object>> data;
         ObjectMapper mapper = new ObjectMapper();
         data = mapper.readValue(json,  new TypeReference<List<HashMap<String, Object>>>() { });
         return data;
+    }
+
+    static public List<Integer> stringToArray(String str){
+        List<Integer> result = new ArrayList<>();
+        String[] spl = str.split("|");
+        for (String aSpl : spl) {
+            if (!(aSpl.equals(",") || aSpl.equals("")))
+                result.add(Integer.parseInt(aSpl));
+        }
+        return result;
     }
 
 }
