@@ -58,7 +58,6 @@ public class DishesFragment extends Fragment {
                 i.putExtra(DatabaseContract.DishesColumns.INDEXID,
                         position);
                 i.putExtra(PagerActivity.KEY_TYPE_LIST, PagerActivity.ALL_DISHES_TYPE);
-                startActivity(i);
                 startActivityForResult(i, 1);
             }
         });
@@ -84,4 +83,5 @@ public class DishesFragment extends Fragment {
         int position = data.getIntExtra("position", 0);
         lv.smoothScrollToPosition(position);
     }
+
 }
