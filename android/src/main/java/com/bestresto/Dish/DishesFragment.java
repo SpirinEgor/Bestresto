@@ -35,6 +35,7 @@ public class DishesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dish_fragment_all, container, false);
 
+        lv = (ListView) view.findViewById(R.id.listDishes);
 
         Bundle extBundle = this.getArguments();
         if (extBundle != null){
@@ -42,13 +43,12 @@ public class DishesFragment extends Fragment {
             ArrayList<String> dish_params = extBundle.getStringArrayList("dish_params");
             String dishtitle = extBundle.getString("dishtitle");
             int dishprice = extBundle.getInt("price");
-            Log.d("TAG", quisine_params.toString());
-            Log.d("TAG", dish_params.toString());
-            Log.d("TAG", dishtitle);
+            lv.setAdapter(new DishManager().getFilteredAdapter(view.getContext(), dishtitle));
+        }
+        else{
+            lv.setAdapter(new DishManager().getAdapter(view.getContext()));
         }
 
-        lv = (ListView) view.findViewById(R.id.listDishes);
-        lv.setAdapter(new DishManager().getAdapter(view.getContext()));
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -83,5 +83,49 @@ public class DishesFragment extends Fragment {
         if (data == null) return;
         int position = data.getIntExtra("position", 0);
         lv.smoothScrollToPosition(position);
+    }
+
+    private String CuisineParamsDecode(ArrayList<String> cuisine_params){
+        String result="";
+        for (String current:
+             cuisine_params) {
+            if (current.equals(getString(R.string.kor))) result += "18,";
+            if (current.equals(getString(R.string.arm))) result += "10,";
+            if (current.equals(getString(R.string.ara))) result += "9,";
+            if (current.equals(getString(R.string.eas))) result += "12,";
+            if (current.equals(getString(R.string.gre))) result += "13,";
+            if (current.equals(getString(R.string.geo))) result += "14,";
+            if (current.equals(getString(R.string.ind))) result += "15,";
+            if (current.equals(getString(R.string.spa))) result += "16,";
+            if (current.equals(getString(R.string.chi))) result += "17,";
+            if (current.equals(getString(R.string.veg))) result += "11,";
+            if (current.equals(getString(R.string.ita))) result += "1,";
+            if (current.equals(getString(R.string.rus))) result += "2,";
+            if (current.equals(getString(R.string.jew))) result += "3,";
+            if (current.equals(getString(R.string.eur))) result += "4,";
+            if (current.equals(getString(R.string.aut))) result += "5,";
+            if (current.equals(getString(R.string.aze))) result += "6,";
+            if (current.equals(getString(R.string.asi))) result += "7,";
+            if (current.equals(getString(R.string.usa))) result += "8,";
+            if (current.equals(getString(R.string.jap))) result += "19,";
+            if (current.equals(getString(R.string.pan))) result += "20,";
+            if (current.equals(getString(R.string.fra))) result += "21,";
+            if (current.equals(getString(R.string.ady))) result += "22,";
+            if (current.equals(getString(R.string.kav))) result += "23,";
+            if (current.equals(getString(R.string.med))) result += "24,";
+            if (current.equals(getString(R.string.per))) result += "25,";
+            if (current.equals(getString(R.string.tur))) result += "26,";
+            if (current.equals(getString(R.string.ska))) result += "27,";
+            if (current.equals(getString(R.string.irl))) result += "28,";
+            if (current.equals(getString(R.string.sco))) result += "29,";
+            if (current.equals(getString(R.string.ger))) result += "30,";
+            if (current.equals(getString(R.string.fus))) result += "31,";
+            if (current.equals(getString(R.string.mex))) result += "32,";
+            if (current.equals(getString(R.string.mar))) result += "33,";
+            if (current.equals(getString(R.string.ukr))) result += "34,";
+            if (current.equals(getString(R.string.eng))) result += "35,";
+
+        }
+        return result;
     }
 }

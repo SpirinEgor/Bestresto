@@ -879,7 +879,7 @@ public class RestaurantFilter extends Fragment {
         if (wes.isChecked()){
             count++;
             if(!result.equals("")) result +=", ";
-            result += getString(R.string.wes);
+            result += getString(R.string.eas);
         }
         if (gre.isChecked()){
             count++;
