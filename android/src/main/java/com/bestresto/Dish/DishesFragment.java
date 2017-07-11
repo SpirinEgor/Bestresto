@@ -58,7 +58,6 @@ public class DishesFragment extends Fragment {
                 i.putExtra(DatabaseContract.DishesColumns.INDEXID,
                         position);
                 i.putExtra(PagerActivity.KEY_TYPE_LIST, PagerActivity.ALL_DISHES_TYPE);
-                startActivity(i);
                 startActivityForResult(i, 1);
             }
         });
@@ -128,4 +127,11 @@ public class DishesFragment extends Fragment {
         }
         return result;
     }
+    
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle("Блюда");
+    }
+
 }
