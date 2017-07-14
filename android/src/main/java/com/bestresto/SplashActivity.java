@@ -37,7 +37,7 @@ interface AsyncResponse {
 
 public class SplashActivity extends AppCompatActivity
         implements AsyncResponse{
-
+    dbHelper dbh;
     ProgressBar pBar;
     TextView textView;
     final String SERVER = "http://www.bestresto.ru/api/";
@@ -51,9 +51,7 @@ public class SplashActivity extends AppCompatActivity
         pBar = (ProgressBar) findViewById(R.id.progressBar);
         textView = (TextView)findViewById(R.id.textIndicator);
         pBar.setIndeterminate(true);
-        dbHelper dbh = new dbHelper(this);
-        SQLiteDatabase db = dbh.getWritableDatabase();
-        dbh.onUpgrade(db, 1, 1);
+        dbh = new dbHelper(this);
         DownloadTask task = new DownloadTask(this);
         task.delegate = this;
         task.execute(DISHES_ALL_REQUEST);
@@ -135,6 +133,8 @@ public class SplashActivity extends AppCompatActivity
                         buffer.append(line);
                     }
                     String resultJson = buffer.toString();
+                    SQLiteDatabase db = dbh.getWritableDatabase();
+                    dbh.onUpgrade(db, 1, 1);
                     publishProgress(0);
                     List<HashMap<String, Object>> data = Parser.parserJackson(resultJson);
                     if (METHOD.equals(DISHES_ALL_REQUEST)) {
