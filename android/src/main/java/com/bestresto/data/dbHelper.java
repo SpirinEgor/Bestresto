@@ -55,10 +55,15 @@ public class dbHelper extends SQLiteOpenHelper{
     public void createRestaurant(SQLiteDatabase db){
         String SQL = "CREATE TABLE IF NOT EXISTS " + DatabaseContract.RestaurantsColumns.TABLE_NAME + " ("
                 + DatabaseContract.RestaurantsColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + DatabaseContract.RestaurantsColumns.INDEXID + " INTEGER NOT NULL, "
-                + DatabaseContract.RestaurantsColumns.ACTIVE + " TEXT NOT NULL, "
                 + DatabaseContract.RestaurantsColumns.CAPTION + " TEXT NOT NULL, "
-                + DatabaseContract.RestaurantsColumns.SORT + " TEXT NOT NULL);";
+                + DatabaseContract.RestaurantsColumns.URL + " TEXT NOT NULL, "
+                + DatabaseContract.RestaurantsColumns.LOGO + " TEXT NOT NULL, "
+                + DatabaseContract.RestaurantsColumns.REITING + " TEXT NOT NULL, "
+                + DatabaseContract.RestaurantsColumns.TIP + " TEXT NOT NULL, "
+                + DatabaseContract.RestaurantsColumns.MIN_PRICE + " TEXT NOT NULL, "
+                + DatabaseContract.RestaurantsColumns.MAX_PRICE + " TEXT NOT NULL, "
+                + DatabaseContract.RestaurantsColumns.KITCHEN + " TEXT NOT NULL, "
+                + DatabaseContract.RestaurantsColumns.ADDRESS + " TEXT NOT NULL);";
         db.execSQL(SQL);
     }
 }
