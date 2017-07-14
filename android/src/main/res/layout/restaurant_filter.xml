@@ -61,7 +61,7 @@
                 android:id="@+id/cuisine_wes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/wes"/>
+                android:text="@string/eas"/>
 
             <CheckBox
                 android:id="@+id/cuisine_gre"

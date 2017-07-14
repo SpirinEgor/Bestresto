@@ -13,7 +13,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bestresto.Dish.DishManager;
-import com.bestresto.Dish.DishManager;
 import com.bestresto.Restaurant.RestaurantManager;
 import com.bestresto.data.dbHelper;
 
@@ -137,7 +136,7 @@ public class SplashActivity extends AppCompatActivity
                     }
                     String resultJson = buffer.toString();
                     publishProgress(0);
-                    List<HashMap<String, Object>> data = new Parser().parserJackson(resultJson);
+                    List<HashMap<String, Object>> data = Parser.parserJackson(resultJson);
                     if (METHOD.equals(DISHES_ALL_REQUEST)) {
                         DishManager dish = new DishManager();
                         dish.openbd(context);

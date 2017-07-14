@@ -30,13 +30,10 @@ import java.util.List;
 
 public class DishManager {
 
-    private dbHelper dbh;
-    private Context context;
     private SQLiteDatabase db;
 
     public void openbd(Context context){
-        this.context = context;
-        dbh = new dbHelper(context);
+        dbHelper dbh = new dbHelper(context);
         db = dbh.getWritableDatabase();
         dbh.createDish(db);
     }
@@ -132,7 +129,60 @@ public class DishManager {
         //Log.d("add", String.valueOf(newRowId));
     }
 
-    public ArrayAdapter getAdapter(Context context){
+    public ArrayAdapter getFilteredAdapter(Context context, String dishtitle){
+        return new CustomAdapter(context, make_data_filtered(context, dishtitle));
+    }
+
+    private ArrayList<HashMap<String,Object>> make_data_filtered(Context context, String dishtitle) {
+        openbd(context);
+        ArrayList<HashMap<String, Object>> data = new ArrayList<>();
+
+        String[] projection = {
+                DatabaseContract.DishesColumns.CAPTION,
+                DatabaseContract.DishesColumns.PRICE,
+                DatabaseContract.DishesColumns.PICTURE
+        };
+        Cursor cursor = db.query(
+                DatabaseContract.DishesColumns.TABLE_NAME,   // таблица
+                projection,            // столбцы
+                DatabaseContract.DishesColumns.ACTIVE + " = \"yes\"" +
+                " AND " + DatabaseContract.DishesColumns.CAPTION + " = \"" + dishtitle + "\"",                  // столбцы для условия WHERE
+                null,                  // значения для условия WHERE
+                null,                  // Don't group the rows
+                null,                  // Don't filter by row groups
+                null);
+        Log.e("tag", DatabaseContract.DishesColumns.ACTIVE + " = \"yes\"" +
+                " AND " + DatabaseContract.DishesColumns.CAPTION + " = \"" + dishtitle + "\"");
+
+        try {
+            // Узнаем индекс каждого столбца
+
+            int captionColumnIndex = cursor.getColumnIndex(DatabaseContract.DishesColumns.CAPTION);
+            int priceColumnIndex = cursor.getColumnIndex(DatabaseContract.DishesColumns.PRICE);
+            int pictureColumnIndex = cursor.getColumnIndex(DatabaseContract.DishesColumns.PICTURE);
+
+            while (cursor.moveToNext()) {
+                // Используем индекс для получения строки или числа
+                String currentCaption = cursor.getString(captionColumnIndex);
+                String currentPrice = cursor.getString(priceColumnIndex);
+                String currentPicture = cursor.getString(pictureColumnIndex);
+
+                HashMap<String, Object> cur = new HashMap<>();
+                cur.put(DatabaseContract.DishesColumns.CAPTION, currentCaption);
+                cur.put(DatabaseContract.DishesColumns.PRICE, currentPrice);
+                cur.put(DatabaseContract.DishesColumns.PICTURE, currentPicture);
+                data.add(cur);
+            }
+        }
+        finally {
+            // Всегда закрываем курсор после чтения
+            cursor.close();
+        }
+        closebd();
+        return data;
+    }
+
+    ArrayAdapter getAdapter(Context context){
         return new CustomAdapter(context, make_data_all(context));
     }
 
@@ -231,7 +281,7 @@ public class DishManager {
         return data;
     }
 
-    public HashMap<String, Object> make_data_about(Context context, String caption){
+    HashMap<String, Object> make_data_about(Context context, String caption){
         HashMap<String, Object> info = new HashMap<>();
         openbd(context);
 
@@ -241,9 +291,10 @@ public class DishManager {
                 DatabaseContract.DishesColumns.PICTURE,
                 DatabaseContract.DishesColumns.REITING,
                 DatabaseContract.DishesColumns.DESC,
-                DatabaseContract.DishesColumns.GARANT
+                DatabaseContract.DishesColumns.GARANT,
+                DatabaseContract.DishesColumns.PARENT_ID
         };
-        String selection = DatabaseContract.DishesColumns.CAPTION + " = \"" + caption + "\"";
+        String selection = DatabaseContract.DishesColumns.CAPTION + " = \"" + check(caption) + "\"";
         Cursor cursor = db.query(
                 DatabaseContract.DishesColumns.TABLE_NAME,   // таблица
                 projection,            // столбцы
@@ -261,7 +312,6 @@ public class DishManager {
             int reitingColumnIndex = cursor.getColumnIndex(DatabaseContract.DishesColumns.REITING);
             int descColumnIndex = cursor.getColumnIndex(DatabaseContract.DishesColumns.DESC);
             int garantColumnIndex = cursor.getColumnIndex(DatabaseContract.DishesColumns.GARANT);
-
             while (cursor.moveToNext()) {
                 // Используем индекс для получения строки или числа
                 String currentCaption = cursor.getString(captionColumnIndex);
@@ -285,6 +335,20 @@ public class DishManager {
         }
         closebd();
         return info;
+    }
+
+    private String check(String current){
+        String result = "";
+        int prev = 0;
+        for (int i = 0; i < current.length(); ++i){
+            if (current.charAt(i) == '"'){
+                String tmp = current.substring(prev, i);
+                result = result.concat(tmp).concat("\"");
+                prev = i;
+            }
+        }
+        result = result.concat(current.substring(prev, current.length()));
+        return result;
     }
 
     private class CustomAdapter extends ArrayAdapter<HashMap<String, Object>> {
