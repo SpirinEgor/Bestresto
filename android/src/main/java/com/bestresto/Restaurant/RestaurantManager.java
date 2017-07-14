@@ -50,35 +50,35 @@ public class RestaurantManager {
                 (rest.get(DatabaseContract.RestaurantsColumns.CAPTION) == null ?
                         "" : rest.get(DatabaseContract.RestaurantsColumns.CAPTION).toString()));
 
-         values.put(DatabaseContract.RestaurantsColumns.URL,
+        values.put(DatabaseContract.RestaurantsColumns.URL,
                 (rest.get(DatabaseContract.RestaurantsColumns.URL) == null ?
                         "" : rest.get(DatabaseContract.RestaurantsColumns.URL).toString()));
 
-         values.put(DatabaseContract.RestaurantsColumns.LOGO,
+        values.put(DatabaseContract.RestaurantsColumns.LOGO,
                 (rest.get(DatabaseContract.RestaurantsColumns.LOGO) == null ?
                         "" : rest.get(DatabaseContract.RestaurantsColumns.LOGO).toString()));
 
-         values.put(DatabaseContract.RestaurantsColumns.REITING,
+        values.put(DatabaseContract.RestaurantsColumns.REITING,
                 (rest.get(DatabaseContract.RestaurantsColumns.REITING) == null ?
                         "" : rest.get(DatabaseContract.RestaurantsColumns.REITING).toString()));
 
-         values.put(DatabaseContract.RestaurantsColumns.TIP,
+        values.put(DatabaseContract.RestaurantsColumns.TIP,
                 (rest.get(DatabaseContract.RestaurantsColumns.TIP) == null ?
                         "" : rest.get(DatabaseContract.RestaurantsColumns.TIP).toString()));
 
-         values.put(DatabaseContract.RestaurantsColumns.MIN_PRICE,
+        values.put(DatabaseContract.RestaurantsColumns.MIN_PRICE,
                 (rest.get(DatabaseContract.RestaurantsColumns.MIN_PRICE) == null ?
                         "" : rest.get(DatabaseContract.RestaurantsColumns.MIN_PRICE).toString()));
 
-         values.put(DatabaseContract.RestaurantsColumns.MAX_PRICE,
+        values.put(DatabaseContract.RestaurantsColumns.MAX_PRICE,
                 (rest.get(DatabaseContract.RestaurantsColumns.MAX_PRICE) == null ?
                         "" : rest.get(DatabaseContract.RestaurantsColumns.MAX_PRICE).toString()));
 
-         values.put(DatabaseContract.RestaurantsColumns.KITCHEN,
+        values.put(DatabaseContract.RestaurantsColumns.KITCHEN,
                 (rest.get(DatabaseContract.RestaurantsColumns.KITCHEN) == null ?
                         "" : rest.get(DatabaseContract.RestaurantsColumns.KITCHEN).toString()));
 
-         values.put(DatabaseContract.RestaurantsColumns.ADDRESS,
+        values.put(DatabaseContract.RestaurantsColumns.ADDRESS,
                 (rest.get(DatabaseContract.RestaurantsColumns.ADDRESS) == null ?
                         "" : rest.get(DatabaseContract.RestaurantsColumns.ADDRESS).toString()));
 

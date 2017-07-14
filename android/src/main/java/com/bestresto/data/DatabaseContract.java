@@ -38,9 +38,9 @@ public final class DatabaseContract {
         public final static String LOGO = "logo";
         public final static String REITING = "reit";
         public final static String TIP = "tip";
-        public final static String MIN_PRICE = "min_price";
-        public final static String MAX_PRICE = "max_price";
+        public final static String MIN_PRICE = "minPrice";
+        public final static String MAX_PRICE = "maxPrice";
         public final static String KITCHEN = "kitchen";
-        public final static String ADDRESS = "address";
+        public final static String ADDRESS = "adress";
     }
 }
