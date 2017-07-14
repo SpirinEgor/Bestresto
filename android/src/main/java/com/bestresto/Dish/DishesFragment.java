@@ -83,7 +83,7 @@ public class DishesFragment extends Fragment {
         int position = data.getIntExtra("position", 0);
         lv.smoothScrollToPosition(position);
     }
-    
+
     @Override
     public void onResume() {
         super.onResume();
