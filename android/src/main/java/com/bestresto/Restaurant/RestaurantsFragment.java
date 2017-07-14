@@ -21,11 +21,6 @@ import com.bestresto.data.DatabaseContract;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * Created by egor on 31.05.17.
- * make adapter of all dishes
- */
-
 public class RestaurantsFragment extends Fragment {
 
     FloatingActionButton fab;
@@ -56,7 +51,7 @@ public class RestaurantsFragment extends Fragment {
                 HashMap<String, Object> rest = (HashMap) lv.getItemAtPosition(position);
                 Intent i = new Intent(getActivity(), PagerActivity.class);
 
-                i.putExtra(DatabaseContract.RestaurantsColumns.INDEXID, position);
+                i.putExtra(DatabaseContract.DishesColumns.INDEXID, position);
                 i.putExtra(PagerActivity.KEY_TYPE_LIST, PagerActivity.RESTAURANTS_TYPE);
                 i.putExtra(PagerActivity.KEY_DISH_OR_REST, PagerActivity.RESTAURANT_CONSTANT);
 
