@@ -11,6 +11,9 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:paddingTop="16dp"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="24dp"
         android:background="@drawable/top_menu_bg" />
 
     <android.support.design.widget.FloatingActionButton
