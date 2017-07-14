@@ -127,7 +127,6 @@ public class DishesFragment extends Fragment {
         result = result.substring(0, result.length()-1);
         return result;
     }
-    
     @Override
     public void onResume() {
         super.onResume();

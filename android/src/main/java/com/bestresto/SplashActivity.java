@@ -42,7 +42,7 @@ public class SplashActivity extends AppCompatActivity
     TextView textView;
     final String SERVER = "http://www.bestresto.ru/api/";
     final String DISHES_ALL_REQUEST = "foods/foods.php?all";
-    final String RESTAURANTS_ALL_REQUEST = "";
+    final String RESTAURANTS_ALL_REQUEST = "rest/rest.php?all";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,7 +54,7 @@ public class SplashActivity extends AppCompatActivity
         dbh = new dbHelper(this);
         DownloadTask task = new DownloadTask(this);
         task.delegate = this;
-        task.execute(DISHES_ALL_REQUEST);
+        task.execute(DISHES_ALL_REQUEST, RESTAURANTS_ALL_REQUEST);
     }
 
     @Override

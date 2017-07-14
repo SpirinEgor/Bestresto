@@ -27,26 +27,31 @@ public class DescriptionRestaurantFragment extends android.support.v4.app.Fragme
         String name = getArguments().getString(DatabaseContract.DishesColumns.CAPTION);
         HashMap<String, Object> info = new RestaurantManager().make_data_about(view.getContext(), name);
 
-//        ImageView picture = (ImageView) view.findViewById(R.id.singleDish_picture);
-//        RatingBar reiting = (RatingBar) view.findViewById(R.id.singleDish_rating);
+        ImageView logo = (ImageView) view.findViewById(R.id.singleRestaurant_logo);
+        RatingBar rating = (RatingBar) view.findViewById(R.id.singleRestaurant_rating);
         TextView caption = (TextView) view.findViewById(R.id.singleRestaurant_caption);
-//        TextView price = (TextView) view.findViewById(R.id.singleDish_price);
-//        WebView desc = (WebView) view.findViewById(R.id.singleDish_description);
+        TextView price = (TextView) view.findViewById(R.id.singleRestaurant_price);
+        TextView address = (TextView) view.findViewById(R.id.singleRestaurant_address);
 
-//        String url = "http://www.bestresto.ru/" + info.get(DatabaseContract.DishesColumns.PICTURE);
-//        Picasso.with(view.getContext()).load(url).into(picture);
-//        String rating = info.get(DatabaseContract.DishesColumns.REITING).toString();
-//        if (rating.equals(""))
-//            reiting.setRating(0);
-//        else
-//            reiting.setRating(Float.parseFloat(rating));
-        caption.setText(info.get(DatabaseContract.DishesColumns.CAPTION).toString());
-//        price.append(info.get(DatabaseContract.DishesColumns.PRICE).toString());
-//        String description = info.get(DatabaseContract.DishesColumns.DESC).toString();
-//        if (!description.equals(""))
-//            description += "\n";
-//        description += info.get(DatabaseContract.DishesColumns.GARANT).toString();
-//        desc.loadDataWithBaseURL("", description, "text/html", "UTF-8", "");
+
+        String url = "http://www.bestresto.ru/" + info.get(DatabaseContract.RestaurantsColumns.LOGO);
+        Picasso.with(view.getContext()).load(url).into(logo);
+
+        String ratingAb = info.get(DatabaseContract.RestaurantsColumns.REITING).toString();
+        if (ratingAb.equals(""))
+            rating.setRating(0);
+        else
+            rating.setRating(Float.parseFloat(ratingAb));
+
+        caption.setText(info.get(DatabaseContract.RestaurantsColumns.CAPTION).toString());
+
+        String price_range = "диапозон цен: " +
+                info.get(DatabaseContract.RestaurantsColumns.MIN_PRICE) +
+                "р - " +
+                info.get(DatabaseContract.RestaurantsColumns.MAX_PRICE) + "р";
+        price.setText(price_range);
+
+        address.setText("" + info.get(DatabaseContract.RestaurantsColumns.ADDRESS));
 
         return view;
     }
