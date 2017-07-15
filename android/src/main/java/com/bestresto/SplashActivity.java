@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.bestresto.Dish.DishManager;
 import com.bestresto.Restaurant.RestaurantManager;
+import com.bestresto.Types.KitchenTypesManager;
 import com.bestresto.data.dbHelper;
 
 import java.io.BufferedReader;
@@ -41,8 +42,10 @@ public class SplashActivity extends AppCompatActivity
     ProgressBar pBar;
     TextView textView;
     final String SERVER = "http://www.bestresto.ru/api/";
+
     final String DISHES_ALL_REQUEST = "foods/foods.php?all";
     final String RESTAURANTS_ALL_REQUEST = "rest/rest.php?all";
+    final String KITCHEN_TYPES_REQUEST = "types/types.php?kitchenTypes";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,7 +59,7 @@ public class SplashActivity extends AppCompatActivity
         dbh.onUpgrade(db, 1, 1);
         DownloadTask task = new DownloadTask(this);
         task.delegate = this;
-        task.execute(DISHES_ALL_REQUEST, RESTAURANTS_ALL_REQUEST);
+        task.execute(KITCHEN_TYPES_REQUEST, DISHES_ALL_REQUEST, RESTAURANTS_ALL_REQUEST);
     }
 
     @Override
@@ -141,26 +144,33 @@ public class SplashActivity extends AppCompatActivity
                         DishManager dish = new DishManager();
                         dish.openbd(context);
                         dish.cleantable();
-                        int progress;
-                        for (int i = 0; i < data.size(); i++) {
-                            dish.addDB(data.get(i));
+                        int progress, i = 0;
+                        for (HashMap<String, Object> curDish: data) {
+                            dish.addDB(curDish, context);
                             progress = (int) ((1. * (i + 1)) / data.size() * 100);
                             publishProgress(progress);
+                            ++i;
                         }
                         dish.closebd();
                     } else if (METHOD.equals(RESTAURANTS_ALL_REQUEST)) {
                         RestaurantManager rest = new RestaurantManager();
                         rest.openbd(context);
                         rest.cleantable();
-                        int progress;
-                        for (int i = 0; i < data.size(); ++i) {
-                            rest.addDB(data.get(i));
+                        int progress, i = 0;
+                        for (HashMap<String, Object> curRest: data) {
+                            rest.addDB(curRest, context);
                             progress = (int) ((1. * (i + 1)) / data.size() * 100);
                             publishProgress(progress);
+                            ++i;
                         }
                         rest.closebd();
+                    } else if (METHOD.equals(KITCHEN_TYPES_REQUEST)){
+                        KitchenTypesManager types = new KitchenTypesManager();
+                        types.openbd(context);
+                        types.cleantable();
+                        types.addDB(data);
+                        types.closebd();
                     }
-
                     long finish = System.currentTimeMillis();
                     Log.d("time: " + method, Long.toString(finish - start));
                 } catch (ProtocolException e) {

@@ -36,16 +36,16 @@ public class dbHelper extends SQLiteOpenHelper{
                 + DatabaseContract.DishesColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + DatabaseContract.DishesColumns.INDEXID + " INTEGER NOT NULL, "
                 + DatabaseContract.DishesColumns.PARENT_ID + " TEXT NOT NULL, "
-                + DatabaseContract.DishesColumns.ACTIVE + " TEXT NOT NULL, "
+                + DatabaseContract.DishesColumns.ACTIVE + " TINYINT NOT NULL, "
                 + DatabaseContract.DishesColumns.CAPTION + " TEXT NOT NULL, "
-                + DatabaseContract.DishesColumns.KITCHEN + " TEXT NOT NULL, "
-                + DatabaseContract.DishesColumns.PRICE + " TEXT NOT NULL, "
+                + DatabaseContract.DishesColumns.KITCHEN + " INTEGER NOT NULL, "
+                + DatabaseContract.DishesColumns.PRICE + " INTEGER NOT NULL, "
                 + DatabaseContract.DishesColumns.DESC + " TEXT NOT NULL, "
-                + DatabaseContract.DishesColumns.FIRST_PAGE + " TEXT NOT NULL, "
+                + DatabaseContract.DishesColumns.FIRST_PAGE + " TINYINT NOT NULL, "
                 + DatabaseContract.DishesColumns.PICTURE + " TEXT NOT NULL, "
                 + DatabaseContract.DishesColumns.DOPPIC + " TEXT NOT NULL, "
-                + DatabaseContract.DishesColumns.SORT + " TEXT NOT NULL, "
-                + DatabaseContract.DishesColumns.REITING + " TEXT NOT NULL, "
+                + DatabaseContract.DishesColumns.SORT + " INTEGER NOT NULL, "
+                + DatabaseContract.DishesColumns.REITING + " FLOAT NOT NULL, "
                 + DatabaseContract.DishesColumns.GARANT + " TEXT NOT NULL, "
                 + DatabaseContract.DishesColumns.SEARCHTAGS + " TEXT NOT NULL, "
                 + DatabaseContract.DishesColumns.CREATEDATE +" TEXT NOT NULL);";
@@ -58,12 +58,23 @@ public class dbHelper extends SQLiteOpenHelper{
                 + DatabaseContract.RestaurantsColumns.CAPTION + " TEXT NOT NULL, "
                 + DatabaseContract.RestaurantsColumns.URL + " TEXT NOT NULL, "
                 + DatabaseContract.RestaurantsColumns.LOGO + " TEXT NOT NULL, "
-                + DatabaseContract.RestaurantsColumns.REITING + " TEXT NOT NULL, "
+                + DatabaseContract.RestaurantsColumns.REITING + " FLOAT NOT NULL, "
                 + DatabaseContract.RestaurantsColumns.TIP + " TEXT NOT NULL, "
-                + DatabaseContract.RestaurantsColumns.MIN_PRICE + " TEXT NOT NULL, "
-                + DatabaseContract.RestaurantsColumns.MAX_PRICE + " TEXT NOT NULL, "
-                + DatabaseContract.RestaurantsColumns.KITCHEN + " TEXT NOT NULL, "
+                + DatabaseContract.RestaurantsColumns.MIN_PRICE + " INTEGER NOT NULL, "
+                + DatabaseContract.RestaurantsColumns.MAX_PRICE + " INTEGER NOT NULL, "
+                + DatabaseContract.RestaurantsColumns.KITCHEN + " INTEGER NOT NULL, "
                 + DatabaseContract.RestaurantsColumns.ADDRESS + " TEXT NOT NULL);";
+        db.execSQL(SQL);
+    }
+
+    public void createKitchenTypes(SQLiteDatabase db){
+        String SQL = "CREATE TABLE IF NOT EXISTS " + DatabaseContract.KitchenTypesColumns.TABLE_NAME + " ("
+                + DatabaseContract.KitchenTypesColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + DatabaseContract.KitchenTypesColumns.CAPTION + " TEXT NOT NULL, "
+                + DatabaseContract.KitchenTypesColumns.INDEXID + " INTEGER NOT NULL, "
+                + DatabaseContract.KitchenTypesColumns.SORT + " INTEGER NOT NULL, "
+                + DatabaseContract.KitchenTypesColumns.PRIMEID + " INTEGER NOT NULL, "
+                + DatabaseContract.KitchenTypesColumns.ACTIVE + " TINYINT NOT NULL);";
         db.execSQL(SQL);
     }
 }
