@@ -124,7 +124,7 @@ public class DishesFragment extends Fragment {
             if (current.equals(getString(R.string.ukr))) result += "34,";
             if (current.equals(getString(R.string.eng))) result += "35,";
         }
-        result = result.substring(0, result.length()-1);
+        if (!result.equals(""))result = result.substring(0, result.length()-1);
         return result;
     }
     @Override
