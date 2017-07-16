@@ -38,9 +38,20 @@ public final class DatabaseContract {
         public final static String LOGO = "logo";
         public final static String REITING = "reit";
         public final static String TIP = "tip";
-        public final static String MIN_PRICE = "min_price";
-        public final static String MAX_PRICE = "max_price";
+        public final static String MIN_PRICE = "minPrice";
+        public final static String MAX_PRICE = "maxPrice";
         public final static String KITCHEN = "kitchen";
-        public final static String ADDRESS = "address";
+        public final static String ADDRESS = "adress";
+    }
+
+    public static final class KitchenTypesColumns implements BaseColumns{
+        public final static String TABLE_NAME = "KitchenTypes";
+
+        public final static String _ID = BaseColumns._ID;
+        public final static String CAPTION = "caption";
+        public final static String INDEXID = "indexid";
+        public final static String SORT = "sort";
+        public final static String ACTIVE = "active";
+        public final static String PRIMEID = "primeId";
     }
 }

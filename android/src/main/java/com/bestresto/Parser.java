@@ -55,14 +55,4 @@ public class Parser {
         return data;
     }
 
-    static public List<Integer> stringToArray(String str){
-        List<Integer> result = new ArrayList<>();
-        String[] spl = str.split("|");
-        for (String aSpl : spl) {
-            if (!(aSpl.equals(",") || aSpl.equals("")))
-                result.add(Integer.parseInt(aSpl));
-        }
-        return result;
-    }
-
 }
