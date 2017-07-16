@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.bestresto.data.DatabaseContract;
 import com.bestresto.data.dbHelper;
@@ -62,8 +63,8 @@ public class KitchenTypesManager {
             Cursor cursor = db.query(
                     DatabaseContract.KitchenTypesColumns.TABLE_NAME,   // таблица
                     projection,            // столбцы
-                    DatabaseContract.DishesColumns.ACTIVE + " = 1" +
-                            " AND " + DatabaseContract.DishesColumns.INDEXID + " = " + kit,                  // столбцы для условия WHERE
+                    DatabaseContract.KitchenTypesColumns.ACTIVE + " = 1" +
+                            " AND " + DatabaseContract.KitchenTypesColumns.INDEXID + " = " + kit,                  // столбцы для условия WHERE
                     null,                  // значения для условия WHERE
                     null,                  // Don't group the rows
                     null,                  // Don't filter by row groups
@@ -106,6 +107,56 @@ public class KitchenTypesManager {
         for (String aSpl : spl) {
             if (!(aSpl.equals(",") || aSpl.equals("") || aSpl.equals("|")))
                 result.add(Integer.parseInt(aSpl));
+        }
+        return result;
+    }
+
+    public String getKitchens(int num, Context context){
+        ArrayList<Integer> prime = simply(num);
+        String result = "";
+        openbd(context);
+        for (int curPrime: prime){
+            String[] projection = {
+                    DatabaseContract.KitchenTypesColumns.CAPTION,
+                    DatabaseContract.KitchenTypesColumns.PRIMEID,
+                    DatabaseContract.KitchenTypesColumns.ACTIVE
+            };
+            Cursor cursor = db.query(
+                    DatabaseContract.KitchenTypesColumns.TABLE_NAME,   // таблица
+                    projection,            // столбцы
+                    DatabaseContract.KitchenTypesColumns.ACTIVE + " = 1" +
+                            " AND " + DatabaseContract.KitchenTypesColumns.PRIMEID + " = " + curPrime,                  // столбцы для условия WHERE
+                    null,                  // значения для условия WHERE
+                    null,                  // Don't group the rows
+                    null,                  // Don't filter by row groups
+                    null);
+            try {
+                // Узнаем индекс каждого столбца
+                int captionColumnIndex = cursor.getColumnIndex(DatabaseContract.KitchenTypesColumns.CAPTION);
+                while (cursor.moveToNext()) {
+                    // Используем индекс для получения строки или числа
+                    String currentCaption = cursor.getString(captionColumnIndex);
+                    result += currentCaption + ", ";
+                }
+            }
+            finally {
+                cursor.close();
+            }
+        }
+        closebd();
+        if (!result.equals(""))
+            result = result.substring(0, result.length() - 2);
+        return result;
+    }
+
+    private ArrayList<Integer> simply(int num){
+        ArrayList<Integer> result = new ArrayList<>();
+        for (int i = 2; i * i <= num; ++i){
+            if (num % i == 0){
+                result.add(i);
+                while (num % i == 0)
+                    num /= i;
+            }
         }
         return result;
     }
