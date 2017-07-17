@@ -39,11 +39,11 @@ public class DishesFragment extends Fragment {
 
         Bundle extBundle = this.getArguments();
         if (extBundle != null){
-            ArrayList<String> quisine_params = extBundle.getStringArrayList("quisine_params");
+            ArrayList<String> cuisine_params = extBundle.getStringArrayList("quisine_params");
             ArrayList<String> dish_params = extBundle.getStringArrayList("dish_params");
             String dishtitle = extBundle.getString("dishtitle");
             int dishprice = extBundle.getInt("price");
-            lv.setAdapter(new DishManager().getFilteredAdapter(view.getContext(), dishtitle));
+            lv.setAdapter(new DishManager().getFilteredAdapter(view.getContext(), dishtitle, CuisineParamsDecode(cuisine_params)));
         }
         else{
             lv.setAdapter(new DishManager().getAdapter(view.getContext()));
@@ -123,8 +123,8 @@ public class DishesFragment extends Fragment {
             if (current.equals(getString(R.string.mar))) result += "33,";
             if (current.equals(getString(R.string.ukr))) result += "34,";
             if (current.equals(getString(R.string.eng))) result += "35,";
-
         }
+        if (!result.equals(""))result = result.substring(0, result.length()-1);
         return result;
     }
     @Override

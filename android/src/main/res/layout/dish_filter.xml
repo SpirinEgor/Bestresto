@@ -17,7 +17,7 @@
             android:layout_width="275sp"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
-            android:hint="Название ресторана"/>
+            android:hint="Название блюда"/>
 
         <Button
             android:id="@+id/filter_button_find"
@@ -68,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/ara"/>
             <CheckBox
-                android:id="@+id/cuisine_wes"
+                android:id="@+id/cuisine_eas"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/eas"/>

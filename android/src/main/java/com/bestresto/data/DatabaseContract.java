@@ -16,7 +16,7 @@ public final class DatabaseContract {
         public final static String PARENT_ID = "parent_id";
         public final static String ACTIVE = "active";
         public final static String CAPTION = "caption";
-        public final static String KITCHEN = "kithen";
+        public final static String KITCHEN = "kitchen";
         public final static String PRICE = "price";
         public final static String DESC = "desc";
         public final static String FIRST_PAGE = "first_page";

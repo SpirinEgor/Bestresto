@@ -3,6 +3,7 @@ package com.bestresto.Restaurant;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,12 +35,13 @@ public class RestaurantFilter extends Fragment {
     CheckBox price_from2000;
     CheckBox price_from3500;
     CheckBox price_over5000;
-    CheckBox chi, arm, ara, wes, gre, geo, ind, spa, kor, veg, ita, rus, jew, eur, aut, aze, asi, usa, jap, pan, fra, ady, kav, med, per,
+    CheckBox chi, arm, ara, eas, gre, geo, ind, spa, kor, veg, ita, rus, jew, eur, aut, aze, asi, usa, jap, pan, fra, ady, kav, med, per,
             tur, ska, irl, sco, ger, fus, mex, mar, ukr, eng;
     CheckBox rest_restaurant, rest_cafe, rest_bar, rest_pub, rest_gastropub, rest_vinotheque, rest_fastfood, rest_streetfood,
             rest_beerrest, rest_steakhouse, rest_beerbar, rest_gastrobar, rest_confectionary, rest_coffehouse, rest_bakery, rest_fishrest, rest_cookery;
     CheckBox features_delivery, features_banquet, features_roundtheclock, features_panorama, features_veranda, features_wifi, features_livemusic, features_coffetogo,
             features_breakfast, features_kidsanimation, features_businesslunch, features_hookah, features_karaoke, features_livesports, features_homecuisine;
+    ArrayList<Pair<CheckBox, String>> cuisines, resttypes, prices, features;
 
 
     @Nullable
@@ -60,521 +62,199 @@ public class RestaurantFilter extends Fragment {
         rating_from.setAdapter(adapter);
         rating_to.setAdapter(adapter);
         ///////////////////////////////////////////////////////////////////////////////////////////////
+        cuisines = new ArrayList<>();
         chi = (CheckBox)view.findViewById(R.id.cuisine_chi);
+        cuisines.add(Pair.create(chi, getString(R.string.chi)));
         arm = (CheckBox)view.findViewById(R.id.cuisine_arm);
+        cuisines.add(Pair.create(arm, getString(R.string.arm)));
         ara = (CheckBox)view.findViewById(R.id.cuisine_ara);
-        wes = (CheckBox)view.findViewById(R.id.cuisine_wes);
+        cuisines.add(Pair.create(ara, getString(R.string.ara)));
+        eas = (CheckBox)view.findViewById(R.id.cuisine_eas);
+        cuisines.add(Pair.create(eas, getString(R.string.eas)));
         gre = (CheckBox)view.findViewById(R.id.cuisine_gre);
+        cuisines.add(Pair.create(gre, getString(R.string.gre)));
         geo = (CheckBox)view.findViewById(R.id.cuisine_geo);
+        cuisines.add(Pair.create(geo, getString(R.string.geo)));
         ind = (CheckBox)view.findViewById(R.id.cuisine_ind);
+        cuisines.add(Pair.create(ind, getString(R.string.ind)));
         spa = (CheckBox)view.findViewById(R.id.cuisine_spa);
+        cuisines.add(Pair.create(spa, getString(R.string.spa)));
         kor = (CheckBox)view.findViewById(R.id.cuisine_kor);
+        cuisines.add(Pair.create(kor, getString(R.string.kor)));
         veg = (CheckBox)view.findViewById(R.id.cuisine_veg);
+        cuisines.add(Pair.create(veg, getString(R.string.veg)));
         ita = (CheckBox)view.findViewById(R.id.cuisine_ita);
+        cuisines.add(Pair.create(ita, getString(R.string.ita)));
         rus = (CheckBox)view.findViewById(R.id.cuisine_rus);
+        cuisines.add(Pair.create(rus, getString(R.string.rus)));
         jew = (CheckBox)view.findViewById(R.id.cuisine_jew);
+        cuisines.add(Pair.create(jew, getString(R.string.jew)));
         eur = (CheckBox)view.findViewById(R.id.cuisine_eur);
+        cuisines.add(Pair.create(eur, getString(R.string.eur)));
         aut = (CheckBox)view.findViewById(R.id.cuisine_aut);
+        cuisines.add(Pair.create(aut, getString(R.string.aut)));
         aze = (CheckBox)view.findViewById(R.id.cuisine_aze);
+        cuisines.add(Pair.create(aze, getString(R.string.aze)));
         asi = (CheckBox)view.findViewById(R.id.cuisine_asi);
+        cuisines.add(Pair.create(asi, getString(R.string.asi)));
         usa = (CheckBox)view.findViewById(R.id.cuisine_usa);
+        cuisines.add(Pair.create(usa, getString(R.string.usa)));
         jap = (CheckBox)view.findViewById(R.id.cuisine_jap);
+        cuisines.add(Pair.create(jap, getString(R.string.jap)));
         pan = (CheckBox)view.findViewById(R.id.cuisine_pan);
+        cuisines.add(Pair.create(pan, getString(R.string.pan)));
         fra = (CheckBox)view.findViewById(R.id.cuisine_fra);
+        cuisines.add(Pair.create(fra, getString(R.string.fra)));
         ady = (CheckBox)view.findViewById(R.id.cuisine_ady);
+        cuisines.add(Pair.create(ady, getString(R.string.ady)));
         kav = (CheckBox)view.findViewById(R.id.cuisine_kav);
+        cuisines.add(Pair.create(kav, getString(R.string.kav)));
         med = (CheckBox)view.findViewById(R.id.cuisine_med);
+        cuisines.add(Pair.create(med, getString(R.string.med)));
         per = (CheckBox)view.findViewById(R.id.cuisine_per);
+        cuisines.add(Pair.create(per, getString(R.string.per)));
         tur = (CheckBox)view.findViewById(R.id.cuisine_tur);
+        cuisines.add(Pair.create(tur, getString(R.string.tur)));
         ska = (CheckBox)view.findViewById(R.id.cuisine_ska);
+        cuisines.add(Pair.create(ska, getString(R.string.ska)));
         irl = (CheckBox)view.findViewById(R.id.cuisine_irl);
+        cuisines.add(Pair.create(irl, getString(R.string.irl)));
         sco = (CheckBox)view.findViewById(R.id.cuisine_sco);
+        cuisines.add(Pair.create(sco, getString(R.string.sco)));
         ger = (CheckBox)view.findViewById(R.id.cuisine_ger);
+        cuisines.add(Pair.create(ger, getString(R.string.ger)));
         fus = (CheckBox)view.findViewById(R.id.cuisine_fus);
+        cuisines.add(Pair.create(fus, getString(R.string.fus)));
         mex = (CheckBox)view.findViewById(R.id.cuisine_mex);
+        cuisines.add(Pair.create(mex, getString(R.string.mex)));
         mar = (CheckBox)view.findViewById(R.id.cuisine_mar);
-        ukr = (CheckBox)view.findViewById(R.id.cuisine_mar);
-        eng = (CheckBox)view.findViewById(R.id.cuisine_mar);
+        cuisines.add(Pair.create(mar, getString(R.string.mar)));
+        ukr = (CheckBox)view.findViewById(R.id.cuisine_ukr);
+        cuisines.add(Pair.create(ukr, getString(R.string.ukr)));
+        eng = (CheckBox)view.findViewById(R.id.cuisine_eng);
+        cuisines.add(Pair.create(eng, getString(R.string.eng)));
 
         //OnCheckedListeners for cuisine section
-        chi.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CuisineReset(rest_cuisine_button);
-            }
-        });
-        arm.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CuisineReset(rest_cuisine_button);
-            }
-        });
-        ara.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CuisineReset(rest_cuisine_button);
-            }
-        });
-        wes.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CuisineReset(rest_cuisine_button);
-            }
-        });
-        gre.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CuisineReset(rest_cuisine_button);
-            }
-        });
-        geo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CuisineReset(rest_cuisine_button);
-            }
-        });
-        ind.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CuisineReset(rest_cuisine_button);
-            }
-        });
-        spa.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CuisineReset(rest_cuisine_button);
-            }
-        });
-        kor.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CuisineReset(rest_cuisine_button);
-            }
-        });
-        veg.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CuisineReset(rest_cuisine_button);
-            }
-        });
-        ita.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CuisineReset(rest_cuisine_button);
-            }
-        });
-        rus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CuisineReset(rest_cuisine_button);
-            }
-        });
-        jew.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CuisineReset(rest_cuisine_button);
-            }
-        });
-        eur.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CuisineReset(rest_cuisine_button);
-            }
-        });
-        aut.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CuisineReset(rest_cuisine_button);
-            }
-        });
-        aze.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CuisineReset(rest_cuisine_button);
-            }
-        });
-        asi.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CuisineReset(rest_cuisine_button);
-            }
-        });
-        usa.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CuisineReset(rest_cuisine_button);
-            }
-        });
-        jap.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CuisineReset(rest_cuisine_button);
-            }
-        });
-        pan.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CuisineReset(rest_cuisine_button);
-            }
-        });
-        fra.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CuisineReset(rest_cuisine_button);
-            }
-        });
-        ady.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CuisineReset(rest_cuisine_button);
-            }
-        });
-        kav.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CuisineReset(rest_cuisine_button);
-            }
-        });
-        med.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CuisineReset(rest_cuisine_button);
-            }
-        });
-        per.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CuisineReset(rest_cuisine_button);
-            }
-        });
-        tur.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CuisineReset(rest_cuisine_button);
-            }
-        });
-        ska.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CuisineReset(rest_cuisine_button);
-            }
-        });
-        irl.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CuisineReset(rest_cuisine_button);
-            }
-        });
-        sco.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CuisineReset(rest_cuisine_button);
-            }
-        });
-        ger.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CuisineReset(rest_cuisine_button);
-            }
-        });
-        fus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CuisineReset(rest_cuisine_button);
-            }
-        });
-        mex.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CuisineReset(rest_cuisine_button);
-            }
-        });
-        mar.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CuisineReset(rest_cuisine_button);
-            }
-        });
-        ukr.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CuisineReset(rest_cuisine_button);
-            }
-        });
-        eng.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                CuisineReset(rest_cuisine_button);
-            }
-        });
+        for (Pair<CheckBox, String> cuisine:cuisines) {
+            cuisine.first.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    CuisineReset(rest_cuisine_button);
+                }
+            });
+        }
 
         //////////////////////////////////////////////////////////////////////////////////////////////////
+        prices = new ArrayList<>();
         price_under1000 = (CheckBox)view.findViewById(R.id.price_under1000);
+        prices.add(Pair.create(price_under1000, getString(R.string.under1000)));
         price_from1000 = (CheckBox)view.findViewById(R.id.price_from1000);
+        prices.add(Pair.create(price_from1000, getString(R.string.from1000)));
         price_from2000 = (CheckBox)view.findViewById(R.id.price_from2000);
+        prices.add(Pair.create(price_from2000, getString(R.string.from2000)));
         price_from3500 = (CheckBox)view.findViewById(R.id.price_from3500);
+        prices.add(Pair.create(price_from3500, getString(R.string.from3500)));
         price_over5000 = (CheckBox)view.findViewById(R.id.price_over5000);
+        prices.add(Pair.create(price_over5000, getString(R.string.over5000)));
 
-        price_under1000.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                AveragePriceReset(avg_price_button);
-            }
-        });
-        price_from1000.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                AveragePriceReset(avg_price_button);
-            }
-        });
-        price_from2000.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                AveragePriceReset(avg_price_button);
-            }
-        });
-        price_from3500.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                AveragePriceReset(avg_price_button);
-            }
-        });
-        price_over5000.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                AveragePriceReset(avg_price_button);
-            }
-        });
+
+        for (Pair<CheckBox, String> price:prices) {
+            price.first.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    AveragePriceReset(avg_price_button);
+                }
+            });
+        }
 
         /////////////////////////////////////////////////////////////////////////////////
+        resttypes = new ArrayList<>();
         rest_restaurant = (CheckBox)view.findViewById(R.id.rest_restaurant);
+        resttypes.add(Pair.create(rest_restaurant, getString(R.string.restaurant)));
         rest_cafe = (CheckBox)view.findViewById(R.id.rest_cafe);
+        resttypes.add(Pair.create(rest_cafe, getString(R.string.cafe)));
         rest_bar = (CheckBox)view.findViewById(R.id.rest_bar);
+        resttypes.add(Pair.create(rest_bar, getString(R.string.bar)));
         rest_pub = (CheckBox)view.findViewById(R.id.rest_pub);
+        resttypes.add(Pair.create(rest_pub, getString(R.string.pub)));
         rest_gastropub = (CheckBox)view.findViewById(R.id.rest_gastropub);
+        resttypes.add(Pair.create(rest_gastropub, getString(R.string.gastropub)));
         rest_vinotheque = (CheckBox)view.findViewById(R.id.rest_vinotheque);
+        resttypes.add(Pair.create(rest_vinotheque, getString(R.string.vinotheque)));
         rest_fastfood = (CheckBox)view.findViewById(R.id.rest_fastfood);
+        resttypes.add(Pair.create(rest_fastfood, getString(R.string.fastfood)));
         rest_streetfood = (CheckBox)view.findViewById(R.id.rest_streetfood);
+        resttypes.add(Pair.create(rest_streetfood, getString(R.string.streetfood)));
         rest_beerrest = (CheckBox)view.findViewById(R.id.rest_beerrest);
+        resttypes.add(Pair.create(rest_beerrest, getString(R.string.beerrest)));
         rest_steakhouse = (CheckBox)view.findViewById(R.id.rest_steakhouse);
+        resttypes.add(Pair.create(rest_steakhouse, getString(R.string.steakhouse)));
         rest_beerbar = (CheckBox)view.findViewById(R.id.rest_beerbar);
+        resttypes.add(Pair.create(rest_beerbar, getString(R.string.beerbar)));
         rest_gastrobar = (CheckBox)view.findViewById(R.id.rest_gastrobar);
+        resttypes.add(Pair.create(rest_gastrobar, getString(R.string.gastrobar)));
         rest_confectionary = (CheckBox)view.findViewById(R.id.rest_confectionary);
+        resttypes.add(Pair.create(rest_confectionary, getString(R.string.confectionary)));
         rest_coffehouse = (CheckBox)view.findViewById(R.id.rest_coffehouse);
+        resttypes.add(Pair.create(rest_coffehouse, getString(R.string.coffeehouse)));
         rest_bakery = (CheckBox)view.findViewById(R.id.rest_bakery);
+        resttypes.add(Pair.create(rest_bakery, getString(R.string.bakery)));
         rest_fishrest = (CheckBox)view.findViewById(R.id.rest_fishrest);
+        resttypes.add(Pair.create(rest_fishrest, getString(R.string.fishrest)));
         rest_cookery = (CheckBox)view.findViewById(R.id.rest_cookery);
+        resttypes.add(Pair.create(rest_cookery, getString(R.string.cookery)));
 
-        rest_restaurant.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                RestTypeReset(rest_type_button);
-            }
-        });
-        rest_cafe.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                RestTypeReset(rest_type_button);
-            }
-        });
-        rest_bar.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                RestTypeReset(rest_type_button);
-            }
-        });
-        rest_pub.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                RestTypeReset(rest_type_button);
-            }
-        });
-        rest_gastropub.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                RestTypeReset(rest_type_button);
-            }
-        });
-        rest_vinotheque.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                RestTypeReset(rest_type_button);
-            }
-        });
-        rest_fastfood.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                RestTypeReset(rest_type_button);
-            }
-        });
-        rest_streetfood.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                RestTypeReset(rest_type_button);
-            }
-        });
-        rest_beerrest.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                RestTypeReset(rest_type_button);
-            }
-        });
-        rest_steakhouse.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                RestTypeReset(rest_type_button);
-            }
-        });
-        rest_beerbar.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                RestTypeReset(rest_type_button);
-            }
-        });
-        rest_gastrobar.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                RestTypeReset(rest_type_button);
-            }
-        });
-        rest_confectionary.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                RestTypeReset(rest_type_button);
-            }
-        });
-        rest_coffehouse.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                RestTypeReset(rest_type_button);
-            }
-        });
-        rest_bakery.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                RestTypeReset(rest_type_button);
-            }
-        });
-        rest_fishrest.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                RestTypeReset(rest_type_button);
-            }
-        });
-        rest_cookery.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                RestTypeReset(rest_type_button);
-            }
-        });
+        for (Pair<CheckBox, String> resttype:resttypes) {
+            resttype.first.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    RestTypeReset(rest_type_button);
+                }
+            });
+        }
+
         ///////////////////////////////////////////////////////////////////////////////////////////
-
+        features = new ArrayList<>();
         features_delivery = (CheckBox)view.findViewById(R.id.features_delivery);
+        features.add(Pair.create(features_delivery, getString(R.string.delivery)));
         features_banquet = (CheckBox)view.findViewById(R.id.features_banquet);
+        features.add(Pair.create(features_banquet, getString(R.string.banquet)));
         features_roundtheclock = (CheckBox)view.findViewById(R.id.features_roundtheclock);
+        features.add(Pair.create(features_roundtheclock, getString(R.string.roundtheclock)));
         features_panorama = (CheckBox)view.findViewById(R.id.features_panorama);
+        features.add(Pair.create(features_panorama, getString(R.string.panorama)));
         features_veranda = (CheckBox)view.findViewById(R.id.features_veranda);
+        features.add(Pair.create(features_veranda, getString(R.string.veranda)));
         features_wifi = (CheckBox)view.findViewById(R.id.features_wifi);
+        features.add(Pair.create(features_wifi, getString(R.string.wifi)));
         features_livemusic = (CheckBox)view.findViewById(R.id.features_livemusic);
+        features.add(Pair.create(features_livemusic, getString(R.string.livemusic)));
         features_coffetogo = (CheckBox)view.findViewById(R.id.features_coffetogo);
+        features.add(Pair.create(features_coffetogo, getString(R.string.coffeetogo)));
         features_breakfast = (CheckBox)view.findViewById(R.id.features_breakfast);
+        features.add(Pair.create(features_breakfast, getString(R.string.breakfast)));
         features_kidsanimation = (CheckBox)view.findViewById(R.id.features_kidsanimation);
+        features.add(Pair.create(features_kidsanimation, getString(R.string.kidsanimation)));
         features_businesslunch = (CheckBox)view.findViewById(R.id.features_businesslunch);
+        features.add(Pair.create(features_businesslunch, getString(R.string.businesslunch)));
         features_hookah = (CheckBox)view.findViewById(R.id.features_hookah);
+        features.add(Pair.create(features_hookah, getString(R.string.hookah)));
         features_karaoke = (CheckBox)view.findViewById(R.id.features_karaoke);
+        features.add(Pair.create(features_karaoke, getString(R.string.karaoke)));
         features_livesports = (CheckBox)view.findViewById(R.id.features_livesports);
+        features.add(Pair.create(features_livesports, getString(R.string.livesports)));
         features_homecuisine = (CheckBox)view.findViewById(R.id.features_homecuisine);
+        features.add(Pair.create(features_homecuisine, getString(R.string.homecuisine)));
 
-        features_delivery.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                FeaturesReset(features_button);
-            }
-        });
-        features_banquet.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                FeaturesReset(features_button);
-            }
-        });
-        features_roundtheclock.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                FeaturesReset(features_button);
-            }
-        });
-        features_panorama.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                FeaturesReset(features_button);
-            }
-        });
-        features_veranda.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                FeaturesReset(features_button);
-            }
-        });
-        features_wifi.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                FeaturesReset(features_button);
-            }
-        });
-        features_livemusic.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                FeaturesReset(features_button);
-            }
-        });
-        features_coffetogo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                FeaturesReset(features_button);
-            }
-        });
-        features_breakfast.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                FeaturesReset(features_button);
-            }
-        });
-        features_kidsanimation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                FeaturesReset(features_button);
-            }
-        });
-        features_businesslunch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                FeaturesReset(features_button);
-            }
-        });
-        features_hookah.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                FeaturesReset(features_button);
-            }
-        });
-        features_karaoke.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                FeaturesReset(features_button);
-            }
-        });
-        features_livesports.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                FeaturesReset(features_button);
-            }
-        });
-        features_homecuisine.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                FeaturesReset(features_button);
-            }
-        });
+        for (Pair<CheckBox, String> feature:features) {
+            feature.first.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    FeaturesReset(features_button);
+                }
+            });
+        }
+
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         avg_price_view = (ScrollView)view.findViewById(R.id.avg_price_view);
@@ -655,24 +335,11 @@ public class RestaurantFilter extends Fragment {
 
     private void AveragePriceReset(Button avg_price_button){
         String result = "";
-        if (price_under1000.isChecked()){
-            result += (getString(R.string.under1000));
-        }
-        if (price_from1000.isChecked()){
-            if (!result.equals("")) result += ", ";
-            result += (getString(R.string.from1000));
-        }
-        if (price_from2000.isChecked()){
-            if (!result.equals("")) result += ", ";
-            result += (getString(R.string.from2000));
-        }
-        if (price_from3500.isChecked()){
-            if (!result.equals("")) result += ", ";
-            result += (getString(R.string.from3500));
-        }
-        if (price_over5000.isChecked()){
-            if (!result.equals("")) result += ", ";
-            result += (getString(R.string.over5000));
+        for (Pair<CheckBox, String> price : prices){
+            if (price.first.isChecked()){
+                if (!result.equals("")) result += ", ";
+                result += price.second;
+            }
         }
         if (result.equals("")){
             result = "Средний чек";
@@ -684,173 +351,16 @@ public class RestaurantFilter extends Fragment {
     private void RestTypeReset(Button rest_type_button) {
         String result = "";
         int count = 0;
-        if (rest_restaurant.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else{
-                count++;
-                result += getString(R.string.restaurant);
-            }
-        }
-        if (rest_cafe.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else{
-                count++;
-                if (!result.equals("")) result +=", ";
-                result +=getString(R.string.cafe);
-            }
-        }
-        if (rest_bar.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else{
-                count++;
-                if (!result.equals("")) result +=", ";
-                result +=getString(R.string.bar);
-            }
-        }
-        if (rest_pub.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else{
-                count++;
-                if (!result.equals("")) result +=", ";
-                result +=getString(R.string.pub);
-            }
-        }
-        if (rest_gastropub.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else{
-                count++;
-                if (!result.equals("")) result +=", ";
-                result +=getString(R.string.gastropub);
-            }
-        }
-        if (rest_vinotheque.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else{
-                count++;
-                if (!result.equals("")) result +=", ";
-                result +=getString(R.string.vinotheque);
-            }
-        }
-        if (rest_fastfood.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else{
-                count++;
-                if (!result.equals("")) result +=", ";
-                result +=getString(R.string.fastfood);
-            }
-        }
-        if (rest_streetfood.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else{
-                count++;
-                if (!result.equals("")) result +=", ";
-                result +=getString(R.string.streetfood);
-            }
-        }
-        if (rest_beerrest.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else{
-                count++;
-                if (!result.equals("")) result +=", ";
-                result +=getString(R.string.beerrest);
-            }
-        }
-        if (rest_steakhouse.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else{
-                count++;
-                if (!result.equals("")) result +=", ";
-                result +=getString(R.string.steakhouse);
-            }
-        }
-        if (rest_beerbar.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else{
-                count++;
-                if (!result.equals("")) result +=", ";
-                result +=getString(R.string.beerbar);
-            }
-        }
-        if (rest_gastrobar.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else{
-                count++;
-                if (!result.equals("")) result +=", ";
-                result +=getString(R.string.gastrobar);
-            }
-        }
-        if (rest_confectionary.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else{
-                count++;
-                if (!result.equals("")) result +=", ";
-                result +=getString(R.string.confectionary);
-            }
-        }
-        if (rest_coffehouse.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else{
-                count++;
-                if (!result.equals("")) result +=", ";
-                result +=getString(R.string.coffeehouse);
-            }
-        }
-        if (rest_bakery.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else{
-                count++;
-                if (!result.equals("")) result +=", ";
-                result +=getString(R.string.bakery);
-            }
-        }
-        if (rest_fishrest.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else{
-                count++;
-                if (!result.equals("")) result +=", ";
-                result +=getString(R.string.fishrest);
-            }
-        }
-        if (rest_cookery.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else{
-                count++;
-                if (!result.equals("")) result +=", ";
-                result +=getString(R.string.cookery);
+        for (Pair<CheckBox, String> resttype: resttypes){
+            if (resttype.first.isChecked()){
+                if ((count >= 5)){
+                    if (!result.endsWith(", ..."))result += ", ...";
+                }
+                else{
+                    count++;
+                    if (!result.equals("")) result +=", ";
+                    result += resttype.second;
+                }
             }
         }
         if (result.equals("")) result = "Тип заведения";
@@ -859,483 +369,40 @@ public class RestaurantFilter extends Fragment {
 
     }
 
-    private void CuisineReset(Button rest_cuisine_button){
+    private void CuisineReset(Button dish_cuisine_button){
         int count = 0;
         String result = "";
-        if (chi.isChecked()){
-            count++;
-            result += getString(R.string.chi);
-        }
-        if (arm.isChecked()){
-            count++;
-            if(!result.equals("")) result +=", ";
-            result += getString(R.string.arm);
-        }
-        if (ara.isChecked()){
-            count++;
-            if(!result.equals("")) result +=", ";
-            result += getString(R.string.ara);
-        }
-        if (wes.isChecked()){
-            count++;
-            if(!result.equals("")) result +=", ";
-            result += getString(R.string.eas);
-        }
-        if (gre.isChecked()){
-            count++;
-            if(!result.equals("")) result +=", ";
-            result += getString(R.string.gre);
-        }
-        if (geo.isChecked()){
-            count++;
-            if(!result.equals("")) result +=", ";
-            result += getString(R.string.geo);
-        }
-        if (ind.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
+        for (Pair<CheckBox, String> cuisine:cuisines) {
+            if (cuisine.first.isChecked()){
+                if (count>=5){
+                    if (!result.endsWith(", ..."))result += ", ...";
+                }
+                else{
+                    count++;
+                    if(!result.equals("")) result +=", ";
+                    result += cuisine.second;
+                }
             }
-            else{
-                count++;
-                if(!result.equals("")) result +=", ";
-                result += getString(R.string.ind);
-            }
-        }
-        if (spa.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else{
-                count++;
-                if(!result.equals("")) result +=", ";
-                result += getString(R.string.spa);
-            }
-        }
-        if (kor.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else {
-                count++;
-                if(!result.equals("")) result +=", ";
-                result += getString(R.string.kor);
-            }
-        }
-        if (veg.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else {
-                count++;
-                if(!result.equals("")) result +=", ";
-                result += getString(R.string.veg);
-            }
-        }
-        if (ita.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else {
-                count++;
-                if(!result.equals("")) result +=", ";
-                result += getString(R.string.ita);
-            }
-        }
-        if (rus.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else {
-                count++;
-                if(!result.equals("")) result +=", ";
-                result += getString(R.string.rus);
-            }
-        }
-        if (jew.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else {
-                count++;
-                if(!result.equals("")) result +=", ";
-                result += getString(R.string.jew);
-            }
-        }
-        if (eur.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else {
-                count++;
-                if(!result.equals("")) result +=", ";
-                result += getString(R.string.eur);
-            }
-        }
-        if (aut.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else {
-                count++;
-                if(!result.equals("")) result +=", ";
-                result += getString(R.string.aut);
-            }
-        }
-        if (aze.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else {
-                count++;
-                if(!result.equals("")) result +=", ";
-                result += getString(R.string.aze);
-            }
-        }
-        if (asi.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else {
-                count++;
-                if(!result.equals("")) result +=", ";
-                result += getString(R.string.asi);
-            }
-        }
-        if (usa.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else {
-                count++;
-                if(!result.equals("")) result +=", ";
-                result += getString(R.string.usa);
-            }
-        }
-        if (jap.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else {
-                count++;
-                if(!result.equals("")) result +=", ";
-                result += getString(R.string.jap);
-            }
-        }
-        if (pan.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else {
-                count++;
-                if(!result.equals("")) result +=", ";
-                result += getString(R.string.pan);
-            }
-        }
-        if (fra.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else {
-                count++;
-                if(!result.equals("")) result +=", ";
-                result += getString(R.string.fra);
-            }
-        }
-        if (ady.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else {
-                count++;
-                if(!result.equals("")) result +=", ";
-                result += getString(R.string.ady);
-            }
-        }
-        if (kav.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else {
-                count++;
-                if(!result.equals("")) result +=", ";
-                result += getString(R.string.kav);
-            }
-        }
-        if (med.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else {
-                count++;
-                if(!result.equals("")) result +=", ";
-                result += getString(R.string.med);
-            }
-        }
-        if (per.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else {
-                count++;
-                if(!result.equals("")) result +=", ";
-                result += getString(R.string.per);
-            }
-        }
-        if (tur.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else {
-                count++;
-                if(!result.equals("")) result +=", ";
-                result += getString(R.string.tur);
-            }
-        }
-        if (ska.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else {
-                count++;
-                if(!result.equals("")) result +=", ";
-                result += getString(R.string.ska);
-            }
-        }
-        if (irl.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else {
-                count++;
-                if(!result.equals("")) result +=", ";
-                result += getString(R.string.irl);
-            }
-        }
-        if (sco.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else {
-                count++;
-                if(!result.equals("")) result +=", ";
-                result += getString(R.string.sco);
-            }
-        }
-        if (ger.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else {
-                count++;
-                if(!result.equals("")) result +=", ";
-                result += getString(R.string.ger);
-            }
-        }
-        if (tur.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else {
-                count++;
-                if(!result.equals("")) result +=", ";
-                result += getString(R.string.tur);
-            }
-        }
-        if (mex.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else {
-                count++;
-                if(!result.equals("")) result +=", ";
-                result += getString(R.string.mex);
-            }
-        }
-        if (mar.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else {
-                count++;
-                if(!result.equals("")) result +=", ";
-                result += getString(R.string.mar);
-            }
-        }
-        if (ukr.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else {
-                count++;
-                if(!result.equals("")) result +=", ";
-                result += getString(R.string.ukr);
-            }
-        }
-        if (eng.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else {
-                count++;
-                if(!result.equals("")) result +=", ";
-                result += getString(R.string.eng);
-            }
+
         }
         if (result.equals("")) result = "Выберите кухню";
 
-        rest_cuisine_button.setText(result);
+        dish_cuisine_button.setText(result);
     }
 
     private void FeaturesReset(Button features_button){
         String result = "";
         int count = 0;
-        if (features_delivery.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else{
-                count++;
-                result += getString(R.string.delivery);
-            }
-        }
-        if (features_banquet.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else{
-                count++;
-                if (!result.equals("")) result += ", ";
-                result += getString(R.string.banquet);
-            }
-        }
-        if (features_roundtheclock.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else{
-                count++;
-                if (!result.equals("")) result += ", ";
-                result += getString(R.string.roundtheclock);
-            }
-        }
-        if (features_panorama.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else{
-                count++;
-                if (!result.equals("")) result += ", ";
-                result += getString(R.string.panorama);
-            }
-        }
-        if (features_veranda.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else{
-                count++;
-                if (!result.equals("")) result += ", ";
-                result += getString(R.string.veranda);
-            }
-        }
-        if (features_wifi.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else{
-                count++;
-                if (!result.equals("")) result += ", ";
-                result += getString(R.string.wifi);
-            }
-        }
-        if (features_livemusic.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else{
-                count++;
-                if (!result.equals("")) result += ", ";
-                result += getString(R.string.livemusic);
-            }
-        }
-        if (features_coffetogo.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else{
-                count++;
-                if (!result.equals("")) result += ", ";
-                result += getString(R.string.coffeetogo);
-            }
-        }
-        if (features_breakfast.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else{
-                count++;
-                if (!result.equals("")) result += ", ";
-                result += getString(R.string.breakfast);
-            }
-        }
-        if (features_kidsanimation.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else{
-                count++;
-                if (!result.equals("")) result += ", ";
-                result += getString(R.string.kidsanimation);
-            }
-        }
-        if (features_businesslunch.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else{
-                count++;
-                if (!result.equals("")) result += ", ";
-                result += getString(R.string.businesslunch);
-            }
-        }
-        if (features_hookah.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else{
-                count++;
-                if (!result.equals("")) result += ", ";
-                result += getString(R.string.hookah);
-            }
-        }
-        if (features_karaoke.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else{
-                count++;
-                if (!result.equals("")) result += ", ";
-                result += getString(R.string.karaoke);
-            }
-        }
-        if (features_livesports.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else{
-                count++;
-                if (!result.equals("")) result += ", ";
-                result += getString(R.string.livesports);
-            }
-        }
-        if (features_homecuisine.isChecked()){
-            if ((count >= 5)){
-                if (!result.endsWith(", ..."))result += ", ...";
-            }
-            else{
-                count++;
-                if (!result.equals("")) result += ", ";
-                result += getString(R.string.homecuisine);
+        for (Pair<CheckBox, String> feature : features){
+            if (feature.first.isChecked()){
+                if ((count >= 5)){
+                    if (!result.endsWith(", ..."))result += ", ...";
+                }
+                else{
+                    count++;
+                    if (!result.equals("")) result += ", ";
+                    result += feature.second;
+                }
             }
         }
         if (result.equals("")) result = "Особенности заведения";
