@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bestresto.AddDbInterface;
 import com.bestresto.R;
 import com.bestresto.Types.KitchenTypesManager;
 import com.bestresto.data.DatabaseContract;
@@ -24,25 +25,31 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class RestaurantManager {
+public class RestaurantManager implements AddDbInterface{
 
-    private dbHelper dbh;
-    private Context context;
     private SQLiteDatabase db;
 
-    public void openbd(Context context){
-        this.context = context;
-        dbh = new dbHelper(context);
+    private void openbd(Context context){
+        dbHelper dbh = new dbHelper(context);
         db = dbh.getWritableDatabase();
-        dbh.createRestaurant(db);
     }
 
-    public void closebd(){
+    private void closebd(){
         db.close();
     }
 
-    public void cleantable(){
+    public void cleanTable(){
         db.delete(DatabaseContract.RestaurantsColumns.TABLE_NAME, null, null);
+    }
+
+    public void setDb(SQLiteDatabase db){
+        this.db = db;
+    }
+
+    public void addAllDb(List<HashMap<String, Object>> data, Context context){
+        for (HashMap<String, Object> rest: data){
+            this.addDB(rest, context);
+        }
     }
 
     public void addDB(HashMap<String, Object> rest, Context context){

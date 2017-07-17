@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.bestresto.AddDbInterface;
 import com.bestresto.data.DatabaseContract;
 import com.bestresto.data.dbHelper;
 
@@ -14,22 +15,29 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class RestaurantTypesManager {
+public class RestaurantTypesManager implements AddDbInterface{
 
     private SQLiteDatabase db;
 
-    public void openbd(Context context){
+    private void openbd(Context context){
         dbHelper dbh = new dbHelper(context);
         db = dbh.getWritableDatabase();
-        dbh.createRestaurantTypes(db);
     }
 
-    public void closebd(){
+    private void closebd(){
         db.close();
     }
 
-    public void cleantable(){
+    public void cleanTable(){
         db.delete(DatabaseContract.RestaurantTypesColumns.TABLE_NAME, null, null);
+    }
+
+    public void setDb(SQLiteDatabase db){
+        this.db = db;
+    }
+
+    public void addAllDb(List<HashMap<String, Object>> data, Context context){
+        addDB(data);
     }
 
     public void addDB(List<HashMap<String, Object>> info){
@@ -46,7 +54,7 @@ public class RestaurantTypesManager {
             values.put(DatabaseContract.RestaurantTypesColumns.ACTIVE,
                     (type.get(DatabaseContract.RestaurantTypesColumns.ACTIVE) == null ? 0 : Integer.parseInt(type.get(DatabaseContract.RestaurantTypesColumns.ACTIVE).toString())));
             values.put(DatabaseContract.RestaurantTypesColumns.PRIMEID, primeNumber.get(i));
-            Log.d(type.get(DatabaseContract.DishesColumns.CAPTION).toString(), String.valueOf(primeNumber.get(i)));
+            //Log.d(type.get(DatabaseContract.DishesColumns.CAPTION).toString(), String.valueOf(primeNumber.get(i)));
             ++i;
             long newRowId = db.insert(DatabaseContract.RestaurantTypesColumns.TABLE_NAME, null, values);
         }

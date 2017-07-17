@@ -21,6 +21,7 @@ import com.bestresto.Types.RestaurantTypesManager;
 import com.bestresto.data.DatabaseContract;
 import com.bestresto.data.dbHelper;
 import com.squareup.picasso.Picasso;
+import com.bestresto.AddDbInterface;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,22 +32,31 @@ import java.util.List;
  * make bd, make adapters, get data
  */
 
-public class DishManager {
+public class DishManager implements AddDbInterface{
 
     private SQLiteDatabase db;
 
-    public void openbd(Context context){
+    private void openbd(Context context){
         dbHelper dbh = new dbHelper(context);
         db = dbh.getWritableDatabase();
-        dbh.createDish(db);
     }
 
-    public void closebd(){
+    private void closebd(){
         db.close();
     }
 
-    public void cleantable(){
+    public void cleanTable(){
         db.delete(DatabaseContract.DishesColumns.TABLE_NAME, null, null);
+    }
+
+    public void setDb(SQLiteDatabase db){
+        this.db = db;
+    }
+
+    public void addAllDb(List<HashMap<String, Object>> data, Context context){
+        for (HashMap<String, Object> dish: data){
+            this.addDB(dish, context);
+        }
     }
 
     public void addDB(HashMap<String, Object> dish, Context context){

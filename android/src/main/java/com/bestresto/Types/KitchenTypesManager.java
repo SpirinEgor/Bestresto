@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.bestresto.AddDbInterface;
 import com.bestresto.data.DatabaseContract;
 import com.bestresto.data.dbHelper;
 
@@ -14,22 +15,29 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class KitchenTypesManager {
+public class KitchenTypesManager implements AddDbInterface{
 
     private SQLiteDatabase db;
 
-    public void openbd(Context context){
+    private void openbd(Context context){
         dbHelper dbh = new dbHelper(context);
         db = dbh.getWritableDatabase();
-        dbh.createKitchenTypes(db);
     }
 
-    public void closebd(){
+    private void closebd(){
         db.close();
     }
 
-    public void cleantable(){
+    public void cleanTable(){
         db.delete(DatabaseContract.KitchenTypesColumns.TABLE_NAME, null, null);
+    }
+
+    public void setDb(SQLiteDatabase db){
+        this.db = db;
+    }
+
+    public void addAllDb(List<HashMap<String, Object>> data, Context context){
+        addDB(data);
     }
 
     public void addDB(List<HashMap<String, Object>> info){
