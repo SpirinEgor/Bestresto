@@ -126,7 +126,7 @@ public class RestaurantManager {
                 String currentCaption = cursor.getString(captionColumnIndex);
                 String currentLogo = cursor.getString(logoColumnIndex);
                 float currentReiting = cursor.getFloat(reitingColumnIndex);
-                String currentKitchen = new KitchenTypesManager().getKitchens(cursor.getInt(kitchenColumnIndex), context);
+                int currentKitchen = cursor.getInt(kitchenColumnIndex);
                 String currentAddress = cursor.getString(addressColumnIndex);
 
                 HashMap<String, Object> cur = new HashMap<>();
@@ -197,7 +197,7 @@ public class RestaurantManager {
                 String currentTip = cursor.getString(tipColumnIndex);
                 int currentMinPrice = cursor.getInt(minPriceColumnIndex);
                 int currentMaxPrice = cursor.getInt(maxPriceColumnIndex);
-                String currentKitchen = new KitchenTypesManager().getKitchens(cursor.getInt(kitchenColumnIndex), context);
+                String currentKitchen = cursor.getString(kitchenColumnIndex);
                 String currentAddress = cursor.getString(addressColumnIndex);
 
                 info.put(DatabaseContract.RestaurantsColumns.CAPTION, currentCaption);

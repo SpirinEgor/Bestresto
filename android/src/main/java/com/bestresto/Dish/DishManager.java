@@ -88,11 +88,11 @@ public class DishManager {
         //Log.d("add", String.valueOf(newRowId));
     }
 
-    public ArrayAdapter getFilteredAdapter(Context context, String dishtitle, String cuisine_params){
-        return new CustomAdapter(context, make_data_filtered(context, dishtitle, cuisine_params));
+    public ArrayAdapter getFilteredAdapter(Context context, String dishtitle){
+        return new CustomAdapter(context, make_data_filtered(context, dishtitle));
     }
 
-    private ArrayList<HashMap<String,Object>> make_data_filtered(Context context, String dishtitle, String cuisine_params) {
+    private ArrayList<HashMap<String,Object>> make_data_filtered(Context context, String dishtitle) {
         openbd(context);
         ArrayList<HashMap<String, Object>> data = new ArrayList<>();
 
@@ -101,19 +101,17 @@ public class DishManager {
                 DatabaseContract.DishesColumns.PRICE,
                 DatabaseContract.DishesColumns.PICTURE
         };
-
-        String query = DatabaseContract.DishesColumns.ACTIVE + " = \"yes\"";
-        if (!dishtitle.equals("")) query += " AND " + DatabaseContract.DishesColumns.CAPTION + " = \"" + dishtitle +"\"";
-        if (!cuisine_params.equals("")) query += " AND " + DatabaseContract.DishesColumns.KITCHEN + " = \"" + cuisine_params +"\"";
         Cursor cursor = db.query(
                 DatabaseContract.DishesColumns.TABLE_NAME,   // таблица
                 projection,            // столбцы
-                query,
-                null,
+                DatabaseContract.DishesColumns.ACTIVE + " = 1" +
+                " AND " + DatabaseContract.DishesColumns.CAPTION + " = \"" + dishtitle + "\"",                  // столбцы для условия WHERE
+                null,                  // значения для условия WHERE
                 null,                  // Don't group the rows
                 null,                  // Don't filter by row groups
                 null);
-        Log.d("TAG", query);
+        Log.e("tag", DatabaseContract.DishesColumns.ACTIVE + " = 1" +
+                " AND " + DatabaseContract.DishesColumns.CAPTION + " = \"" + dishtitle + "\"");
 
         try {
             // Узнаем индекс каждого столбца
