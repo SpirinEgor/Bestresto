@@ -2,6 +2,7 @@ package com.bestresto.Dish;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -74,7 +76,15 @@ public class DishesFragment extends Fragment {
 
         });
 
+
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
     }
 
     @Override
@@ -84,49 +94,6 @@ public class DishesFragment extends Fragment {
         lv.smoothScrollToPosition(position);
     }
 
-    private String CuisineParamsDecode(ArrayList<String> cuisine_params){
-        String result="";
-        for (String current:
-             cuisine_params) {
-            if (current.equals(getString(R.string.kor))) result += "18,";
-            if (current.equals(getString(R.string.arm))) result += "10,";
-            if (current.equals(getString(R.string.ara))) result += "9,";
-            if (current.equals(getString(R.string.eas))) result += "12,";
-            if (current.equals(getString(R.string.gre))) result += "13,";
-            if (current.equals(getString(R.string.geo))) result += "14,";
-            if (current.equals(getString(R.string.ind))) result += "15,";
-            if (current.equals(getString(R.string.spa))) result += "16,";
-            if (current.equals(getString(R.string.chi))) result += "17,";
-            if (current.equals(getString(R.string.veg))) result += "11,";
-            if (current.equals(getString(R.string.ita))) result += "1,";
-            if (current.equals(getString(R.string.rus))) result += "2,";
-            if (current.equals(getString(R.string.jew))) result += "3,";
-            if (current.equals(getString(R.string.eur))) result += "4,";
-            if (current.equals(getString(R.string.aut))) result += "5,";
-            if (current.equals(getString(R.string.aze))) result += "6,";
-            if (current.equals(getString(R.string.asi))) result += "7,";
-            if (current.equals(getString(R.string.usa))) result += "8,";
-            if (current.equals(getString(R.string.jap))) result += "19,";
-            if (current.equals(getString(R.string.pan))) result += "20,";
-            if (current.equals(getString(R.string.fra))) result += "21,";
-            if (current.equals(getString(R.string.ady))) result += "22,";
-            if (current.equals(getString(R.string.kav))) result += "23,";
-            if (current.equals(getString(R.string.med))) result += "24,";
-            if (current.equals(getString(R.string.per))) result += "25,";
-            if (current.equals(getString(R.string.tur))) result += "26,";
-            if (current.equals(getString(R.string.ska))) result += "27,";
-            if (current.equals(getString(R.string.irl))) result += "28,";
-            if (current.equals(getString(R.string.sco))) result += "29,";
-            if (current.equals(getString(R.string.ger))) result += "30,";
-            if (current.equals(getString(R.string.fus))) result += "31,";
-            if (current.equals(getString(R.string.mex))) result += "32,";
-            if (current.equals(getString(R.string.mar))) result += "33,";
-            if (current.equals(getString(R.string.ukr))) result += "34,";
-            if (current.equals(getString(R.string.eng))) result += "35,";
-
-        }
-        return result;
-    }
     @Override
     public void onResume() {
         super.onResume();

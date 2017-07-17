@@ -7,3 +7,4 @@
 /.idea/*
 /android.iml
 /app/*
+/build.gradle

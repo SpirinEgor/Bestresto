@@ -47,6 +47,7 @@ public class RestaurantManager implements AddDbInterface{
     }
 
     public void addAllDb(List<HashMap<String, Object>> data, Context context){
+        this.cleanTable();
         for (HashMap<String, Object> rest: data){
             this.addDB(rest, context);
         }

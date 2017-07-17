@@ -37,6 +37,7 @@ public class KitchenTypesManager implements AddDbInterface{
     }
 
     public void addAllDb(List<HashMap<String, Object>> data, Context context){
+        this.cleanTable();
         addDB(data);
     }
 

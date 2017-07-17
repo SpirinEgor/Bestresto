@@ -37,6 +37,7 @@ public class RestaurantTypesManager implements AddDbInterface{
     }
 
     public void addAllDb(List<HashMap<String, Object>> data, Context context){
+        this.cleanTable();
         addDB(data);
     }
 
@@ -45,7 +46,7 @@ public class RestaurantTypesManager implements AddDbInterface{
         int i = 0;
         for (HashMap<String, Object> type: info){
             ContentValues values = new ContentValues();
-            values.put(DatabaseContract.RestaurantTypesColumns.INDEXID,
+            values.put(DatabaseContract.RestaurantTypesColumns.INDEXID  ,
                     (type.get(DatabaseContract.RestaurantTypesColumns.INDEXID) == null ? 0 : Integer.parseInt(type.get(DatabaseContract.RestaurantTypesColumns.INDEXID).toString())));
             values.put(DatabaseContract.RestaurantTypesColumns.CAPTION,
                     (type.get(DatabaseContract.DishesColumns.CAPTION) == null ? "" : type.get(DatabaseContract.DishesColumns.CAPTION).toString()));

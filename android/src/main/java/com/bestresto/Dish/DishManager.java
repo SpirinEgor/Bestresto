@@ -54,6 +54,7 @@ public class DishManager implements AddDbInterface{
     }
 
     public void addAllDb(List<HashMap<String, Object>> data, Context context){
+        this.cleanTable();
         for (HashMap<String, Object> dish: data){
             this.addDB(dish, context);
         }
