@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.bestresto.R;
 import com.bestresto.Types.KitchenTypesManager;
+import com.bestresto.Types.RestaurantTypesManager;
 import com.bestresto.data.DatabaseContract;
 import com.bestresto.data.dbHelper;
 import com.squareup.picasso.Picasso;
@@ -53,7 +54,8 @@ public class DishManager {
         values.put(DatabaseContract.DishesColumns.INDEXID,
                 (dish.get(DatabaseContract.DishesColumns.INDEXID) == null ? 0 : Integer.parseInt(dish.get(DatabaseContract.DishesColumns.INDEXID).toString())));
         values.put(DatabaseContract.DishesColumns.PARENT_ID,
-                (dish.get(DatabaseContract.DishesColumns.PARENT_ID) == null ? "" : dish.get(DatabaseContract.DishesColumns.PARENT_ID).toString()));
+                (dish.get(DatabaseContract.DishesColumns.PARENT_ID) == null ? -1 :
+                        new RestaurantTypesManager().getRestaurantNumber(context, dish.get(DatabaseContract.DishesColumns.PARENT_ID).toString())));
         values.put(DatabaseContract.DishesColumns.ACTIVE,
                 (dish.get(DatabaseContract.DishesColumns.ACTIVE) == null ? 0 :
                         dish.get(DatabaseContract.DishesColumns.ACTIVE).toString().equals("yes") ? 1: 0));
@@ -104,13 +106,13 @@ public class DishManager {
         Cursor cursor = db.query(
                 DatabaseContract.DishesColumns.TABLE_NAME,   // таблица
                 projection,            // столбцы
-                DatabaseContract.DishesColumns.ACTIVE + " = \"yes\"" +
+                DatabaseContract.DishesColumns.ACTIVE + " = 1" +
                 " AND " + DatabaseContract.DishesColumns.CAPTION + " = \"" + dishtitle + "\"",                  // столбцы для условия WHERE
                 null,                  // значения для условия WHERE
                 null,                  // Don't group the rows
                 null,                  // Don't filter by row groups
                 null);
-        Log.e("tag", DatabaseContract.DishesColumns.ACTIVE + " = \"yes\"" +
+        Log.e("tag", DatabaseContract.DishesColumns.ACTIVE + " = 1" +
                 " AND " + DatabaseContract.DishesColumns.CAPTION + " = \"" + dishtitle + "\"");
 
         try {
@@ -123,7 +125,7 @@ public class DishManager {
             while (cursor.moveToNext()) {
                 // Используем индекс для получения строки или числа
                 String currentCaption = cursor.getString(captionColumnIndex);
-                String currentPrice = cursor.getString(priceColumnIndex);
+                int currentPrice = cursor.getInt(priceColumnIndex);
                 String currentPicture = cursor.getString(pictureColumnIndex);
 
                 HashMap<String, Object> cur = new HashMap<>();
@@ -158,7 +160,7 @@ public class DishManager {
         Cursor cursor = db.query(
                 DatabaseContract.DishesColumns.TABLE_NAME,   // таблица
                 projection,            // столбцы
-                DatabaseContract.DishesColumns.ACTIVE + " = \"yes\"",                  // столбцы для условия WHERE
+                DatabaseContract.DishesColumns.ACTIVE + " = 1",                  // столбцы для условия WHERE
                 null,                  // значения для условия WHERE
                 null,                  // Don't group the rows
                 null,                  // Don't filter by row groups
@@ -174,7 +176,7 @@ public class DishManager {
             while (cursor.moveToNext()) {
                 // Используем индекс для получения строки или числа
                 String currentCaption = cursor.getString(captionColumnIndex);
-                String currentPrice = cursor.getString(priceColumnIndex);
+                int currentPrice = cursor.getInt(priceColumnIndex);
                 String currentPicture = cursor.getString(pictureColumnIndex);
 
                 HashMap<String, Object> cur = new HashMap<>();
@@ -202,13 +204,12 @@ public class DishManager {
                 DatabaseContract.DishesColumns.PRICE,
                 DatabaseContract.DishesColumns.PICTURE
         };
-        String selection = DatabaseContract.DishesColumns.FIRST_PAGE + " = ? AND " + DatabaseContract.DishesColumns.ACTIVE + " = \"yes\"";
-        String[] selection_args = {"yes"};
+        String selection = DatabaseContract.DishesColumns.FIRST_PAGE + " = 1 AND " + DatabaseContract.DishesColumns.ACTIVE + " = 1";
         Cursor cursor = db.query(
                 DatabaseContract.DishesColumns.TABLE_NAME,   // таблица
                 projection,            // столбцы
                 selection,                  // столбцы для условия WHERE
-                selection_args,                  // значения для условия WHERE
+                null,                  // значения для условия WHERE
                 null,                  // Don't group the rows
                 null,                  // Don't filter by row groups
                 null);
@@ -222,7 +223,7 @@ public class DishManager {
             while (cursor.moveToNext()) {
                 // Используем индекс для получения строки или числа
                 String currentCaption = cursor.getString(captionColumnIndex);
-                String currentPrice = cursor.getString(priceColumnIndex);
+                int currentPrice = cursor.getInt(priceColumnIndex);
                 String currentPicture = cursor.getString(pictureColumnIndex);
 
                 HashMap<String, Object> cur = new HashMap<>();
@@ -274,9 +275,9 @@ public class DishManager {
             while (cursor.moveToNext()) {
                 // Используем индекс для получения строки или числа
                 String currentCaption = cursor.getString(captionColumnIndex);
-                String currentPrice = cursor.getString(priceColumnIndex);
+                int currentPrice = cursor.getInt(priceColumnIndex);
                 String currentPicture = cursor.getString(pictureColumnIndex);
-                String currentReiting = cursor.getString(reitingColumnIndex);
+                float currentReiting = cursor.getFloat(reitingColumnIndex);
                 String currentDesc = cursor.getString(descColumnIndex);
                 String currentGarant = cursor.getString(garantColumnIndex);
 

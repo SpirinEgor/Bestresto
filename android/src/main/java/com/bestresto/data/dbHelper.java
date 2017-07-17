@@ -22,12 +22,16 @@ public class dbHelper extends SQLiteOpenHelper{
     public void onCreate(SQLiteDatabase db) {
         createDish(db);
         createRestaurant(db);
+        createKitchenTypes(db);
+        createRestaurantTypes(db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + DatabaseContract.DishesColumns.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + DatabaseContract.RestaurantsColumns.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + DatabaseContract.KitchenTypesColumns.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + DatabaseContract.RestaurantTypesColumns.TABLE_NAME);
         onCreate(db);
     }
 
@@ -35,7 +39,7 @@ public class dbHelper extends SQLiteOpenHelper{
         String SQL = "CREATE TABLE IF NOT EXISTS " + DatabaseContract.DishesColumns.TABLE_NAME + " ("
                 + DatabaseContract.DishesColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + DatabaseContract.DishesColumns.INDEXID + " INTEGER NOT NULL, "
-                + DatabaseContract.DishesColumns.PARENT_ID + " TEXT NOT NULL, "
+                + DatabaseContract.DishesColumns.PARENT_ID + " INTEGER NOT NULL, "
                 + DatabaseContract.DishesColumns.ACTIVE + " TINYINT NOT NULL, "
                 + DatabaseContract.DishesColumns.CAPTION + " TEXT NOT NULL, "
                 + DatabaseContract.DishesColumns.KITCHEN + " INTEGER NOT NULL, "
@@ -75,6 +79,17 @@ public class dbHelper extends SQLiteOpenHelper{
                 + DatabaseContract.KitchenTypesColumns.SORT + " INTEGER NOT NULL, "
                 + DatabaseContract.KitchenTypesColumns.PRIMEID + " INTEGER NOT NULL, "
                 + DatabaseContract.KitchenTypesColumns.ACTIVE + " TINYINT NOT NULL);";
+        db.execSQL(SQL);
+    }
+
+    public void createRestaurantTypes(SQLiteDatabase db){
+        String SQL = "CREATE TABLE IF NOT EXISTS " + DatabaseContract.RestaurantTypesColumns.TABLE_NAME + " ("
+                + DatabaseContract.RestaurantTypesColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + DatabaseContract.RestaurantTypesColumns.CAPTION + " TEXT NOT NULL, "
+                + DatabaseContract.RestaurantTypesColumns.INDEXID + " INTEGER NOT NULL, "
+                + DatabaseContract.RestaurantTypesColumns.SORT + " INTEGER NOT NULL, "
+                + DatabaseContract.RestaurantTypesColumns.PRIMEID + " INTEGER NOT NULL, "
+                + DatabaseContract.RestaurantTypesColumns.ACTIVE + " TINYINT NOT NULL);";
         db.execSQL(SQL);
     }
 }

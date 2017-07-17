@@ -125,8 +125,8 @@ public class RestaurantManager {
                 // Используем индекс для получения строки или числа
                 String currentCaption = cursor.getString(captionColumnIndex);
                 String currentLogo = cursor.getString(logoColumnIndex);
-                String currentReiting = cursor.getString(reitingColumnIndex);
-                String currentKitchen = cursor.getString(kitchenColumnIndex);
+                float currentReiting = cursor.getFloat(reitingColumnIndex);
+                String currentKitchen = new KitchenTypesManager().getKitchens(cursor.getInt(kitchenColumnIndex), context);
                 String currentAddress = cursor.getString(addressColumnIndex);
 
                 HashMap<String, Object> cur = new HashMap<>();
@@ -193,11 +193,11 @@ public class RestaurantManager {
                 String currentCaption = cursor.getString(captionColumnIndex);
                 String currentUrl = cursor.getString(urlColumnIndex);
                 String currentLogo = cursor.getString(logoColumnIndex);
-                String currentReiting = cursor.getString(reitingColumnIndex);
+                float currentReiting = cursor.getFloat(reitingColumnIndex);
                 String currentTip = cursor.getString(tipColumnIndex);
-                String currentMinPrice = cursor.getString(minPriceColumnIndex);
-                String currentMaxPrice = cursor.getString(maxPriceColumnIndex);
-                String currentKitchen = cursor.getString(kitchenColumnIndex);
+                int currentMinPrice = cursor.getInt(minPriceColumnIndex);
+                int currentMaxPrice = cursor.getInt(maxPriceColumnIndex);
+                String currentKitchen = new KitchenTypesManager().getKitchens(cursor.getInt(kitchenColumnIndex), context);
                 String currentAddress = cursor.getString(addressColumnIndex);
 
                 info.put(DatabaseContract.RestaurantsColumns.CAPTION, currentCaption);

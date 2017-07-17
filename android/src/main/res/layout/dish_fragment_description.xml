@@ -44,7 +44,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/singleDish_price"
         android:layout_centerHorizontal="true"
-        app:srcCompat="@drawable/separator" />
+        app:srcCompat="@drawable/separator"
+        android:contentDescription="@string/split" />
 
     <WebView
         android:id="@+id/singleDish_description"
