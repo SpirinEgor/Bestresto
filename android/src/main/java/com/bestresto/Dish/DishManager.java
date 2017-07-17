@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.bestresto.R;
 import com.bestresto.Types.KitchenTypesManager;
+import com.bestresto.Types.RestaurantTypesManager;
 import com.bestresto.data.DatabaseContract;
 import com.bestresto.data.dbHelper;
 import com.squareup.picasso.Picasso;
@@ -53,7 +54,8 @@ public class DishManager {
         values.put(DatabaseContract.DishesColumns.INDEXID,
                 (dish.get(DatabaseContract.DishesColumns.INDEXID) == null ? 0 : Integer.parseInt(dish.get(DatabaseContract.DishesColumns.INDEXID).toString())));
         values.put(DatabaseContract.DishesColumns.PARENT_ID,
-                (dish.get(DatabaseContract.DishesColumns.PARENT_ID) == null ? "" : dish.get(DatabaseContract.DishesColumns.PARENT_ID).toString()));
+                (dish.get(DatabaseContract.DishesColumns.PARENT_ID) == null ? -1 :
+                        new RestaurantTypesManager().getRestaurantNumber(context, dish.get(DatabaseContract.DishesColumns.PARENT_ID).toString())));
         values.put(DatabaseContract.DishesColumns.ACTIVE,
                 (dish.get(DatabaseContract.DishesColumns.ACTIVE) == null ? 0 :
                         dish.get(DatabaseContract.DishesColumns.ACTIVE).toString().equals("yes") ? 1: 0));

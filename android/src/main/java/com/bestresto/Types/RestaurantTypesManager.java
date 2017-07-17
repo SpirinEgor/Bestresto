@@ -14,14 +14,14 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class KitchenTypesManager {
+public class RestaurantTypesManager {
 
     private SQLiteDatabase db;
 
     public void openbd(Context context){
         dbHelper dbh = new dbHelper(context);
         db = dbh.getWritableDatabase();
-        dbh.createKitchenTypes(db);
+        dbh.createRestaurantTypes(db);
     }
 
     public void closebd(){
@@ -29,7 +29,7 @@ public class KitchenTypesManager {
     }
 
     public void cleantable(){
-        db.delete(DatabaseContract.KitchenTypesColumns.TABLE_NAME, null, null);
+        db.delete(DatabaseContract.RestaurantTypesColumns.TABLE_NAME, null, null);
     }
 
     public void addDB(List<HashMap<String, Object>> info){
@@ -37,34 +37,34 @@ public class KitchenTypesManager {
         int i = 0;
         for (HashMap<String, Object> type: info){
             ContentValues values = new ContentValues();
-            values.put(DatabaseContract.KitchenTypesColumns.INDEXID,
-                    (type.get(DatabaseContract.KitchenTypesColumns.INDEXID) == null ? 0 : Integer.parseInt(type.get(DatabaseContract.KitchenTypesColumns.INDEXID).toString())));
-            values.put(DatabaseContract.KitchenTypesColumns.CAPTION,
+            values.put(DatabaseContract.RestaurantTypesColumns.INDEXID,
+                    (type.get(DatabaseContract.RestaurantTypesColumns.INDEXID) == null ? 0 : Integer.parseInt(type.get(DatabaseContract.RestaurantTypesColumns.INDEXID).toString())));
+            values.put(DatabaseContract.RestaurantTypesColumns.CAPTION,
                     (type.get(DatabaseContract.DishesColumns.CAPTION) == null ? "" : type.get(DatabaseContract.DishesColumns.CAPTION).toString()));
-            values.put(DatabaseContract.KitchenTypesColumns.SORT,
-                    (type.get(DatabaseContract.KitchenTypesColumns.SORT) == null ? 0 : Integer.parseInt(type.get(DatabaseContract.KitchenTypesColumns.ACTIVE).toString())));
-            values.put(DatabaseContract.KitchenTypesColumns.ACTIVE,
-                    (type.get(DatabaseContract.KitchenTypesColumns.ACTIVE) == null ? 0 : Integer.parseInt(type.get(DatabaseContract.KitchenTypesColumns.ACTIVE).toString())));
-            values.put(DatabaseContract.KitchenTypesColumns.PRIMEID, primeNumber.get(i));
-            //Log.d(type.get(DatabaseContract.DishesColumns.CAPTION).toString(), String.valueOf(primeNumber.get(i)));
+            values.put(DatabaseContract.RestaurantTypesColumns.SORT,
+                    (type.get(DatabaseContract.RestaurantTypesColumns.SORT) == null ? 0 : Integer.parseInt(type.get(DatabaseContract.RestaurantTypesColumns.ACTIVE).toString())));
+            values.put(DatabaseContract.RestaurantTypesColumns.ACTIVE,
+                    (type.get(DatabaseContract.RestaurantTypesColumns.ACTIVE) == null ? 0 : Integer.parseInt(type.get(DatabaseContract.RestaurantTypesColumns.ACTIVE).toString())));
+            values.put(DatabaseContract.RestaurantTypesColumns.PRIMEID, primeNumber.get(i));
+            Log.d(type.get(DatabaseContract.DishesColumns.CAPTION).toString(), String.valueOf(primeNumber.get(i)));
             ++i;
-            long newRowId = db.insert(DatabaseContract.KitchenTypesColumns.TABLE_NAME, null, values);
+            long newRowId = db.insert(DatabaseContract.RestaurantTypesColumns.TABLE_NAME, null, values);
         }
     }
 
-    public int getKitchenNumber(Context context, String req){
+    public int getRestaurantNumber(Context context, String req){
         ArrayList<Integer> kitchens = stringToArray(req);
         //Log.d(req, kitchens.toString());
         int result = 1;
         openbd(context);
         for (int kit: kitchens){
             String[] projection = {
-                    DatabaseContract.KitchenTypesColumns.INDEXID,
-                    DatabaseContract.KitchenTypesColumns.PRIMEID,
-                    DatabaseContract.KitchenTypesColumns.ACTIVE
+                    DatabaseContract.RestaurantTypesColumns.INDEXID,
+                    DatabaseContract.RestaurantTypesColumns.PRIMEID,
+                    DatabaseContract.RestaurantTypesColumns.ACTIVE
             };
             Cursor cursor = db.query(
-                    DatabaseContract.KitchenTypesColumns.TABLE_NAME,   // таблица
+                    DatabaseContract.RestaurantTypesColumns.TABLE_NAME,   // таблица
                     projection,            // столбцы
                     DatabaseContract.DishesColumns.ACTIVE + " = 1" +
                             " AND " + DatabaseContract.DishesColumns.INDEXID + " = " + kit,                  // столбцы для условия WHERE
@@ -74,7 +74,7 @@ public class KitchenTypesManager {
                     null);
             try {
                 // Узнаем индекс каждого столбца
-                int primeColumnIndex = cursor.getColumnIndex(DatabaseContract.KitchenTypesColumns.PRIMEID);
+                int primeColumnIndex = cursor.getColumnIndex(DatabaseContract.RestaurantTypesColumns.PRIMEID);
                 while (cursor.moveToNext()) {
                     // Используем индекс для получения строки или числа
                     int currentPrime = cursor.getInt(primeColumnIndex);
@@ -127,28 +127,28 @@ public class KitchenTypesManager {
         return result;
     }
 
-    public String getKitchens(int num, Context context){
+    public String getRestaurants(int num, Context context){
         ArrayList<Integer> prime = simply(num);
         String result = "";
         openbd(context);
         for (int curPrime: prime){
             String[] projection = {
-                    DatabaseContract.KitchenTypesColumns.CAPTION,
-                    DatabaseContract.KitchenTypesColumns.PRIMEID,
-                    DatabaseContract.KitchenTypesColumns.ACTIVE
+                    DatabaseContract.RestaurantTypesColumns.CAPTION,
+                    DatabaseContract.RestaurantTypesColumns.PRIMEID,
+                    DatabaseContract.RestaurantTypesColumns.ACTIVE
             };
             Cursor cursor = db.query(
-                    DatabaseContract.KitchenTypesColumns.TABLE_NAME,   // таблица
+                    DatabaseContract.RestaurantTypesColumns.TABLE_NAME,   // таблица
                     projection,            // столбцы
-                    DatabaseContract.KitchenTypesColumns.ACTIVE + " = 1" +
-                            " AND " + DatabaseContract.KitchenTypesColumns.PRIMEID + " = " + curPrime,                  // столбцы для условия WHERE
+                    DatabaseContract.RestaurantTypesColumns.ACTIVE + " = 1" +
+                            " AND " + DatabaseContract.RestaurantTypesColumns.PRIMEID + " = " + curPrime,                  // столбцы для условия WHERE
                     null,                  // значения для условия WHERE
                     null,                  // Don't group the rows
                     null,                  // Don't filter by row groups
                     null);
             try {
                 // Узнаем индекс каждого столбца
-                int captionColumnIndex = cursor.getColumnIndex(DatabaseContract.KitchenTypesColumns.CAPTION);
+                int captionColumnIndex = cursor.getColumnIndex(DatabaseContract.RestaurantTypesColumns.CAPTION);
                 while (cursor.moveToNext()) {
                     // Используем индекс для получения строки или числа
                     String currentCaption = cursor.getString(captionColumnIndex);
@@ -180,38 +180,4 @@ public class KitchenTypesManager {
         return result;
     }
 
-    public int getKitchenNumberByNames(Context context, ArrayList<String> names){
-        int result = 1;
-        openbd(context);
-        for (String name: names){
-            String[] projection = {
-                    DatabaseContract.KitchenTypesColumns.CAPTION,
-                    DatabaseContract.KitchenTypesColumns.PRIMEID,
-                    DatabaseContract.KitchenTypesColumns.ACTIVE
-            };
-            Cursor cursor = db.query(
-                    DatabaseContract.KitchenTypesColumns.TABLE_NAME,   // таблица
-                    projection,            // столбцы
-                    DatabaseContract.KitchenTypesColumns.ACTIVE + " = 1" +
-                            " AND " + DatabaseContract.KitchenTypesColumns.CAPTION + " = " + name,                  // столбцы для условия WHERE
-                    null,                  // значения для условия WHERE
-                    null,                  // Don't group the rows
-                    null,                  // Don't filter by row groups
-                    null);
-            try {
-                // Узнаем индекс каждого столбца
-                int primeColumnIndex = cursor.getColumnIndex(DatabaseContract.KitchenTypesColumns.PRIMEID);
-                while (cursor.moveToNext()) {
-                    // Используем индекс для получения строки или числа
-                    int currentPrime = cursor.getInt(primeColumnIndex);
-                    result *= currentPrime;
-                }
-            }
-            finally {
-                cursor.close();
-            }
-        }
-        closebd();
-        return result;
-    }
 }

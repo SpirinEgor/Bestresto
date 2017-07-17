@@ -54,4 +54,15 @@ public final class DatabaseContract {
         public final static String ACTIVE = "active";
         public final static String PRIMEID = "primeId";
     }
+
+    public static final class RestaurantTypesColumns implements BaseColumns{
+        public final static String TABLE_NAME = "RestaurantTypes";
+
+        public final static String _ID = BaseColumns._ID;
+        public final static String CAPTION = "caption";
+        public final static String INDEXID = "indexid";
+        public final static String SORT = "sort";
+        public final static String ACTIVE = "active";
+        public final static String PRIMEID = "primeId";
+    }
 }
