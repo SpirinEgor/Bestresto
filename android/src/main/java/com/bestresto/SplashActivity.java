@@ -57,7 +57,6 @@ public class SplashActivity extends AppCompatActivity{
         long startTime = System.currentTimeMillis();
         pBar = (ProgressBar) findViewById(R.id.progressBar);
         textView = (TextView)findViewById(R.id.textIndicator);
-        pBar.setIndeterminate(true);
         dbHelper dbh = new dbHelper(this);
         SQLiteDatabase db = dbh.getWritableDatabase();
         try{

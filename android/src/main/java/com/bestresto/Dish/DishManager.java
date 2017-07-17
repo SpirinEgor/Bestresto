@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.FloatProperty;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,12 +35,12 @@ public class DishManager implements AddDbInterface{
 
     private SQLiteDatabase db;
 
-    private void openbd(Context context){
+    private void openBd(Context context){
         dbHelper dbh = new dbHelper(context);
         db = dbh.getWritableDatabase();
     }
 
-    private void closebd(){
+    private void closeBd(){
         db.close();
     }
 
@@ -60,7 +59,7 @@ public class DishManager implements AddDbInterface{
         }
     }
 
-    public void addDB(HashMap<String, Object> dish, Context context){
+    private void addDB(HashMap<String, Object> dish, Context context){
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.DishesColumns.INDEXID,
                 (dish.get(DatabaseContract.DishesColumns.INDEXID) == null ? 0 : Integer.parseInt(dish.get(DatabaseContract.DishesColumns.INDEXID).toString())));
@@ -101,12 +100,12 @@ public class DishManager implements AddDbInterface{
         //Log.d("add", String.valueOf(newRowId));
     }
 
-    public ArrayAdapter getFilteredAdapter(Context context, String dishtitle){
+    ArrayAdapter getFilteredAdapter(Context context, String dishtitle){
         return new CustomAdapter(context, make_data_filtered(context, dishtitle));
     }
 
     private ArrayList<HashMap<String,Object>> make_data_filtered(Context context, String dishtitle) {
-        openbd(context);
+        openBd(context);
         ArrayList<HashMap<String, Object>> data = new ArrayList<>();
 
         String[] projection = {
@@ -150,7 +149,7 @@ public class DishManager implements AddDbInterface{
             // Всегда закрываем курсор после чтения
             cursor.close();
         }
-        closebd();
+        closeBd();
         return data;
     }
 
@@ -159,7 +158,7 @@ public class DishManager implements AddDbInterface{
     }
 
     public ArrayList<HashMap<String, Object>> make_data_all(Context context){
-        openbd(context);
+        openBd(context);
 
         ArrayList<HashMap<String, Object>> data = new ArrayList<>();
 
@@ -201,12 +200,12 @@ public class DishManager implements AddDbInterface{
             // Всегда закрываем курсор после чтения
             cursor.close();
         }
-        closebd();
+        closeBd();
         return data;
     }
 
     public ArrayList<HashMap<String, Object>> make_data_first(Context context){
-        openbd(context);
+        openBd(context);
         ArrayList<HashMap<String, Object>> data = new ArrayList<>();
 
         String[] projection = {
@@ -248,13 +247,13 @@ public class DishManager implements AddDbInterface{
             // Всегда закрываем курсор после чтения
             cursor.close();
         }
-        closebd();
+        closeBd();
         return data;
     }
 
     HashMap<String, Object> make_data_about(Context context, String caption){
         HashMap<String, Object> info = new HashMap<>();
-        openbd(context);
+        openBd(context);
 
         String[] projection = {
                 DatabaseContract.DishesColumns.CAPTION,
@@ -304,7 +303,7 @@ public class DishManager implements AddDbInterface{
             // Всегда закрываем курсор после чтения
             cursor.close();
         }
-        closebd();
+        closeBd();
         return info;
     }
 
