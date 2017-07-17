@@ -29,12 +29,12 @@ public class RestaurantManager implements AddDbInterface{
 
     private SQLiteDatabase db;
 
-    private void openbd(Context context){
+    private void openBd(Context context){
         dbHelper dbh = new dbHelper(context);
         db = dbh.getWritableDatabase();
     }
 
-    private void closebd(){
+    private void closeBd(){
         db.close();
     }
 
@@ -47,12 +47,13 @@ public class RestaurantManager implements AddDbInterface{
     }
 
     public void addAllDb(List<HashMap<String, Object>> data, Context context){
+        this.cleanTable();
         for (HashMap<String, Object> rest: data){
             this.addDB(rest, context);
         }
     }
 
-    public void addDB(HashMap<String, Object> rest, Context context){
+    private void addDB(HashMap<String, Object> rest, Context context){
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.RestaurantsColumns.CAPTION,
                 (rest.get(DatabaseContract.RestaurantsColumns.CAPTION) == null ?
@@ -94,12 +95,12 @@ public class RestaurantManager implements AddDbInterface{
         //Log.d("add", rest.get(DatabaseContract.RestaurantsColumns.CAPTION).toString());
     }
 
-    public ArrayAdapter getAdapter(Context context){
+    ArrayAdapter getAdapter(Context context){
         return new CustomAdapter(context, make_data_all(context));
     }
 
     public ArrayList<HashMap<String, Object>> make_data_all(Context context){
-        openbd(context);
+        openBd(context);
 
         ArrayList<HashMap<String, Object>> data = new ArrayList<>();
 
@@ -151,13 +152,13 @@ public class RestaurantManager implements AddDbInterface{
             // Всегда закрываем курсор после чтения
             cursor.close();
         }
-        closebd();
+        closeBd();
         return data;
     }
 
-    public HashMap<String, Object> make_data_about(Context context, String caption){
+    HashMap<String, Object> make_data_about(Context context, String caption){
         HashMap<String, Object> info = new HashMap<>();
-        openbd(context);
+        openBd(context);
 
         String[] projection = {
                 DatabaseContract.RestaurantsColumns.CAPTION,
@@ -222,7 +223,7 @@ public class RestaurantManager implements AddDbInterface{
             // Всегда закрываем курсор после чтения
             cursor.close();
         }
-        closebd();
+        closeBd();
         return info;
     }
 

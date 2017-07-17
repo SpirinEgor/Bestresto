@@ -57,16 +57,13 @@ public class SplashActivity extends AppCompatActivity{
         long startTime = System.currentTimeMillis();
         pBar = (ProgressBar) findViewById(R.id.progressBar);
         textView = (TextView)findViewById(R.id.textIndicator);
-        pBar.setIndeterminate(true);
         dbHelper dbh = new dbHelper(this);
         SQLiteDatabase db = dbh.getWritableDatabase();
         try{
-            dbh.onUpgrade(db, 1, 1);
             ArrayList<Thread> threads = new ArrayList<>();
             for (int i = 0; i < requests.length; ++i){
                 threads.add(new RequestThread(requests[i], manager[i], this));
                 manager[i].setDb(db);
-                manager[i].cleanTable();
             }
             for (Thread thread: threads){
                 thread.start();
