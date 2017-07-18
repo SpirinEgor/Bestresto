@@ -54,15 +54,23 @@ public class PagerActivity extends FragmentActivity {
         int key = getIntent().getIntExtra(KEY_TYPE_LIST, ALL_DISHES_TYPE);
         final int dishOrRest = getIntent().getIntExtra(KEY_DISH_OR_REST, DISH_CONSTANT);
 
+        DishManager dishManager = new DishManager();
+        RestaurantManager restaurantManager = new RestaurantManager();
         switch (key) {
             case ALL_DISHES_TYPE:
-                elements = new DishManager().make_data_all(this);
+                dishManager.openDb(this);
+                elements = dishManager.make_data_all();
+                dishManager.closeDb();
                 break;
             case FIRST_DISHES_TYPE:
-                elements = new DishManager().make_data_first(this);
+                dishManager.openDb(this);
+                elements = dishManager.make_data_first();
+                dishManager.closeDb();
                 break;
             case RESTAURANTS_TYPE:
-                elements = new RestaurantManager().make_data_all(this);
+                restaurantManager.openDb(this);
+                elements = restaurantManager.make_data_all();
+                restaurantManager.closeDb();
                 break;
             default:
                 elements = new ArrayList<>();

@@ -21,10 +21,6 @@ import java.util.ArrayList;
  * Created by sergey on 20.06.17.
  */
 
-interface AsyncResponse {
-    void processFinish(String output);
-}
-
 public class SplashActivity extends AppCompatActivity{
 
     ProgressBar pBar;
@@ -36,18 +32,24 @@ public class SplashActivity extends AppCompatActivity{
     final String kitchenTypesRequest = "types/types.php?kitchenTypes";
     final String restaurantTypesRequest = "types/types.php?restTypes";
 
-    final String[] requests = {
+    final String[] requestsTypes = {
             kitchenTypesRequest,
             restaurantTypesRequest,
-            dishesAllRequest,
-            restaurantsAllRequest
     };
 
-    final AddDbInterface[] manager = {
+    final ManagerInterface[] managerTypes = {
             new KitchenTypesManager(),
             new RestaurantTypesManager(),
+    };
+
+    final String[] requestsData = {
+            dishesAllRequest,
+            restaurantsAllRequest,
+    };
+
+    final ManagerInterface[] managerData = {
             new DishManager(),
-            new RestaurantManager()
+            new RestaurantManager(),
     };
 
     @Override
@@ -61,9 +63,20 @@ public class SplashActivity extends AppCompatActivity{
         SQLiteDatabase db = dbh.getWritableDatabase();
         try{
             ArrayList<Thread> threads = new ArrayList<>();
-            for (int i = 0; i < requests.length; ++i){
-                threads.add(new RequestThread(requests[i], manager[i], this));
-                manager[i].setDb(db);
+            for (int i = 0; i < requestsTypes.length; ++i){
+                managerTypes[i].setDb(db);
+                threads.add(new RequestThread(requestsTypes[i], managerTypes[i]));
+            }
+            for (Thread thread: threads){
+                thread.start();
+            }
+            for (Thread thread: threads){
+                thread.join();
+            }
+            threads = new ArrayList<>();
+            for (int i = 0; i < requestsData.length; ++i){
+                managerData[i].setDb(db);
+                threads.add(new RequestThread(requestsData[i], managerData[i]));
             }
             for (Thread thread: threads){
                 thread.start();

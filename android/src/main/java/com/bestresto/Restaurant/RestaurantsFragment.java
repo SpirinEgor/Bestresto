@@ -43,7 +43,10 @@ public class RestaurantsFragment extends Fragment {
 //        }
 
         lv = (ListView) view.findViewById(R.id.listRestaurants);
-        lv.setAdapter(new RestaurantManager().getAdapter(view.getContext()));
+        RestaurantManager restaurantManager = new RestaurantManager();
+        restaurantManager.openDb(view.getContext());
+        lv.setAdapter(restaurantManager.getAdapter(view.getContext()));
+        restaurantManager.closeDb();
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bestresto.AddDbInterface;
+import com.bestresto.AddDbThread;
+import com.bestresto.ManagerInterface;
 import com.bestresto.R;
 import com.bestresto.Types.KitchenTypesManager;
 import com.bestresto.data.DatabaseContract;
@@ -23,18 +23,17 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
-public class RestaurantManager implements AddDbInterface{
+public class RestaurantManager implements ManagerInterface {
 
     private SQLiteDatabase db;
 
-    private void openBd(Context context){
+    public void openDb(Context context){
         dbHelper dbh = new dbHelper(context);
         db = dbh.getWritableDatabase();
     }
 
-    private void closeBd(){
+    public void closeDb(){
         db.close();
     }
 
@@ -46,15 +45,36 @@ public class RestaurantManager implements AddDbInterface{
         this.db = db;
     }
 
-    public void addAllDb(List<HashMap<String, Object>> data, Context context){
+    public void addAllDb(ArrayList<HashMap<String, Object>> data){
         this.cleanTable();
-        for (HashMap<String, Object> rest: data){
-            this.addDB(rest, context);
+        int itemPerThread = 300;
+        int cnt = data.size() / itemPerThread + ((data.size() % itemPerThread > 0) ? 1: 0);
+        ArrayList<Thread> threads = new ArrayList<>();
+        for (int i = 0; i < cnt; ++i){
+            final ArrayList<HashMap<String, Object>> curData = new ArrayList<>();
+            for (int j = i * itemPerThread; j < Math.min((i + 1) * itemPerThread, data.size()); ++j){
+                curData.add(data.get(j));
+            }
+            RestaurantManager curManager = new RestaurantManager();
+            curManager.setDb(this.db);
+            threads.add(new AddDbThread(curData, curManager));
+        }
+        for (Thread thread: threads){
+            thread.start();
+        }
+        for (Thread thread: threads){
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    private void addDB(HashMap<String, Object> rest, Context context){
+    synchronized public void addDb(HashMap<String, Object> rest){
         ContentValues values = new ContentValues();
+        KitchenTypesManager kitchenTypesManager = new KitchenTypesManager();
+        kitchenTypesManager.setDb(this.db);
         values.put(DatabaseContract.RestaurantsColumns.CAPTION,
                 (rest.get(DatabaseContract.RestaurantsColumns.CAPTION) == null ?
                         "" : rest.get(DatabaseContract.RestaurantsColumns.CAPTION).toString()));
@@ -85,23 +105,22 @@ public class RestaurantManager implements AddDbInterface{
 
         values.put(DatabaseContract.RestaurantsColumns.KITCHEN,
                 (rest.get(DatabaseContract.RestaurantsColumns.KITCHEN) == null ?
-                        0 : new KitchenTypesManager().getKitchenNumber(context, rest.get(DatabaseContract.RestaurantsColumns.KITCHEN).toString())));
+                        0 : kitchenTypesManager.getKitchenNumber(rest.get(DatabaseContract.RestaurantsColumns.KITCHEN).toString())));
 
         values.put(DatabaseContract.RestaurantsColumns.ADDRESS,
                 (rest.get(DatabaseContract.RestaurantsColumns.ADDRESS) == null ?
                         "" : rest.get(DatabaseContract.RestaurantsColumns.ADDRESS).toString()));
 
         long newRowId = db.insert(DatabaseContract.RestaurantsColumns.TABLE_NAME, null, values);
-        //Log.d("add", rest.get(DatabaseContract.RestaurantsColumns.CAPTION).toString());
     }
 
     ArrayAdapter getAdapter(Context context){
-        return new CustomAdapter(context, make_data_all(context));
+        return new CustomAdapter(context, make_data_all());
     }
 
-    public ArrayList<HashMap<String, Object>> make_data_all(Context context){
-        openBd(context);
-
+    public ArrayList<HashMap<String, Object>> make_data_all(){
+        KitchenTypesManager kitchenTypesManager = new KitchenTypesManager();
+        kitchenTypesManager.setDb(this.db);
         ArrayList<HashMap<String, Object>> data = new ArrayList<>();
 
         String[] projection = {
@@ -120,7 +139,6 @@ public class RestaurantManager implements AddDbInterface{
                 null,                  // Don't group the rows
                 null,                  // Don't filter by row groups
                 null);
-        Log.d("size", String.valueOf(cursor.getCount()));
         try {
             // Узнаем индекс каждого столбца
             int captionColumnIndex = cursor.getColumnIndex(DatabaseContract.RestaurantsColumns.CAPTION);
@@ -134,7 +152,7 @@ public class RestaurantManager implements AddDbInterface{
                 String currentCaption = cursor.getString(captionColumnIndex);
                 String currentLogo = cursor.getString(logoColumnIndex);
                 float currentReiting = cursor.getFloat(reitingColumnIndex);
-                String currentKitchen = new KitchenTypesManager().getKitchens(cursor.getInt(kitchenColumnIndex), context);
+                String currentKitchen = kitchenTypesManager.getKitchens(cursor.getInt(kitchenColumnIndex));
                 String currentAddress = cursor.getString(addressColumnIndex);
 
                 HashMap<String, Object> cur = new HashMap<>();
@@ -152,13 +170,13 @@ public class RestaurantManager implements AddDbInterface{
             // Всегда закрываем курсор после чтения
             cursor.close();
         }
-        closeBd();
         return data;
     }
 
-    HashMap<String, Object> make_data_about(Context context, String caption){
+    HashMap<String, Object> make_data_about(String caption){
+        KitchenTypesManager kitchenTypesManager = new KitchenTypesManager();
+        kitchenTypesManager.setDb(this.db);
         HashMap<String, Object> info = new HashMap<>();
-        openBd(context);
 
         String[] projection = {
                 DatabaseContract.RestaurantsColumns.CAPTION,
@@ -205,7 +223,7 @@ public class RestaurantManager implements AddDbInterface{
                 String currentTip = cursor.getString(tipColumnIndex);
                 int currentMinPrice = cursor.getInt(minPriceColumnIndex);
                 int currentMaxPrice = cursor.getInt(maxPriceColumnIndex);
-                String currentKitchen = new KitchenTypesManager().getKitchens(cursor.getInt(kitchenColumnIndex), context);
+                String currentKitchen = kitchenTypesManager.getKitchens(cursor.getInt(kitchenColumnIndex));
                 String currentAddress = cursor.getString(addressColumnIndex);
 
                 info.put(DatabaseContract.RestaurantsColumns.CAPTION, currentCaption);
@@ -223,7 +241,6 @@ public class RestaurantManager implements AddDbInterface{
             // Всегда закрываем курсор после чтения
             cursor.close();
         }
-        closeBd();
         return info;
     }
 

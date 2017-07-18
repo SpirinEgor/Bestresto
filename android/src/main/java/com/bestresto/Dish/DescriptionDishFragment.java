@@ -31,7 +31,10 @@ public class DescriptionDishFragment extends android.support.v4.app.Fragment {
         final View view = inflater.inflate(R.layout.dish_fragment_description, container, false);
 
         String name = getArguments().getString(DatabaseContract.DishesColumns.CAPTION);
-        HashMap<String, Object> info = new DishManager().make_data_about(view.getContext(), name);
+        DishManager dishManager = new DishManager();
+        dishManager.openDb(view.getContext());
+        HashMap<String, Object> info = dishManager.make_data_about(name);
+        dishManager.closeDb();
 
         ImageView picture = (ImageView) view.findViewById(R.id.singleDish_picture);
         RatingBar reiting = (RatingBar) view.findViewById(R.id.singleDish_rating);

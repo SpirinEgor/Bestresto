@@ -25,7 +25,10 @@ public class DescriptionRestaurantFragment extends android.support.v4.app.Fragme
         final View view = inflater.inflate(R.layout.rest_fragment_description, container, false);
 
         String name = getArguments().getString(DatabaseContract.DishesColumns.CAPTION);
-        HashMap<String, Object> info = new RestaurantManager().make_data_about(view.getContext(), name);
+        RestaurantManager restaurantManager = new RestaurantManager();
+        restaurantManager.openDb(view.getContext());
+        HashMap<String, Object> info = restaurantManager.make_data_about(name);
+        restaurantManager.closeDb();
 
         ImageView logo = (ImageView) view.findViewById(R.id.singleRestaurant_logo);
         RatingBar rating = (RatingBar) view.findViewById(R.id.singleRestaurant_rating);
