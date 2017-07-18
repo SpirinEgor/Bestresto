@@ -3,18 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/dish_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:minHeight="250dp">
 
+    <com.makeramen.roundedimageview.RoundedImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
 
-    <ImageView
         android:id="@+id/dish_picture"
         app:srcCompat="@mipmap/ic_launcher"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@drawable/dish_picture_listview"
+
+        app:riv_corner_radius="30dip"
+        app:riv_border_width="1dip"
+        app:riv_border_color="#333333"
+
+        app:riv_mutate_background="true"
+        android:layout_margin="4dp"
+        android:adjustViewBounds="true"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"/>
 
 
     <TextView
