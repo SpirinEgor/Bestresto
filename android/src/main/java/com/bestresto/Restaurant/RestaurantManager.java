@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bestresto.AddDbInterface;
 import com.bestresto.R;
 import com.bestresto.Types.KitchenTypesManager;
 import com.bestresto.data.DatabaseContract;
@@ -24,28 +25,35 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class RestaurantManager {
+public class RestaurantManager implements AddDbInterface{
 
-    private dbHelper dbh;
-    private Context context;
     private SQLiteDatabase db;
 
-    public void openbd(Context context){
-        this.context = context;
-        dbh = new dbHelper(context);
+    private void openBd(Context context){
+        dbHelper dbh = new dbHelper(context);
         db = dbh.getWritableDatabase();
-        dbh.createRestaurant(db);
     }
 
-    public void closebd(){
+    private void closeBd(){
         db.close();
     }
 
-    public void cleantable(){
+    public void cleanTable(){
         db.delete(DatabaseContract.RestaurantsColumns.TABLE_NAME, null, null);
     }
 
-    public void addDB(HashMap<String, Object> rest, Context context){
+    public void setDb(SQLiteDatabase db){
+        this.db = db;
+    }
+
+    public void addAllDb(List<HashMap<String, Object>> data, Context context){
+        this.cleanTable();
+        for (HashMap<String, Object> rest: data){
+            this.addDB(rest, context);
+        }
+    }
+
+    private void addDB(HashMap<String, Object> rest, Context context){
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.RestaurantsColumns.CAPTION,
                 (rest.get(DatabaseContract.RestaurantsColumns.CAPTION) == null ?
@@ -87,12 +95,12 @@ public class RestaurantManager {
         //Log.d("add", rest.get(DatabaseContract.RestaurantsColumns.CAPTION).toString());
     }
 
-    public ArrayAdapter getAdapter(Context context){
+    ArrayAdapter getAdapter(Context context){
         return new CustomAdapter(context, make_data_all(context));
     }
 
     public ArrayList<HashMap<String, Object>> make_data_all(Context context){
-        openbd(context);
+        openBd(context);
 
         ArrayList<HashMap<String, Object>> data = new ArrayList<>();
 
@@ -144,13 +152,13 @@ public class RestaurantManager {
             // Всегда закрываем курсор после чтения
             cursor.close();
         }
-        closebd();
+        closeBd();
         return data;
     }
 
-    public HashMap<String, Object> make_data_about(Context context, String caption){
+    HashMap<String, Object> make_data_about(Context context, String caption){
         HashMap<String, Object> info = new HashMap<>();
-        openbd(context);
+        openBd(context);
 
         String[] projection = {
                 DatabaseContract.RestaurantsColumns.CAPTION,
@@ -215,7 +223,7 @@ public class RestaurantManager {
             // Всегда закрываем курсор после чтения
             cursor.close();
         }
-        closebd();
+        closeBd();
         return info;
     }
 

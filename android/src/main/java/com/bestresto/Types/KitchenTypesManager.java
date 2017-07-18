@@ -4,35 +4,42 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
+import com.bestresto.AddDbInterface;
 import com.bestresto.data.DatabaseContract;
 import com.bestresto.data.dbHelper;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class KitchenTypesManager {
+public class KitchenTypesManager implements AddDbInterface{
 
     private SQLiteDatabase db;
 
-    public void openbd(Context context){
+    private void openBd(Context context){
         dbHelper dbh = new dbHelper(context);
         db = dbh.getWritableDatabase();
-        dbh.createKitchenTypes(db);
     }
 
-    public void closebd(){
+    private void closeBd(){
         db.close();
     }
 
-    public void cleantable(){
+    public void cleanTable(){
         db.delete(DatabaseContract.KitchenTypesColumns.TABLE_NAME, null, null);
     }
 
-    public void addDB(List<HashMap<String, Object>> info){
+    public void setDb(SQLiteDatabase db){
+        this.db = db;
+    }
+
+    public void addAllDb(List<HashMap<String, Object>> data, Context context){
+        this.cleanTable();
+        addDB(data);
+    }
+
+    private void addDB(List<HashMap<String, Object>> info){
         ArrayList<Integer> primeNumber = generatePrimeNumber();
         int i = 0;
         for (HashMap<String, Object> type: info){
@@ -56,7 +63,7 @@ public class KitchenTypesManager {
         ArrayList<Integer> kitchens = stringToArray(req);
         //Log.d(req, kitchens.toString());
         int result = 1;
-        openbd(context);
+        openBd(context);
         for (int kit: kitchens){
             String[] projection = {
                     DatabaseContract.KitchenTypesColumns.INDEXID,
@@ -85,7 +92,7 @@ public class KitchenTypesManager {
                 cursor.close();
             }
         }
-        closebd();
+        closeBd();
         //Log.d(req, String.valueOf(result));
         return result;
     }
@@ -130,7 +137,7 @@ public class KitchenTypesManager {
     public String getKitchens(int num, Context context){
         ArrayList<Integer> prime = simply(num);
         String result = "";
-        openbd(context);
+        openBd(context);
         for (int curPrime: prime){
             String[] projection = {
                     DatabaseContract.KitchenTypesColumns.CAPTION,
@@ -159,7 +166,7 @@ public class KitchenTypesManager {
                 cursor.close();
             }
         }
-        closebd();
+        closeBd();
         if (!result.equals(""))
             result = result.substring(0, result.length() - 2);
         return result;
@@ -182,7 +189,7 @@ public class KitchenTypesManager {
 
     public int getKitchenNumberByNames(Context context, ArrayList<String> names){
         int result = 1;
-        openbd(context);
+        openBd(context);
         for (String name: names){
             String[] projection = {
                     DatabaseContract.KitchenTypesColumns.CAPTION,
@@ -211,7 +218,7 @@ public class KitchenTypesManager {
                 cursor.close();
             }
         }
-        closebd();
+        closeBd();
         return result;
     }
 }

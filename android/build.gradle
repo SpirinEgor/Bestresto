@@ -54,5 +54,6 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-core:2.9.0.pr4'
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.9.0.pr4'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.9.0.pr4'
+    compile 'com.squareup.okhttp3:okhttp:3.8.1'
     testCompile 'junit:junit:4.12'
 }

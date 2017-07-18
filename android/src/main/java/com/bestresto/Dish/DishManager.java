@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.FloatProperty;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +20,7 @@ import com.bestresto.Types.RestaurantTypesManager;
 import com.bestresto.data.DatabaseContract;
 import com.bestresto.data.dbHelper;
 import com.squareup.picasso.Picasso;
+import com.bestresto.AddDbInterface;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,25 +31,35 @@ import java.util.List;
  * make bd, make adapters, get data
  */
 
-public class DishManager {
+public class DishManager implements AddDbInterface{
 
     private SQLiteDatabase db;
 
-    public void openbd(Context context){
+    private void openBd(Context context){
         dbHelper dbh = new dbHelper(context);
         db = dbh.getWritableDatabase();
-        dbh.createDish(db);
     }
 
-    public void closebd(){
+    private void closeBd(){
         db.close();
     }
 
-    public void cleantable(){
+    public void cleanTable(){
         db.delete(DatabaseContract.DishesColumns.TABLE_NAME, null, null);
     }
 
-    public void addDB(HashMap<String, Object> dish, Context context){
+    public void setDb(SQLiteDatabase db){
+        this.db = db;
+    }
+
+    public void addAllDb(List<HashMap<String, Object>> data, Context context){
+        this.cleanTable();
+        for (HashMap<String, Object> dish: data){
+            this.addDB(dish, context);
+        }
+    }
+
+    private void addDB(HashMap<String, Object> dish, Context context){
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.DishesColumns.INDEXID,
                 (dish.get(DatabaseContract.DishesColumns.INDEXID) == null ? 0 : Integer.parseInt(dish.get(DatabaseContract.DishesColumns.INDEXID).toString())));
@@ -90,12 +100,12 @@ public class DishManager {
         //Log.d("add", String.valueOf(newRowId));
     }
 
-    public ArrayAdapter getFilteredAdapter(Context context, String dishtitle){
+    ArrayAdapter getFilteredAdapter(Context context, String dishtitle){
         return new CustomAdapter(context, make_data_filtered(context, dishtitle));
     }
 
     private ArrayList<HashMap<String,Object>> make_data_filtered(Context context, String dishtitle) {
-        openbd(context);
+        openBd(context);
         ArrayList<HashMap<String, Object>> data = new ArrayList<>();
 
         String[] projection = {
@@ -139,7 +149,7 @@ public class DishManager {
             // Всегда закрываем курсор после чтения
             cursor.close();
         }
-        closebd();
+        closeBd();
         return data;
     }
 
@@ -148,7 +158,7 @@ public class DishManager {
     }
 
     public ArrayList<HashMap<String, Object>> make_data_all(Context context){
-        openbd(context);
+        openBd(context);
 
         ArrayList<HashMap<String, Object>> data = new ArrayList<>();
 
@@ -190,12 +200,12 @@ public class DishManager {
             // Всегда закрываем курсор после чтения
             cursor.close();
         }
-        closebd();
+        closeBd();
         return data;
     }
 
     public ArrayList<HashMap<String, Object>> make_data_first(Context context){
-        openbd(context);
+        openBd(context);
         ArrayList<HashMap<String, Object>> data = new ArrayList<>();
 
         String[] projection = {
@@ -237,13 +247,13 @@ public class DishManager {
             // Всегда закрываем курсор после чтения
             cursor.close();
         }
-        closebd();
+        closeBd();
         return data;
     }
 
     HashMap<String, Object> make_data_about(Context context, String caption){
         HashMap<String, Object> info = new HashMap<>();
-        openbd(context);
+        openBd(context);
 
         String[] projection = {
                 DatabaseContract.DishesColumns.CAPTION,
@@ -293,7 +303,7 @@ public class DishManager {
             // Всегда закрываем курсор после чтения
             cursor.close();
         }
-        closebd();
+        closeBd();
         return info;
     }
 
