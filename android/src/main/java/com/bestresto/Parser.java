@@ -48,10 +48,10 @@ public class Parser {
         return data;
     }
 
-    static List<HashMap<String, Object>> parserJackson(String json) throws IOException {
-        List<HashMap<String, Object>> data;
+    static ArrayList<HashMap<String, Object>> parserJackson(String json) throws IOException {
+        ArrayList<HashMap<String, Object>> data;
         ObjectMapper mapper = new ObjectMapper();
-        data = mapper.readValue(json,  new TypeReference<List<HashMap<String, Object>>>() { });
+        data = mapper.readValue(json,  new TypeReference<ArrayList<HashMap<String, Object>>>() { });
         return data;
     }
 

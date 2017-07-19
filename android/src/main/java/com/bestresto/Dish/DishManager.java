@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,33 +13,33 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bestresto.AddDbThread;
 import com.bestresto.R;
 import com.bestresto.Types.KitchenTypesManager;
 import com.bestresto.Types.RestaurantTypesManager;
 import com.bestresto.data.DatabaseContract;
 import com.bestresto.data.dbHelper;
 import com.squareup.picasso.Picasso;
-import com.bestresto.AddDbInterface;
+import com.bestresto.ManagerInterface;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by egor on 30.05.17.
  * make bd, make adapters, get data
  */
 
-public class DishManager implements AddDbInterface{
+public class DishManager implements ManagerInterface {
 
     private SQLiteDatabase db;
 
-    private void openBd(Context context){
+    public void openDb(Context context){
         dbHelper dbh = new dbHelper(context);
         db = dbh.getWritableDatabase();
     }
 
-    private void closeBd(){
+    public void closeDb(){
         db.close();
     }
 
@@ -52,20 +51,43 @@ public class DishManager implements AddDbInterface{
         this.db = db;
     }
 
-    public void addAllDb(List<HashMap<String, Object>> data, Context context){
+    public void addAllDb(final ArrayList<HashMap<String, Object>> data){
         this.cleanTable();
-        for (HashMap<String, Object> dish: data){
-            this.addDB(dish, context);
+        int itemPerThread = 300;
+        int cnt = data.size() / itemPerThread + ((data.size() % itemPerThread > 0) ? 1: 0);
+        ArrayList<Thread> threads = new ArrayList<>();
+        for (int i = 0; i < cnt; ++i){
+            final ArrayList<HashMap<String, Object>> curData = new ArrayList<>();
+            for (int j = i * itemPerThread; j < Math.min((i + 1) * itemPerThread, data.size()); ++j) {
+                curData.add(data.get(j));
+            }
+            DishManager curManager = new DishManager();
+            curManager.setDb(this.db);
+            threads.add(new AddDbThread(curData, curManager));
+        }
+        for (Thread thread: threads){
+            thread.start();
+        }
+        for (Thread thread: threads){
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    private void addDB(HashMap<String, Object> dish, Context context){
+    synchronized public void addDb(HashMap<String, Object> dish){
         ContentValues values = new ContentValues();
+        KitchenTypesManager kitchenTypesManager = new KitchenTypesManager();
+        kitchenTypesManager.setDb(this.db);
+        RestaurantTypesManager restaurantTypesManager = new RestaurantTypesManager();
+        restaurantTypesManager.setDb(this.db);
         values.put(DatabaseContract.DishesColumns.INDEXID,
                 (dish.get(DatabaseContract.DishesColumns.INDEXID) == null ? 0 : Integer.parseInt(dish.get(DatabaseContract.DishesColumns.INDEXID).toString())));
         values.put(DatabaseContract.DishesColumns.PARENT_ID,
                 (dish.get(DatabaseContract.DishesColumns.PARENT_ID) == null ? -1 :
-                        new RestaurantTypesManager().getRestaurantNumber(context, dish.get(DatabaseContract.DishesColumns.PARENT_ID).toString())));
+                        restaurantTypesManager.getRestaurantNumber(dish.get(DatabaseContract.DishesColumns.PARENT_ID).toString())));
         values.put(DatabaseContract.DishesColumns.ACTIVE,
                 (dish.get(DatabaseContract.DishesColumns.ACTIVE) == null ? 0 :
                         dish.get(DatabaseContract.DishesColumns.ACTIVE).toString().equals("yes") ? 1: 0));
@@ -73,7 +95,7 @@ public class DishManager implements AddDbInterface{
                 (dish.get(DatabaseContract.DishesColumns.CAPTION) == null ? "" : dish.get(DatabaseContract.DishesColumns.CAPTION).toString()));
         values.put(DatabaseContract.DishesColumns.KITCHEN,
                 (dish.get(DatabaseContract.DishesColumns.KITCHEN) == null ? -1 :
-                        new KitchenTypesManager().getKitchenNumber(context, dish.get(DatabaseContract.DishesColumns.KITCHEN).toString())));
+                        kitchenTypesManager.getKitchenNumber(dish.get(DatabaseContract.DishesColumns.KITCHEN).toString())));
         values.put(DatabaseContract.DishesColumns.PRICE,
                 (dish.get(DatabaseContract.DishesColumns.PRICE) == null ? 0 : Integer.parseInt(dish.get(DatabaseContract.DishesColumns.PRICE).toString())));
         values.put(DatabaseContract.DishesColumns.DESC,
@@ -97,15 +119,13 @@ public class DishManager implements AddDbInterface{
         values.put(DatabaseContract.DishesColumns.CREATEDATE,
                 (dish.get(DatabaseContract.DishesColumns.CREATEDATE) == null ? "" : dish.get(DatabaseContract.DishesColumns.CREATEDATE).toString()));
         long newRowId = db.insert(DatabaseContract.DishesColumns.TABLE_NAME, null, values);
-        //Log.d("add", String.valueOf(newRowId));
     }
 
-    ArrayAdapter getFilteredAdapter(Context context, String dishtitle){
-        return new CustomAdapter(context, make_data_filtered(context, dishtitle));
+    ArrayAdapter getFilteredAdapter(Context context, String dishTitle){
+        return new CustomAdapter(context, make_data_filtered(dishTitle));
     }
 
-    private ArrayList<HashMap<String,Object>> make_data_filtered(Context context, String dishtitle) {
-        openBd(context);
+    private ArrayList<HashMap<String,Object>> make_data_filtered(String dishTitle) {
         ArrayList<HashMap<String, Object>> data = new ArrayList<>();
 
         String[] projection = {
@@ -117,14 +137,11 @@ public class DishManager implements AddDbInterface{
                 DatabaseContract.DishesColumns.TABLE_NAME,   // таблица
                 projection,            // столбцы
                 DatabaseContract.DishesColumns.ACTIVE + " = 1" +
-                " AND " + DatabaseContract.DishesColumns.CAPTION + " = \"" + dishtitle + "\"",                  // столбцы для условия WHERE
+                " AND " + DatabaseContract.DishesColumns.CAPTION + " = \"" + dishTitle + "\"",                  // столбцы для условия WHERE
                 null,                  // значения для условия WHERE
                 null,                  // Don't group the rows
                 null,                  // Don't filter by row groups
                 null);
-        Log.e("tag", DatabaseContract.DishesColumns.ACTIVE + " = 1" +
-                " AND " + DatabaseContract.DishesColumns.CAPTION + " = \"" + dishtitle + "\"");
-
         try {
             // Узнаем индекс каждого столбца
 
@@ -149,17 +166,14 @@ public class DishManager implements AddDbInterface{
             // Всегда закрываем курсор после чтения
             cursor.close();
         }
-        closeBd();
         return data;
     }
 
     ArrayAdapter getAdapter(Context context){
-        return new CustomAdapter(context, make_data_all(context));
+        return new CustomAdapter(context, make_data_all());
     }
 
-    public ArrayList<HashMap<String, Object>> make_data_all(Context context){
-        openBd(context);
-
+    public ArrayList<HashMap<String, Object>> make_data_all(){
         ArrayList<HashMap<String, Object>> data = new ArrayList<>();
 
         String[] projection = {
@@ -175,7 +189,6 @@ public class DishManager implements AddDbInterface{
                 null,                  // Don't group the rows
                 null,                  // Don't filter by row groups
                 null);
-        Log.d("size", String.valueOf(cursor.getCount()));
         try {
             // Узнаем индекс каждого столбца
 
@@ -200,12 +213,10 @@ public class DishManager implements AddDbInterface{
             // Всегда закрываем курсор после чтения
             cursor.close();
         }
-        closeBd();
         return data;
     }
 
-    public ArrayList<HashMap<String, Object>> make_data_first(Context context){
-        openBd(context);
+    public ArrayList<HashMap<String, Object>> make_data_first(){
         ArrayList<HashMap<String, Object>> data = new ArrayList<>();
 
         String[] projection = {
@@ -247,13 +258,11 @@ public class DishManager implements AddDbInterface{
             // Всегда закрываем курсор после чтения
             cursor.close();
         }
-        closeBd();
         return data;
     }
 
-    HashMap<String, Object> make_data_about(Context context, String caption){
+    HashMap<String, Object> make_data_about(String caption){
         HashMap<String, Object> info = new HashMap<>();
-        openBd(context);
 
         String[] projection = {
                 DatabaseContract.DishesColumns.CAPTION,
@@ -303,7 +312,6 @@ public class DishManager implements AddDbInterface{
             // Всегда закрываем курсор после чтения
             cursor.close();
         }
-        closeBd();
         return info;
     }
 
@@ -352,7 +360,6 @@ public class DishManager implements AddDbInterface{
         }
 
     }
-
 
 }
 

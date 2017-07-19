@@ -25,7 +25,10 @@ public class MainFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_main, container, false);
         LinearLayout dishes = (LinearLayout) view.findViewById(R.id.main_dishes_list);
-        ArrayList<HashMap<String, Object>> first_dishes_list = (new DishManager()).make_data_first(view.getContext());
+        DishManager dishManager = new DishManager();
+        dishManager.openDb(view.getContext());
+        ArrayList<HashMap<String, Object>> first_dishes_list = dishManager.make_data_first();
+        dishManager.closeDb();
 
         int position = 0;
         for (final HashMap<String, Object> dish : first_dishes_list) {

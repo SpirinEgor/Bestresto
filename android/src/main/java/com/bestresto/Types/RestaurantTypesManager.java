@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.bestresto.AddDbInterface;
+import com.bestresto.ManagerInterface;
 import com.bestresto.data.DatabaseContract;
 import com.bestresto.data.dbHelper;
 
@@ -13,16 +13,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class RestaurantTypesManager implements AddDbInterface{
+public class RestaurantTypesManager implements ManagerInterface {
 
     private SQLiteDatabase db;
 
-    private void openBd(Context context){
+    public void openDb(Context context){
         dbHelper dbh = new dbHelper(context);
         db = dbh.getWritableDatabase();
     }
 
-    private void closeBd(){
+    public void closeDb(){
         db.close();
     }
 
@@ -34,12 +34,12 @@ public class RestaurantTypesManager implements AddDbInterface{
         this.db = db;
     }
 
-    public void addAllDb(List<HashMap<String, Object>> data, Context context){
+    public void addAllDb(ArrayList<HashMap<String, Object>> data){
         this.cleanTable();
         addDB(data);
     }
 
-    private void addDB(List<HashMap<String, Object>> info){
+    private void addDB(ArrayList<HashMap<String, Object>> info){
         ArrayList<Integer> primeNumber = generatePrimeNumber();
         int i = 0;
         for (HashMap<String, Object> type: info){
@@ -59,11 +59,11 @@ public class RestaurantTypesManager implements AddDbInterface{
         }
     }
 
-    public int getRestaurantNumber(Context context, String req){
+    public void addDb(HashMap<String, Object> data) {}
+
+    public int getRestaurantNumber(String req){
         ArrayList<Integer> kitchens = stringToArray(req);
-        //Log.d(req, kitchens.toString());
         int result = 1;
-        openBd(context);
         for (int kit: kitchens){
             String[] projection = {
                     DatabaseContract.RestaurantTypesColumns.INDEXID,
@@ -92,8 +92,6 @@ public class RestaurantTypesManager implements AddDbInterface{
                 cursor.close();
             }
         }
-        closeBd();
-        //Log.d(req, String.valueOf(result));
         return result;
     }
 
@@ -134,10 +132,9 @@ public class RestaurantTypesManager implements AddDbInterface{
         return result;
     }
 
-    public String getRestaurants(int num, Context context){
+    public String getRestaurants(int num){
         ArrayList<Integer> prime = simply(num);
         String result = "";
-        openBd(context);
         for (int curPrime: prime){
             String[] projection = {
                     DatabaseContract.RestaurantTypesColumns.CAPTION,
@@ -166,7 +163,6 @@ public class RestaurantTypesManager implements AddDbInterface{
                 cursor.close();
             }
         }
-        closeBd();
         if (!result.equals(""))
             result = result.substring(0, result.length() - 2);
         return result;

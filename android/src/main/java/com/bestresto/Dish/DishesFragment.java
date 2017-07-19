@@ -45,10 +45,16 @@ public class DishesFragment extends Fragment {
             ArrayList<String> dish_params = extBundle.getStringArrayList("dish_params");
             String dishtitle = extBundle.getString("dishtitle");
             int dishprice = extBundle.getInt("price");
-            lv.setAdapter(new DishManager().getFilteredAdapter(view.getContext(), dishtitle));
+            DishManager dishManager = new DishManager();
+            dishManager.openDb(view.getContext());
+            lv.setAdapter(dishManager.getFilteredAdapter(view.getContext(), dishtitle));
+            dishManager.closeDb();
         }
         else{
-            lv.setAdapter(new DishManager().getAdapter(view.getContext()));
+            DishManager dishManager = new DishManager();
+            dishManager.openDb(view.getContext());
+            lv.setAdapter(dishManager.getAdapter(view.getContext()));
+            dishManager.closeDb();
         }
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -11,25 +12,19 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-/**
- * Created by voudy on 18.07.17.
- */
-
 public class RequestThread extends Thread {
 
     private String server = "http://www.bestresto.ru/api/";
     private String request = "";
-    private AddDbInterface curManager;
-    private Context context;
+    private ManagerInterface curManager;
 
-    RequestThread(String request, AddDbInterface curManager, Context context){
+    RequestThread(String request, ManagerInterface curManager){
         this.request = request;
         this.curManager = curManager;
-        this.context = context;
     }
 
-    private synchronized void putToDb(List<HashMap<String, Object>> data){
-        curManager.addAllDb(data, context);
+    private synchronized void putToDb(ArrayList<HashMap<String, Object>> data){
+        curManager.addAllDb(data);
     }
 
     @Override
@@ -37,7 +32,7 @@ public class RequestThread extends Thread {
         GetRequest client = new GetRequest();
         try {
             String response = client.run(server + request);
-            List<HashMap<String, Object>> data = Parser.parserJackson(response);
+            ArrayList<HashMap<String, Object>> data = Parser.parserJackson(response);
             Log.d(request, String.valueOf(data.size()));
             putToDb(data);
         } catch (IOException e) {
