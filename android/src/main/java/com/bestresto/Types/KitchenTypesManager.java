@@ -32,6 +32,7 @@ public class KitchenTypesManager implements ManagerInterface {
     }
 
     public void cleanTable(){
+        dbHelper.createKitchenTypes(db);
         db.delete(DatabaseContract.KitchenTypesColumns.TABLE_NAME, null, null);
     }
 

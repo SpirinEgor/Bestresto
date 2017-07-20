@@ -14,15 +14,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bestresto.AddDbThread;
+import com.bestresto.Dish.DishManager;
 import com.bestresto.ManagerInterface;
 import com.bestresto.R;
 import com.bestresto.Types.KitchenTypesManager;
+import com.bestresto.Types.RestaurantTypesManager;
 import com.bestresto.data.DatabaseContract;
 import com.bestresto.data.dbHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class RestaurantManager implements ManagerInterface {
 
@@ -38,6 +41,7 @@ public class RestaurantManager implements ManagerInterface {
     }
 
     public void cleanTable(){
+        dbHelper.createRestaurant(db);
         db.delete(DatabaseContract.RestaurantsColumns.TABLE_NAME, null, null);
     }
 
@@ -114,134 +118,88 @@ public class RestaurantManager implements ManagerInterface {
         long newRowId = db.insert(DatabaseContract.RestaurantsColumns.TABLE_NAME, null, values);
     }
 
-    ArrayAdapter getAdapter(Context context){
-        return new CustomAdapter(context, make_data_all());
-    }
-
-    public ArrayList<HashMap<String, Object>> make_data_all(){
-        KitchenTypesManager kitchenTypesManager = new KitchenTypesManager();
-        kitchenTypesManager.setDb(this.db);
+    public ArrayList<HashMap<String, Object>> makeData
+            (HashMap<String, String> whenConditions, HashMap<String, String> orderByConditions, String[] columns){
         ArrayList<HashMap<String, Object>> data = new ArrayList<>();
-
-        String[] projection = {
-                DatabaseContract.RestaurantsColumns.CAPTION,
-                DatabaseContract.RestaurantsColumns.LOGO,
-                DatabaseContract.RestaurantsColumns.REITING,
-                DatabaseContract.RestaurantsColumns.KITCHEN,
-                DatabaseContract.RestaurantsColumns.ADDRESS,
-        };
-
+        StringBuilder when = new StringBuilder();
+        for (Map.Entry<String, String> condition: whenConditions.entrySet()){
+            String column = condition.getKey();
+            String value = check(condition.getValue());
+            when.append(column).append(" = \"").append(value).append("\" AND ");
+        }
+        if (!when.toString().equals("")){
+            when.delete(when.length() - 5, when.length());
+        }
+        StringBuilder order = new StringBuilder();
+        for (Map.Entry<String, String> condition: orderByConditions.entrySet()){
+            String column = condition.getKey();
+            String value = check(condition.getValue());
+            order.append(column).append(" ").append(value).append(", ");
+        }
+        if (!order.toString().equals("")){
+            order.delete(order.length() - 2, order.length());
+        }
         Cursor cursor = db.query(
-                DatabaseContract.RestaurantsColumns.TABLE_NAME,   // таблица
-                projection,            // столбцы
-                null, // столбцы для условия WHERE
-                null,                  // значения для условия WHERE
-                null,                  // Don't group the rows
-                null,                  // Don't filter by row groups
-                null);
-        try {
-            // Узнаем индекс каждого столбца
-            int captionColumnIndex = cursor.getColumnIndex(DatabaseContract.RestaurantsColumns.CAPTION);
-            int logoColumnIndex = cursor.getColumnIndex(DatabaseContract.RestaurantsColumns.LOGO);
-            int reitingColumnIndex = cursor.getColumnIndex(DatabaseContract.RestaurantsColumns.REITING);
-            int kitchenColumnIndex = cursor.getColumnIndex(DatabaseContract.RestaurantsColumns.KITCHEN);
-            int addressColumnIndex = cursor.getColumnIndex(DatabaseContract.RestaurantsColumns.ADDRESS);
-
-            while (cursor.moveToNext()) {
-                // Используем индекс для получения строки или числа
-                String currentCaption = cursor.getString(captionColumnIndex);
-                String currentLogo = cursor.getString(logoColumnIndex);
-                float currentReiting = cursor.getFloat(reitingColumnIndex);
-                String currentKitchen = kitchenTypesManager.getKitchens(cursor.getInt(kitchenColumnIndex));
-                String currentAddress = cursor.getString(addressColumnIndex);
-
+                DatabaseContract.RestaurantsColumns.TABLE_NAME,
+                columns,
+                (when.toString().equals("") ? null : when.toString()),
+                null,
+                null,
+                null,
+                (order.toString().equals("") ? null : order.toString())
+        );
+        try{
+            int[] index = new int[columns.length];
+            for (int i = 0; i < columns.length; ++i) {
+                index[i] = cursor.getColumnIndex(columns[i]);
+            }
+            while (cursor.moveToNext()){
                 HashMap<String, Object> cur = new HashMap<>();
-
-                cur.put(DatabaseContract.RestaurantsColumns.CAPTION, currentCaption);
-                cur.put(DatabaseContract.RestaurantsColumns.LOGO, currentLogo);
-                cur.put(DatabaseContract.RestaurantsColumns.REITING, currentReiting);
-                cur.put(DatabaseContract.RestaurantsColumns.KITCHEN, currentKitchen);
-                cur.put(DatabaseContract.RestaurantsColumns.ADDRESS, currentAddress);
-
+                for (int i = 0; i < columns.length; ++i){
+                    cur.put(columns[i], getValue(cursor, columns[i], index[i]));
+                }
                 data.add(cur);
             }
         }
         finally {
-            // Всегда закрываем курсор после чтения
             cursor.close();
         }
-        return data;
+        return  data;
     }
 
-    HashMap<String, Object> make_data_about(String caption){
-        KitchenTypesManager kitchenTypesManager = new KitchenTypesManager();
-        kitchenTypesManager.setDb(this.db);
-        HashMap<String, Object> info = new HashMap<>();
+    ArrayAdapter getAdapterWithData(Context context,
+                                    HashMap<String, String> whenConditions, HashMap<String, String> orderByConditions, String[] columns){
+        return new RestaurantManager.CustomAdapter(context, makeData(whenConditions, orderByConditions, columns));
+    }
 
-        String[] projection = {
-                DatabaseContract.RestaurantsColumns.CAPTION,
-                DatabaseContract.RestaurantsColumns.URL,
-                DatabaseContract.RestaurantsColumns.LOGO,
-                DatabaseContract.RestaurantsColumns.REITING,
-                DatabaseContract.RestaurantsColumns.TIP,
-                DatabaseContract.RestaurantsColumns.KITCHEN,
-                DatabaseContract.RestaurantsColumns.MIN_PRICE,
-                DatabaseContract.RestaurantsColumns.MAX_PRICE,
-                DatabaseContract.RestaurantsColumns.ADDRESS,
-
-        };
-        String selection = DatabaseContract.RestaurantsColumns.CAPTION + " = \"" + caption + "\"";
-        Cursor cursor = db.query(
-                DatabaseContract.RestaurantsColumns.TABLE_NAME,   // таблица
-                projection,            // столбцы
-                selection,                  // столбцы для условия WHERE
-                null,                  // значения для условия WHERE
-                null,                  // Don't group the rows
-                null,
-                null);
-        try {
-            // Узнаем индекс каждого столбца
-
-            int captionColumnIndex = cursor.getColumnIndex(DatabaseContract.RestaurantsColumns.CAPTION);
-            int urlColumnIndex = cursor.getColumnIndex(DatabaseContract.RestaurantsColumns.URL);
-            int logoColumnIndex = cursor.getColumnIndex(DatabaseContract.RestaurantsColumns.LOGO);
-            int reitingColumnIndex = cursor.getColumnIndex(DatabaseContract.RestaurantsColumns.REITING);
-            int tipColumnIndex = cursor.getColumnIndex(DatabaseContract.RestaurantsColumns.TIP);
-            int minPriceColumnIndex = cursor.getColumnIndex(DatabaseContract.RestaurantsColumns.MIN_PRICE);
-            int maxPriceColumnIndex = cursor.getColumnIndex(DatabaseContract.RestaurantsColumns.MAX_PRICE);
-            int kitchenColumnIndex = cursor.getColumnIndex(DatabaseContract.RestaurantsColumns.KITCHEN);
-            int addressColumnIndex = cursor.getColumnIndex(DatabaseContract.RestaurantsColumns.ADDRESS);
-
-
-
-            while (cursor.moveToNext()) {
-                // Используем индекс для получения строки или числа
-                String currentCaption = cursor.getString(captionColumnIndex);
-                String currentUrl = cursor.getString(urlColumnIndex);
-                String currentLogo = cursor.getString(logoColumnIndex);
-                float currentReiting = cursor.getFloat(reitingColumnIndex);
-                String currentTip = cursor.getString(tipColumnIndex);
-                int currentMinPrice = cursor.getInt(minPriceColumnIndex);
-                int currentMaxPrice = cursor.getInt(maxPriceColumnIndex);
-                String currentKitchen = kitchenTypesManager.getKitchens(cursor.getInt(kitchenColumnIndex));
-                String currentAddress = cursor.getString(addressColumnIndex);
-
-                info.put(DatabaseContract.RestaurantsColumns.CAPTION, currentCaption);
-                info.put(DatabaseContract.RestaurantsColumns.URL, currentUrl);
-                info.put(DatabaseContract.RestaurantsColumns.LOGO, currentLogo);
-                info.put(DatabaseContract.RestaurantsColumns.REITING, currentReiting);
-                info.put(DatabaseContract.RestaurantsColumns.TIP, currentTip);
-                info.put(DatabaseContract.RestaurantsColumns.MIN_PRICE, currentMinPrice);
-                info.put(DatabaseContract.RestaurantsColumns.MAX_PRICE, currentMaxPrice);
-                info.put(DatabaseContract.RestaurantsColumns.KITCHEN, currentKitchen);
-                info.put(DatabaseContract.RestaurantsColumns.ADDRESS, currentAddress);
+    private String check(String current){
+        String result = "";
+        int prev = 0;
+        for (int i = 0; i < current.length(); ++i){
+            if (current.charAt(i) == '"'){
+                String tmp = current.substring(prev, i);
+                result = result.concat(tmp).concat("\"");
+                prev = i;
             }
         }
-        finally {
-            // Всегда закрываем курсор после чтения
-            cursor.close();
+        result = result.concat(current.substring(prev, current.length()));
+        return result;
+    }
+
+    private Object getValue(Cursor cursor, String column, int index){
+        switch (column) {
+            case DatabaseContract.RestaurantsColumns.MIN_PRICE:
+            case DatabaseContract.RestaurantsColumns.MAX_PRICE:
+                return cursor.getInt(index);
+            case DatabaseContract.RestaurantsColumns.REITING:
+                return cursor.getFloat(index);
+            case DatabaseContract.RestaurantsColumns.KITCHEN:
+                KitchenTypesManager kitchenTypesManager = new KitchenTypesManager();
+                kitchenTypesManager.setDb(this.db);
+                return kitchenTypesManager.getKitchens(cursor.getInt(index));
+            default:
+                return cursor.getString(index);
         }
-        return info;
     }
 
     private class CustomAdapter extends ArrayAdapter<HashMap<String, Object>> {

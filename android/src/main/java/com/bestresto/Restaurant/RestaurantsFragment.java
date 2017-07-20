@@ -32,22 +32,20 @@ public class RestaurantsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.rest_fragment_all, container, false);
-
-        Bundle extBundle = this.getArguments();
-//        if (extBundle != null){
-//            ArrayList<String> quisine_params = extBundle.getStringArrayList("quisine_params");
-//            ArrayList<String> dish_params = extBundle.getStringArrayList("dish_params");
-//            String dishtitle = extBundle.getString("dishtitle");
-//            int dishprice = extBundle.getInt("price");
-//            Log.d("TAG", quisine_params.toString());
-//            Log.d("TAG", dish_params.toString());
-//            Log.d("TAG", dishtitle);
-//        }
-
         lv = (ListView) view.findViewById(R.id.listRestaurants);
+
+        HashMap<String, String> whenConditions = new HashMap<>();
+        HashMap<String, String> orderByConditions = new HashMap<>();
+        String[] columns = {
+                DatabaseContract.RestaurantsColumns.CAPTION,
+                DatabaseContract.RestaurantsColumns.LOGO,
+                DatabaseContract.RestaurantsColumns.REITING,
+                DatabaseContract.RestaurantsColumns.KITCHEN,
+                DatabaseContract.RestaurantsColumns.ADDRESS,
+        };
         RestaurantManager restaurantManager = new RestaurantManager();
         restaurantManager.openDb(view.getContext());
-        lv.setAdapter(restaurantManager.getAdapter(view.getContext()));
+        lv.setAdapter(restaurantManager.getAdapterWithData(view.getContext(), whenConditions, orderByConditions, columns));
         restaurantManager.closeDb();
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

@@ -34,11 +34,8 @@ public class PagerActivity extends FragmentActivity {
     public static final int FIRST_DISHES_TYPE = 2;
     public static final int RESTAURANTS_TYPE = 3;
 
-
     public static final int DISH_CONSTANT = 1111;
     public static final int RESTAURANT_CONSTANT = 2222;
-
-
 
     ViewPager viewPager;
     ArrayList<HashMap<String, Object>> elements;
@@ -56,20 +53,43 @@ public class PagerActivity extends FragmentActivity {
 
         DishManager dishManager = new DishManager();
         RestaurantManager restaurantManager = new RestaurantManager();
+        HashMap<String, String> whenConditions = new HashMap<>();
+        HashMap<String, String> orderByConditions = new HashMap<>();
+        String[] columns;
         switch (key) {
             case ALL_DISHES_TYPE:
+                whenConditions.put(DatabaseContract.DishesColumns.ACTIVE, "1");
+                columns = new String[]{
+                        DatabaseContract.DishesColumns.CAPTION,
+                        DatabaseContract.DishesColumns.PRICE,
+                        DatabaseContract.DishesColumns.PICTURE
+                };
                 dishManager.openDb(this);
-                elements = dishManager.make_data_all();
+                elements = dishManager.makeData(whenConditions, orderByConditions, columns);
                 dishManager.closeDb();
                 break;
             case FIRST_DISHES_TYPE:
+                whenConditions.put(DatabaseContract.DishesColumns.ACTIVE, "1");
+                whenConditions.put(DatabaseContract.DishesColumns.FIRST_PAGE, "1");
+                columns = new String[]{
+                        DatabaseContract.DishesColumns.CAPTION,
+                        DatabaseContract.DishesColumns.PRICE,
+                        DatabaseContract.DishesColumns.PICTURE
+                };
                 dishManager.openDb(this);
-                elements = dishManager.make_data_first();
+                elements = dishManager.makeData(whenConditions, orderByConditions, columns);
                 dishManager.closeDb();
                 break;
             case RESTAURANTS_TYPE:
+                columns = new String[]{
+                        DatabaseContract.RestaurantsColumns.CAPTION,
+                        DatabaseContract.RestaurantsColumns.LOGO,
+                        DatabaseContract.RestaurantsColumns.REITING,
+                        DatabaseContract.RestaurantsColumns.KITCHEN,
+                        DatabaseContract.RestaurantsColumns.ADDRESS,
+                };
                 restaurantManager.openDb(this);
-                elements = restaurantManager.make_data_all();
+                elements = restaurantManager.makeData(whenConditions, orderByConditions, columns);
                 restaurantManager.closeDb();
                 break;
             default:

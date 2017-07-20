@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +26,8 @@ import com.bestresto.ManagerInterface;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Created by egor on 30.05.17.
@@ -44,6 +48,7 @@ public class DishManager implements ManagerInterface {
     }
 
     public void cleanTable(){
+        dbHelper.createDish(db);
         db.delete(DatabaseContract.DishesColumns.TABLE_NAME, null, null);
     }
 
@@ -121,198 +126,58 @@ public class DishManager implements ManagerInterface {
         long newRowId = db.insert(DatabaseContract.DishesColumns.TABLE_NAME, null, values);
     }
 
-    ArrayAdapter getFilteredAdapter(Context context, String dishTitle){
-        return new CustomAdapter(context, make_data_filtered(dishTitle));
-    }
-
-    private ArrayList<HashMap<String,Object>> make_data_filtered(String dishTitle) {
+    public ArrayList<HashMap<String, Object>> makeData
+            (HashMap<String, String> whenConditions, HashMap<String, String> orderByConditions, String[] columns){
         ArrayList<HashMap<String, Object>> data = new ArrayList<>();
-
-        String[] projection = {
-                DatabaseContract.DishesColumns.CAPTION,
-                DatabaseContract.DishesColumns.PRICE,
-                DatabaseContract.DishesColumns.PICTURE
-        };
+        StringBuilder when = new StringBuilder();
+        for (Map.Entry<String, String> condition: whenConditions.entrySet()){
+            String column = condition.getKey();
+            String value = check(condition.getValue());
+            when.append(column).append(" = \"").append(value).append("\" AND ");
+        }
+        if (!when.toString().equals("")){
+            when.delete(when.length() - 5, when.length());
+        }
+        StringBuilder order = new StringBuilder();
+        for (Map.Entry<String, String> condition: orderByConditions.entrySet()){
+            String column = condition.getKey();
+            String value = check(condition.getValue());
+            order.append(column).append(" ").append(value).append(", ");
+        }
+        if (!order.toString().equals("")){
+            order.delete(order.length() - 2, order.length());
+        }
         Cursor cursor = db.query(
-                DatabaseContract.DishesColumns.TABLE_NAME,   // таблица
-                projection,            // столбцы
-                DatabaseContract.DishesColumns.ACTIVE + " = 1" +
-                " AND " + DatabaseContract.DishesColumns.CAPTION + " = \"" + dishTitle + "\"",                  // столбцы для условия WHERE
-                null,                  // значения для условия WHERE
-                null,                  // Don't group the rows
-                null,                  // Don't filter by row groups
-                null);
-        try {
-            // Узнаем индекс каждого столбца
-
-            int captionColumnIndex = cursor.getColumnIndex(DatabaseContract.DishesColumns.CAPTION);
-            int priceColumnIndex = cursor.getColumnIndex(DatabaseContract.DishesColumns.PRICE);
-            int pictureColumnIndex = cursor.getColumnIndex(DatabaseContract.DishesColumns.PICTURE);
-
-            while (cursor.moveToNext()) {
-                // Используем индекс для получения строки или числа
-                String currentCaption = cursor.getString(captionColumnIndex);
-                int currentPrice = cursor.getInt(priceColumnIndex);
-                String currentPicture = cursor.getString(pictureColumnIndex);
-
-                HashMap<String, Object> cur = new HashMap<>();
-                cur.put(DatabaseContract.DishesColumns.CAPTION, currentCaption);
-                cur.put(DatabaseContract.DishesColumns.PRICE, currentPrice);
-                cur.put(DatabaseContract.DishesColumns.PICTURE, currentPicture);
-                data.add(cur);
-            }
-        }
-        finally {
-            // Всегда закрываем курсор после чтения
-            cursor.close();
-        }
-        return data;
-    }
-
-    ArrayAdapter getAdapter(Context context){
-        return new CustomAdapter(context, make_data_all());
-    }
-
-    public ArrayList<HashMap<String, Object>> make_data_all(){
-        ArrayList<HashMap<String, Object>> data = new ArrayList<>();
-
-        String[] projection = {
-                DatabaseContract.DishesColumns.CAPTION,
-                DatabaseContract.DishesColumns.PRICE,
-                DatabaseContract.DishesColumns.PICTURE
-        };
-        Cursor cursor = db.query(
-                DatabaseContract.DishesColumns.TABLE_NAME,   // таблица
-                projection,            // столбцы
-                DatabaseContract.DishesColumns.ACTIVE + " = 1",                  // столбцы для условия WHERE
-                null,                  // значения для условия WHERE
-                null,                  // Don't group the rows
-                null,                  // Don't filter by row groups
-                null);
-        try {
-            // Узнаем индекс каждого столбца
-
-            int captionColumnIndex = cursor.getColumnIndex(DatabaseContract.DishesColumns.CAPTION);
-            int priceColumnIndex = cursor.getColumnIndex(DatabaseContract.DishesColumns.PRICE);
-            int pictureColumnIndex = cursor.getColumnIndex(DatabaseContract.DishesColumns.PICTURE);
-
-            while (cursor.moveToNext()) {
-                // Используем индекс для получения строки или числа
-                String currentCaption = cursor.getString(captionColumnIndex);
-                int currentPrice = cursor.getInt(priceColumnIndex);
-                String currentPicture = cursor.getString(pictureColumnIndex);
-
-                HashMap<String, Object> cur = new HashMap<>();
-                cur.put(DatabaseContract.DishesColumns.CAPTION, currentCaption);
-                cur.put(DatabaseContract.DishesColumns.PRICE, currentPrice);
-                cur.put(DatabaseContract.DishesColumns.PICTURE, currentPicture);
-                data.add(cur);
-            }
-        }
-        finally {
-            // Всегда закрываем курсор после чтения
-            cursor.close();
-        }
-        return data;
-    }
-
-    public ArrayList<HashMap<String, Object>> make_data_first(){
-        ArrayList<HashMap<String, Object>> data = new ArrayList<>();
-
-        String[] projection = {
-                DatabaseContract.DishesColumns.FIRST_PAGE,
-                DatabaseContract.DishesColumns.CAPTION,
-                DatabaseContract.DishesColumns.PRICE,
-                DatabaseContract.DishesColumns.PICTURE
-        };
-        String selection = DatabaseContract.DishesColumns.FIRST_PAGE + " = 1 AND " + DatabaseContract.DishesColumns.ACTIVE + " = 1";
-        Cursor cursor = db.query(
-                DatabaseContract.DishesColumns.TABLE_NAME,   // таблица
-                projection,            // столбцы
-                selection,                  // столбцы для условия WHERE
-                null,                  // значения для условия WHERE
-                null,                  // Don't group the rows
-                null,                  // Don't filter by row groups
-                null);
-        try {
-            // Узнаем индекс каждого столбца
-
-            int captionColumnIndex = cursor.getColumnIndex(DatabaseContract.DishesColumns.CAPTION);
-            int priceColumnIndex = cursor.getColumnIndex(DatabaseContract.DishesColumns.PRICE);
-            int pictureColumnIndex = cursor.getColumnIndex(DatabaseContract.DishesColumns.PICTURE);
-
-            while (cursor.moveToNext()) {
-                // Используем индекс для получения строки или числа
-                String currentCaption = cursor.getString(captionColumnIndex);
-                int currentPrice = cursor.getInt(priceColumnIndex);
-                String currentPicture = cursor.getString(pictureColumnIndex);
-
-                HashMap<String, Object> cur = new HashMap<>();
-                cur.put(DatabaseContract.DishesColumns.CAPTION, currentCaption);
-                cur.put(DatabaseContract.DishesColumns.PRICE, currentPrice);
-                cur.put(DatabaseContract.DishesColumns.PICTURE, currentPicture);
-                data.add(cur);
-            }
-        }
-        finally {
-            // Всегда закрываем курсор после чтения
-            cursor.close();
-        }
-        return data;
-    }
-
-    HashMap<String, Object> make_data_about(String caption){
-        HashMap<String, Object> info = new HashMap<>();
-
-        String[] projection = {
-                DatabaseContract.DishesColumns.CAPTION,
-                DatabaseContract.DishesColumns.PRICE,
-                DatabaseContract.DishesColumns.PICTURE,
-                DatabaseContract.DishesColumns.REITING,
-                DatabaseContract.DishesColumns.DESC,
-                DatabaseContract.DishesColumns.GARANT,
-                DatabaseContract.DishesColumns.PARENT_ID
-        };
-        String selection = DatabaseContract.DishesColumns.CAPTION + " = \"" + check(caption) + "\"";
-        Cursor cursor = db.query(
-                DatabaseContract.DishesColumns.TABLE_NAME,   // таблица
-                projection,            // столбцы
-                selection,                  // столбцы для условия WHERE
-                null,                  // значения для условия WHERE
-                null,                  // Don't group the rows
+                DatabaseContract.DishesColumns.TABLE_NAME,
+                columns,
+                (when.toString().equals("") ? null : when.toString()),
                 null,
-                null);
-        try {
-            // Узнаем индекс каждого столбца
-
-            int captionColumnIndex = cursor.getColumnIndex(DatabaseContract.DishesColumns.CAPTION);
-            int priceColumnIndex = cursor.getColumnIndex(DatabaseContract.DishesColumns.PRICE);
-            int pictureColumnIndex = cursor.getColumnIndex(DatabaseContract.DishesColumns.PICTURE);
-            int reitingColumnIndex = cursor.getColumnIndex(DatabaseContract.DishesColumns.REITING);
-            int descColumnIndex = cursor.getColumnIndex(DatabaseContract.DishesColumns.DESC);
-            int garantColumnIndex = cursor.getColumnIndex(DatabaseContract.DishesColumns.GARANT);
-            while (cursor.moveToNext()) {
-                // Используем индекс для получения строки или числа
-                String currentCaption = cursor.getString(captionColumnIndex);
-                int currentPrice = cursor.getInt(priceColumnIndex);
-                String currentPicture = cursor.getString(pictureColumnIndex);
-                float currentReiting = cursor.getFloat(reitingColumnIndex);
-                String currentDesc = cursor.getString(descColumnIndex);
-                String currentGarant = cursor.getString(garantColumnIndex);
-
-                info.put(DatabaseContract.DishesColumns.CAPTION, currentCaption);
-                info.put(DatabaseContract.DishesColumns.PRICE, currentPrice);
-                info.put(DatabaseContract.DishesColumns.PICTURE, currentPicture);
-                info.put(DatabaseContract.DishesColumns.DESC, currentDesc);
-                info.put(DatabaseContract.DishesColumns.GARANT, currentGarant);
-                info.put(DatabaseContract.DishesColumns.REITING, currentReiting);
+                null,
+                null,
+                (order.toString().equals("") ? null : order.toString())
+        );
+        try{
+            int[] index = new int[columns.length];
+            for (int i = 0; i < columns.length; ++i) {
+                index[i] = cursor.getColumnIndex(columns[i]);
+            }
+            while (cursor.moveToNext()){
+                HashMap<String, Object> cur = new HashMap<>();
+                for (int i = 0; i < columns.length; ++i){
+                    cur.put(columns[i], getValue(cursor, columns[i], index[i]));
+                }
+                data.add(cur);
             }
         }
         finally {
-            // Всегда закрываем курсор после чтения
             cursor.close();
         }
-        return info;
+        return  data;
+    }
+
+    ArrayAdapter getAdapterWithData(Context context,
+             HashMap<String, String> whenConditions, HashMap<String, String> orderByConditions, String[] columns){
+        return new CustomAdapter(context, makeData(whenConditions, orderByConditions, columns));
     }
 
     private String check(String current){
@@ -329,10 +194,33 @@ public class DishManager implements ManagerInterface {
         return result;
     }
 
+    private Object getValue(Cursor cursor, String column, int index){
+        switch (column) {
+            case DatabaseContract.DishesColumns.INDEXID:
+            case DatabaseContract.DishesColumns.PRICE:
+            case DatabaseContract.DishesColumns.ACTIVE:
+            case DatabaseContract.DishesColumns.FIRST_PAGE:
+            case DatabaseContract.DishesColumns.SORT:
+                return cursor.getInt(index);
+            case DatabaseContract.DishesColumns.REITING:
+                return cursor.getFloat(index);
+            case DatabaseContract.DishesColumns.KITCHEN:
+                KitchenTypesManager kitchenTypesManager = new KitchenTypesManager();
+                kitchenTypesManager.setDb(this.db);
+                return kitchenTypesManager.getKitchens(cursor.getInt(index));
+            case DatabaseContract.DishesColumns.PARENT_ID:
+                RestaurantTypesManager restaurantTypesManager = new RestaurantTypesManager();
+                restaurantTypesManager.setDb(this.db);
+                return restaurantTypesManager.getRestaurants(cursor.getInt(index));
+            default:
+                return cursor.getString(index);
+        }
+    }
+
     private class CustomAdapter extends ArrayAdapter<HashMap<String, Object>> {
 
         private Context context;
-        private CustomAdapter(Context context, ArrayList<HashMap<String, Object>> data) {
+        CustomAdapter(Context context, ArrayList<HashMap<String, Object>> data) {
             super(context, R.layout.dish_listitem, data);
             this.context = context;
         }

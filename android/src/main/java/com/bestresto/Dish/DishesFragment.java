@@ -39,25 +39,18 @@ public class DishesFragment extends Fragment {
 
         lv = (ListView) view.findViewById(R.id.listDishes);
 
-        Bundle extBundle = this.getArguments();
-        if (extBundle != null){
-            ArrayList<String> cuisine_params = extBundle.getStringArrayList("сuisine_params");
-            ArrayList<String> dish_params = extBundle.getStringArrayList("dish_params");
-            String dish_title = extBundle.getString("dish_title");
-            int dishprice = extBundle.getInt("dish_price");
-            Log.d("NAgaggg", cuisine_params.toString());
-            Log.d("NAgaggg", dish_title);
-            DishManager dishManager = new DishManager();
-            dishManager.openDb(view.getContext());
-            lv.setAdapter(dishManager.getFilteredAdapter(view.getContext(), dish_title));
-            dishManager.closeDb();
-        }
-        else{
-            DishManager dishManager = new DishManager();
-            dishManager.openDb(view.getContext());
-            lv.setAdapter(dishManager.getAdapter(view.getContext()));
-            dishManager.closeDb();
-        }
+        HashMap<String, String> whenConditions = new HashMap<>();
+        HashMap<String, String> orderByConditions = new HashMap<>();
+        whenConditions.put(DatabaseContract.DishesColumns.ACTIVE, "1");
+        String[] columns = {
+                DatabaseContract.DishesColumns.CAPTION,
+                DatabaseContract.DishesColumns.PRICE,
+                DatabaseContract.DishesColumns.PICTURE
+        };
+        DishManager dishManager = new DishManager();
+        dishManager.openDb(view.getContext());
+        lv.setAdapter(dishManager.getAdapterWithData(view.getContext(), whenConditions, orderByConditions, columns));
+        dishManager.closeDb();
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -83,7 +76,6 @@ public class DishesFragment extends Fragment {
             }
 
         });
-
 
         return view;
     }

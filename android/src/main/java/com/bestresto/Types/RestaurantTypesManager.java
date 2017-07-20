@@ -27,6 +27,7 @@ public class RestaurantTypesManager implements ManagerInterface {
     }
 
     public void cleanTable(){
+        dbHelper.createRestaurantTypes(db);
         db.delete(DatabaseContract.RestaurantTypesColumns.TABLE_NAME, null, null);
     }
 

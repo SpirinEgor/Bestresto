@@ -31,9 +31,23 @@ public class DescriptionDishFragment extends android.support.v4.app.Fragment {
         final View view = inflater.inflate(R.layout.dish_fragment_description, container, false);
 
         String name = getArguments().getString(DatabaseContract.DishesColumns.CAPTION);
+        HashMap<String, String> whenConditions = new HashMap<>();
+        HashMap<String, String> orderByConditions = new HashMap<>();
+        whenConditions.put(DatabaseContract.DishesColumns.ACTIVE, "1");
+        String[] columns = {
+                DatabaseContract.DishesColumns.CAPTION,
+                DatabaseContract.DishesColumns.PRICE,
+                DatabaseContract.DishesColumns.PICTURE,
+                DatabaseContract.DishesColumns.REITING,
+                DatabaseContract.DishesColumns.DESC,
+                DatabaseContract.DishesColumns.GARANT,
+                DatabaseContract.DishesColumns.PARENT_ID
+        };
+        whenConditions.put(DatabaseContract.DishesColumns.ACTIVE, "1");
+        whenConditions.put(DatabaseContract.DishesColumns.CAPTION, name);
         DishManager dishManager = new DishManager();
         dishManager.openDb(view.getContext());
-        HashMap<String, Object> info = dishManager.make_data_about(name);
+        HashMap<String, Object> info = dishManager.makeData(whenConditions, orderByConditions, columns).get(0);
         dishManager.closeDb();
 
         ImageView picture = (ImageView) view.findViewById(R.id.singleDish_picture);

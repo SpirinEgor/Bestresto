@@ -35,7 +35,7 @@ public class dbHelper extends SQLiteOpenHelper{
         onCreate(db);
     }
 
-    public void createDish(SQLiteDatabase db){
+    public static void createDish(SQLiteDatabase db){
         String SQL = "CREATE TABLE IF NOT EXISTS " + DatabaseContract.DishesColumns.TABLE_NAME + " ("
                 + DatabaseContract.DishesColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + DatabaseContract.DishesColumns.INDEXID + " INTEGER NOT NULL, "
@@ -56,7 +56,7 @@ public class dbHelper extends SQLiteOpenHelper{
         db.execSQL(SQL);
     }
 
-    public void createRestaurant(SQLiteDatabase db){
+    public static void createRestaurant(SQLiteDatabase db){
         String SQL = "CREATE TABLE IF NOT EXISTS " + DatabaseContract.RestaurantsColumns.TABLE_NAME + " ("
                 + DatabaseContract.RestaurantsColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + DatabaseContract.RestaurantsColumns.CAPTION + " TEXT NOT NULL, "
@@ -71,7 +71,7 @@ public class dbHelper extends SQLiteOpenHelper{
         db.execSQL(SQL);
     }
 
-    public void createKitchenTypes(SQLiteDatabase db){
+    public static void createKitchenTypes(SQLiteDatabase db){
         String SQL = "CREATE TABLE IF NOT EXISTS " + DatabaseContract.KitchenTypesColumns.TABLE_NAME + " ("
                 + DatabaseContract.KitchenTypesColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + DatabaseContract.KitchenTypesColumns.CAPTION + " TEXT NOT NULL, "
@@ -82,7 +82,7 @@ public class dbHelper extends SQLiteOpenHelper{
         db.execSQL(SQL);
     }
 
-    public void createRestaurantTypes(SQLiteDatabase db){
+    public static void createRestaurantTypes(SQLiteDatabase db){
         String SQL = "CREATE TABLE IF NOT EXISTS " + DatabaseContract.RestaurantTypesColumns.TABLE_NAME + " ("
                 + DatabaseContract.RestaurantTypesColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + DatabaseContract.RestaurantTypesColumns.CAPTION + " TEXT NOT NULL, "

@@ -24,10 +24,24 @@ public class DescriptionRestaurantFragment extends android.support.v4.app.Fragme
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.rest_fragment_description, container, false);
 
-        String name = getArguments().getString(DatabaseContract.DishesColumns.CAPTION);
+        String name = getArguments().getString(DatabaseContract.RestaurantsColumns.CAPTION);
+        HashMap<String, String> whenConditions = new HashMap<>();
+        HashMap<String, String> orderByConditions = new HashMap<>();
+        whenConditions.put(DatabaseContract.RestaurantsColumns.CAPTION, name);
+        String[] columns = {
+                DatabaseContract.RestaurantsColumns.CAPTION,
+                DatabaseContract.RestaurantsColumns.URL,
+                DatabaseContract.RestaurantsColumns.LOGO,
+                DatabaseContract.RestaurantsColumns.REITING,
+                DatabaseContract.RestaurantsColumns.TIP,
+                DatabaseContract.RestaurantsColumns.KITCHEN,
+                DatabaseContract.RestaurantsColumns.MIN_PRICE,
+                DatabaseContract.RestaurantsColumns.MAX_PRICE,
+                DatabaseContract.RestaurantsColumns.ADDRESS,
+        };
         RestaurantManager restaurantManager = new RestaurantManager();
         restaurantManager.openDb(view.getContext());
-        HashMap<String, Object> info = restaurantManager.make_data_about(name);
+        HashMap<String, Object> info = restaurantManager.makeData(whenConditions, orderByConditions, columns).get(0);
         restaurantManager.closeDb();
 
         ImageView logo = (ImageView) view.findViewById(R.id.singleRestaurant_logo);
