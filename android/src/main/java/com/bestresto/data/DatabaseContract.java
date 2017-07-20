@@ -46,7 +46,6 @@ public final class DatabaseContract {
 
     public static final class KitchenTypesColumns implements BaseColumns{
         public final static String TABLE_NAME = "KitchenTypes";
-
         public final static String _ID = BaseColumns._ID;
         public final static String CAPTION = "caption";
         public final static String INDEXID = "indexid";

@@ -8,6 +8,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -118,12 +119,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onFilterSet(String dishtitle, int dishprice, ArrayList<String> quisine_params, ArrayList<String> dish_params) {
+    public void onFilterSet(String dish_title, int dish_price, ArrayList<String> cuisine_params, ArrayList<String> dish_params) {
         Bundle bundle = new Bundle();
-        bundle.putStringArrayList("quisine_params", quisine_params);
+        bundle.putStringArrayList("сuisine_params", cuisine_params);
         bundle.putStringArrayList("dish_params", dish_params);
-        bundle.putString("dishtitle", dishtitle);
-        bundle.putInt("dishprice", dishprice);
+        bundle.putString("dish_title", dish_title);
+        bundle.putInt("dish_price", dish_price);
+        Log.d("NAgaggg", cuisine_params.toString());
+        Log.d("NAgaggg", dish_title);
 
         getFragmentManager().popBackStack();
         getFragmentManager().popBackStack();

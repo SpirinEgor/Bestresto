@@ -183,4 +183,33 @@ public class RestaurantTypesManager implements ManagerInterface {
         return result;
     }
 
+    public ArrayList<String> make_data_restaurants_sorted(Context context){
+        ArrayList<String> result = new ArrayList<>();
+        openDb(context);
+        String[] projection = {
+            DatabaseContract.RestaurantTypesColumns.CAPTION
+        };
+
+        Cursor cursor = db.query(
+                DatabaseContract.RestaurantTypesColumns.TABLE_NAME,
+                projection,
+                DatabaseContract.RestaurantTypesColumns.ACTIVE + " = 1",
+                null,
+                null,
+                null,
+                DatabaseContract.RestaurantTypesColumns.SORT + " ASC"
+        );
+
+        try {
+            int currentCaption = cursor.getColumnIndex(DatabaseContract.RestaurantTypesColumns.CAPTION);
+            while (cursor.moveToNext()){
+                result.add(cursor.getString(currentCaption));
+            }
+        }
+        finally {
+            cursor.close();
+        }
+        closeDb();
+        return result;
+    }
 }

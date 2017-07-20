@@ -11,10 +11,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 
 import com.bestresto.R;
+import com.bestresto.Types.KitchenTypesManager;
+import com.bestresto.Types.RestaurantTypesManager;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -26,7 +29,6 @@ import java.util.LinkedList;
 public class RestaurantFilter extends Fragment {
     Spinner rating_from;
     Spinner rating_to;
-    private ArrayList<Integer> spinner_array;
     Button avg_price_button, rest_type_button, rest_cuisine_button, features_button;
     ScrollView avg_price_view, rest_type_view, rest_cuisine_view, features_view;
 
@@ -35,13 +37,10 @@ public class RestaurantFilter extends Fragment {
     CheckBox price_from2000;
     CheckBox price_from3500;
     CheckBox price_over5000;
-    CheckBox chi, arm, ara, eas, gre, geo, ind, spa, kor, veg, ita, rus, jew, eur, aut, aze, asi, usa, jap, pan, fra, ady, kav, med, per,
-            tur, ska, irl, sco, ger, fus, mex, mar, ukr, eng;
-    CheckBox rest_restaurant, rest_cafe, rest_bar, rest_pub, rest_gastropub, rest_vinotheque, rest_fastfood, rest_streetfood,
-            rest_beerrest, rest_steakhouse, rest_beerbar, rest_gastrobar, rest_confectionary, rest_coffehouse, rest_bakery, rest_fishrest, rest_cookery;
     CheckBox features_delivery, features_banquet, features_roundtheclock, features_panorama, features_veranda, features_wifi, features_livemusic, features_coffetogo,
             features_breakfast, features_kidsanimation, features_businesslunch, features_hookah, features_karaoke, features_livesports, features_homecuisine;
     ArrayList<Pair<CheckBox, String>> cuisines, resttypes, prices, features;
+    LinearLayout rest_cuisine_container, rest_type_container;
 
 
     @Nullable
@@ -51,7 +50,7 @@ public class RestaurantFilter extends Fragment {
 
         rating_from = (Spinner)view.findViewById(R.id.restaurant_rating_from);
         rating_to = (Spinner)view.findViewById(R.id.restaurant_rating_to);
-        spinner_array = new ArrayList<Integer>();
+        ArrayList<Integer> spinner_array = new ArrayList<Integer>();
         spinner_array.add(1);//WTF???
         spinner_array.add(2);
         spinner_array.add(3);
@@ -61,88 +60,9 @@ public class RestaurantFilter extends Fragment {
                 android.R.layout.simple_spinner_item, spinner_array);
         rating_from.setAdapter(adapter);
         rating_to.setAdapter(adapter);
-        ///////////////////////////////////////////////////////////////////////////////////////////////
-        cuisines = new ArrayList<>();
-        chi = (CheckBox)view.findViewById(R.id.cuisine_chi);
-        cuisines.add(Pair.create(chi, getString(R.string.chi)));
-        arm = (CheckBox)view.findViewById(R.id.cuisine_arm);
-        cuisines.add(Pair.create(arm, getString(R.string.arm)));
-        ara = (CheckBox)view.findViewById(R.id.cuisine_ara);
-        cuisines.add(Pair.create(ara, getString(R.string.ara)));
-        eas = (CheckBox)view.findViewById(R.id.cuisine_eas);
-        cuisines.add(Pair.create(eas, getString(R.string.eas)));
-        gre = (CheckBox)view.findViewById(R.id.cuisine_gre);
-        cuisines.add(Pair.create(gre, getString(R.string.gre)));
-        geo = (CheckBox)view.findViewById(R.id.cuisine_geo);
-        cuisines.add(Pair.create(geo, getString(R.string.geo)));
-        ind = (CheckBox)view.findViewById(R.id.cuisine_ind);
-        cuisines.add(Pair.create(ind, getString(R.string.ind)));
-        spa = (CheckBox)view.findViewById(R.id.cuisine_spa);
-        cuisines.add(Pair.create(spa, getString(R.string.spa)));
-        kor = (CheckBox)view.findViewById(R.id.cuisine_kor);
-        cuisines.add(Pair.create(kor, getString(R.string.kor)));
-        veg = (CheckBox)view.findViewById(R.id.cuisine_veg);
-        cuisines.add(Pair.create(veg, getString(R.string.veg)));
-        ita = (CheckBox)view.findViewById(R.id.cuisine_ita);
-        cuisines.add(Pair.create(ita, getString(R.string.ita)));
-        rus = (CheckBox)view.findViewById(R.id.cuisine_rus);
-        cuisines.add(Pair.create(rus, getString(R.string.rus)));
-        jew = (CheckBox)view.findViewById(R.id.cuisine_jew);
-        cuisines.add(Pair.create(jew, getString(R.string.jew)));
-        eur = (CheckBox)view.findViewById(R.id.cuisine_eur);
-        cuisines.add(Pair.create(eur, getString(R.string.eur)));
-        aut = (CheckBox)view.findViewById(R.id.cuisine_aut);
-        cuisines.add(Pair.create(aut, getString(R.string.aut)));
-        aze = (CheckBox)view.findViewById(R.id.cuisine_aze);
-        cuisines.add(Pair.create(aze, getString(R.string.aze)));
-        asi = (CheckBox)view.findViewById(R.id.cuisine_asi);
-        cuisines.add(Pair.create(asi, getString(R.string.asi)));
-        usa = (CheckBox)view.findViewById(R.id.cuisine_usa);
-        cuisines.add(Pair.create(usa, getString(R.string.usa)));
-        jap = (CheckBox)view.findViewById(R.id.cuisine_jap);
-        cuisines.add(Pair.create(jap, getString(R.string.jap)));
-        pan = (CheckBox)view.findViewById(R.id.cuisine_pan);
-        cuisines.add(Pair.create(pan, getString(R.string.pan)));
-        fra = (CheckBox)view.findViewById(R.id.cuisine_fra);
-        cuisines.add(Pair.create(fra, getString(R.string.fra)));
-        ady = (CheckBox)view.findViewById(R.id.cuisine_ady);
-        cuisines.add(Pair.create(ady, getString(R.string.ady)));
-        kav = (CheckBox)view.findViewById(R.id.cuisine_kav);
-        cuisines.add(Pair.create(kav, getString(R.string.kav)));
-        med = (CheckBox)view.findViewById(R.id.cuisine_med);
-        cuisines.add(Pair.create(med, getString(R.string.med)));
-        per = (CheckBox)view.findViewById(R.id.cuisine_per);
-        cuisines.add(Pair.create(per, getString(R.string.per)));
-        tur = (CheckBox)view.findViewById(R.id.cuisine_tur);
-        cuisines.add(Pair.create(tur, getString(R.string.tur)));
-        ska = (CheckBox)view.findViewById(R.id.cuisine_ska);
-        cuisines.add(Pair.create(ska, getString(R.string.ska)));
-        irl = (CheckBox)view.findViewById(R.id.cuisine_irl);
-        cuisines.add(Pair.create(irl, getString(R.string.irl)));
-        sco = (CheckBox)view.findViewById(R.id.cuisine_sco);
-        cuisines.add(Pair.create(sco, getString(R.string.sco)));
-        ger = (CheckBox)view.findViewById(R.id.cuisine_ger);
-        cuisines.add(Pair.create(ger, getString(R.string.ger)));
-        fus = (CheckBox)view.findViewById(R.id.cuisine_fus);
-        cuisines.add(Pair.create(fus, getString(R.string.fus)));
-        mex = (CheckBox)view.findViewById(R.id.cuisine_mex);
-        cuisines.add(Pair.create(mex, getString(R.string.mex)));
-        mar = (CheckBox)view.findViewById(R.id.cuisine_mar);
-        cuisines.add(Pair.create(mar, getString(R.string.mar)));
-        ukr = (CheckBox)view.findViewById(R.id.cuisine_ukr);
-        cuisines.add(Pair.create(ukr, getString(R.string.ukr)));
-        eng = (CheckBox)view.findViewById(R.id.cuisine_eng);
-        cuisines.add(Pair.create(eng, getString(R.string.eng)));
+        SetCuisineCheckboxes(view);
+        SetRestaurantCheckBoxes(view);
 
-        //OnCheckedListeners for cuisine section
-        for (Pair<CheckBox, String> cuisine:cuisines) {
-            cuisine.first.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    CuisineReset(rest_cuisine_button);
-                }
-            });
-        }
 
         //////////////////////////////////////////////////////////////////////////////////////////////////
         prices = new ArrayList<>();
@@ -163,52 +83,6 @@ public class RestaurantFilter extends Fragment {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     AveragePriceReset(avg_price_button);
-                }
-            });
-        }
-
-        /////////////////////////////////////////////////////////////////////////////////
-        resttypes = new ArrayList<>();
-        rest_restaurant = (CheckBox)view.findViewById(R.id.rest_restaurant);
-        resttypes.add(Pair.create(rest_restaurant, getString(R.string.restaurant)));
-        rest_cafe = (CheckBox)view.findViewById(R.id.rest_cafe);
-        resttypes.add(Pair.create(rest_cafe, getString(R.string.cafe)));
-        rest_bar = (CheckBox)view.findViewById(R.id.rest_bar);
-        resttypes.add(Pair.create(rest_bar, getString(R.string.bar)));
-        rest_pub = (CheckBox)view.findViewById(R.id.rest_pub);
-        resttypes.add(Pair.create(rest_pub, getString(R.string.pub)));
-        rest_gastropub = (CheckBox)view.findViewById(R.id.rest_gastropub);
-        resttypes.add(Pair.create(rest_gastropub, getString(R.string.gastropub)));
-        rest_vinotheque = (CheckBox)view.findViewById(R.id.rest_vinotheque);
-        resttypes.add(Pair.create(rest_vinotheque, getString(R.string.vinotheque)));
-        rest_fastfood = (CheckBox)view.findViewById(R.id.rest_fastfood);
-        resttypes.add(Pair.create(rest_fastfood, getString(R.string.fastfood)));
-        rest_streetfood = (CheckBox)view.findViewById(R.id.rest_streetfood);
-        resttypes.add(Pair.create(rest_streetfood, getString(R.string.streetfood)));
-        rest_beerrest = (CheckBox)view.findViewById(R.id.rest_beerrest);
-        resttypes.add(Pair.create(rest_beerrest, getString(R.string.beerrest)));
-        rest_steakhouse = (CheckBox)view.findViewById(R.id.rest_steakhouse);
-        resttypes.add(Pair.create(rest_steakhouse, getString(R.string.steakhouse)));
-        rest_beerbar = (CheckBox)view.findViewById(R.id.rest_beerbar);
-        resttypes.add(Pair.create(rest_beerbar, getString(R.string.beerbar)));
-        rest_gastrobar = (CheckBox)view.findViewById(R.id.rest_gastrobar);
-        resttypes.add(Pair.create(rest_gastrobar, getString(R.string.gastrobar)));
-        rest_confectionary = (CheckBox)view.findViewById(R.id.rest_confectionary);
-        resttypes.add(Pair.create(rest_confectionary, getString(R.string.confectionary)));
-        rest_coffehouse = (CheckBox)view.findViewById(R.id.rest_coffehouse);
-        resttypes.add(Pair.create(rest_coffehouse, getString(R.string.coffeehouse)));
-        rest_bakery = (CheckBox)view.findViewById(R.id.rest_bakery);
-        resttypes.add(Pair.create(rest_bakery, getString(R.string.bakery)));
-        rest_fishrest = (CheckBox)view.findViewById(R.id.rest_fishrest);
-        resttypes.add(Pair.create(rest_fishrest, getString(R.string.fishrest)));
-        rest_cookery = (CheckBox)view.findViewById(R.id.rest_cookery);
-        resttypes.add(Pair.create(rest_cookery, getString(R.string.cookery)));
-
-        for (Pair<CheckBox, String> resttype:resttypes) {
-            resttype.first.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    RestTypeReset(rest_type_button);
                 }
             });
         }
@@ -331,6 +205,43 @@ public class RestaurantFilter extends Fragment {
 
 
         return view;
+    }
+
+
+    private void SetCuisineCheckboxes(View view){
+        cuisines = new ArrayList<>();
+        ArrayList<String> captions = (new KitchenTypesManager()).make_data_cuisines_sorted(view.getContext());
+        rest_cuisine_container = (LinearLayout)view.findViewById(R.id.rest_cuisine_container);
+        for (String caption : captions){
+            CheckBox cb = new CheckBox(view.getContext());
+            cb.setText(caption);
+            cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    CuisineReset(rest_cuisine_button);
+                }
+            });
+            cuisines.add(Pair.create(cb, caption));
+            rest_cuisine_container.addView(cb);
+        }
+    }
+
+    private  void SetRestaurantCheckBoxes(View view){
+        resttypes = new ArrayList<>();
+        ArrayList<String> captions = (new RestaurantTypesManager()).make_data_restaurants_sorted(view.getContext());
+        rest_type_container = (LinearLayout)view.findViewById(R.id.rest_type_container);
+        for (String caption : captions){
+            CheckBox cb = new CheckBox(view.getContext());
+            cb.setText(caption);
+            cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    RestTypeReset(rest_type_button);
+                }
+            });
+            resttypes.add(Pair.create(cb, caption));
+            rest_type_container.addView(cb);
+        }
     }
 
     private void AveragePriceReset(Button avg_price_button){

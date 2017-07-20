@@ -18,12 +18,15 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import com.bestresto.R;
+import com.bestresto.Types.KitchenTypesManager;
 import com.bestresto.data.DatabaseContract;
 import com.bestresto.data.dbHelper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 /**
  * Created by sergey on 02.06.17.
@@ -36,12 +39,11 @@ public class DishFilter extends Fragment {
 
     ArrayList<Pair<CheckBox, String>> cuisines, dishtypes;
     Button dish_type_button, dish_cuisine_button;
-    CheckBox chi, arm, ara, eas, gre, geo, ind, spa, kor, veg, ita, rus, jew, eur, aut, aze, asi, usa, jap, pan, fra, ady, kav, med, per,
-            tur, ska, irl, sco, ger, fus, mex, mar, ukr, eng;
 
     ScrollView dish_cuisine_view, dish_type_view;
     EditText dish_title;
     EditText dish_price;
+    LinearLayout dish_cuisine_container;
 
     public interface FilterListener{
         public void onFilterSet(String dishtitle, int dishprice, ArrayList<String> cuisine_params, ArrayList<String> dish_params);
@@ -97,94 +99,8 @@ public class DishFilter extends Fragment {
                 }
             }
         });
-        cuisines = new ArrayList<>();
 
-
-
-
-//        chi = (CheckBox)view.findViewById(R.id.cuisine_chi);
-//        cuisines.add(Pair.create(chi, getString(R.string.chi)));
-//        arm = (CheckBox)view.findViewById(R.id.cuisine_arm);
-//        cuisines.add(Pair.create(arm, getString(R.string.arm)));
-//        ara = (CheckBox)view.findViewById(R.id.cuisine_ara);
-//        cuisines.add(Pair.create(ara, getString(R.string.ara)));
-//        eas = (CheckBox)view.findViewById(R.id.cuisine_eas);
-//        cuisines.add(Pair.create(eas, getString(R.string.eas)));
-//        gre = (CheckBox)view.findViewById(R.id.cuisine_gre);
-//        cuisines.add(Pair.create(gre, getString(R.string.gre)));
-//        geo = (CheckBox)view.findViewById(R.id.cuisine_geo);
-//        cuisines.add(Pair.create(geo, getString(R.string.geo)));
-//        ind = (CheckBox)view.findViewById(R.id.cuisine_ind);
-//        cuisines.add(Pair.create(ind, getString(R.string.ind)));
-//        spa = (CheckBox)view.findViewById(R.id.cuisine_spa);
-//        cuisines.add(Pair.create(spa, getString(R.string.spa)));
-//        kor = (CheckBox)view.findViewById(R.id.cuisine_kor);
-//        cuisines.add(Pair.create(kor, getString(R.string.kor)));
-//        veg = (CheckBox)view.findViewById(R.id.cuisine_veg);
-//        cuisines.add(Pair.create(veg, getString(R.string.veg)));
-//        ita = (CheckBox)view.findViewById(R.id.cuisine_ita);
-//        cuisines.add(Pair.create(ita, getString(R.string.ita)));
-//        rus = (CheckBox)view.findViewById(R.id.cuisine_rus);
-//        cuisines.add(Pair.create(rus, getString(R.string.rus)));
-//        jew = (CheckBox)view.findViewById(R.id.cuisine_jew);
-//        cuisines.add(Pair.create(jew, getString(R.string.jew)));
-//        eur = (CheckBox)view.findViewById(R.id.cuisine_eur);
-//        cuisines.add(Pair.create(eur, getString(R.string.eur)));
-//        aut = (CheckBox)view.findViewById(R.id.cuisine_aut);
-//        cuisines.add(Pair.create(aut, getString(R.string.aut)));
-//        aze = (CheckBox)view.findViewById(R.id.cuisine_aze);
-//        cuisines.add(Pair.create(aze, getString(R.string.aze)));
-//        asi = (CheckBox)view.findViewById(R.id.cuisine_asi);
-//        cuisines.add(Pair.create(asi, getString(R.string.asi)));
-//        usa = (CheckBox)view.findViewById(R.id.cuisine_usa);
-//        cuisines.add(Pair.create(usa, getString(R.string.usa)));
-//        jap = (CheckBox)view.findViewById(R.id.cuisine_jap);
-//        cuisines.add(Pair.create(jap, getString(R.string.jap)));
-//        pan = (CheckBox)view.findViewById(R.id.cuisine_pan);
-//        cuisines.add(Pair.create(pan, getString(R.string.pan)));
-//        fra = (CheckBox)view.findViewById(R.id.cuisine_fra);
-//        cuisines.add(Pair.create(fra, getString(R.string.fra)));
-//        ady = (CheckBox)view.findViewById(R.id.cuisine_ady);
-//        cuisines.add(Pair.create(ady, getString(R.string.ady)));
-//        kav = (CheckBox)view.findViewById(R.id.cuisine_kav);
-//        cuisines.add(Pair.create(kav, getString(R.string.kav)));
-//        med = (CheckBox)view.findViewById(R.id.cuisine_med);
-//        cuisines.add(Pair.create(med, getString(R.string.med)));
-//        per = (CheckBox)view.findViewById(R.id.cuisine_per);
-//        cuisines.add(Pair.create(per, getString(R.string.per)));
-//        tur = (CheckBox)view.findViewById(R.id.cuisine_tur);
-//        cuisines.add(Pair.create(tur, getString(R.string.tur)));
-//        ska = (CheckBox)view.findViewById(R.id.cuisine_ska);
-//        cuisines.add(Pair.create(ska, getString(R.string.ska)));
-//        irl = (CheckBox)view.findViewById(R.id.cuisine_irl);
-//        cuisines.add(Pair.create(irl, getString(R.string.irl)));
-//        sco = (CheckBox)view.findViewById(R.id.cuisine_sco);
-//        cuisines.add(Pair.create(sco, getString(R.string.sco)));
-//        ger = (CheckBox)view.findViewById(R.id.cuisine_ger);
-//        cuisines.add(Pair.create(ger, getString(R.string.ger)));
-//        fus = (CheckBox)view.findViewById(R.id.cuisine_fus);
-//        cuisines.add(Pair.create(fus, getString(R.string.fus)));
-//        mex = (CheckBox)view.findViewById(R.id.cuisine_mex);
-//        cuisines.add(Pair.create(mex, getString(R.string.mex)));
-//        mar = (CheckBox)view.findViewById(R.id.cuisine_mar);
-//        cuisines.add(Pair.create(mar, getString(R.string.mar)));
-//        ukr = (CheckBox)view.findViewById(R.id.cuisine_ukr);
-//        cuisines.add(Pair.create(ukr, getString(R.string.ukr)));
-//        eng = (CheckBox)view.findViewById(R.id.cuisine_eng);
-//        cuisines.add(Pair.create(eng, getString(R.string.eng)));
-
-        //OnCheckedListeners for cuisine section
-        for (Pair<CheckBox, String> cuisine:cuisines) {
-            cuisine.first.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    CuisineReset(dish_cuisine_button);
-                }
-            });
-        }
-
-
-
+        SetCuisineCheckboxes(view);
 
         ///////////////////////////////////////////////////////////////////////
 
@@ -474,54 +390,20 @@ public class DishFilter extends Fragment {
     }
 
     private void SetCuisineCheckboxes(View view){
-        dbHelper dbh = new dbHelper(view.getContext());
-        SQLiteDatabase db = dbh.getReadableDatabase();
-        String[] projection = {
-                DatabaseContract.RestaurantTypesColumns.ACTIVE,
-                DatabaseContract.RestaurantTypesColumns.SORT,
-                DatabaseContract.RestaurantTypesColumns.PRIMEID
-        };
-
-        Cursor cursor = db.query(
-                DatabaseContract.RestaurantTypesColumns.TABLE_NAME,   // таблица
-                projection,            // столбцы
-                DatabaseContract.DishesColumns.ACTIVE + " = 1",                  // столбцы для условия WHERE
-                null,                  // значения для условия WHERE
-                null,                  // Don't group the rows
-                null,                  // Don't filter by row groups
-                null);
-        ArrayList<Pair<Integer, String>> pre_cuisines = new ArrayList<>();
-
-        try {
-            // Узнаем индекс каждого столбца
-
-            int captionColumnIndex = cursor.getColumnIndex(DatabaseContract.RestaurantTypesColumns.CAPTION);
-            int sortColumnIndex = cursor.getColumnIndex(DatabaseContract.RestaurantTypesColumns.SORT);
-            int primeidColumnIndex = cursor.getColumnIndex(DatabaseContract.RestaurantTypesColumns.PRIMEID);
-
-            while (cursor.moveToNext()) {
-                // Используем индекс для получения строки или числа
-                String currentCaption = cursor.getString(captionColumnIndex);
-                int currentSort = cursor.getInt(sortColumnIndex);
-
-                pre_cuisines.add(Pair.create(currentSort, currentCaption));
-            }
-        }
-        finally {
-            // Всегда закрываем курсор после чтения
-            cursor.close();
-        }
-        db.close();
-
-        pre_cuisines.sort(new Comparator<Pair<Integer, String>>() {
-            @Override
-            public int compare(Pair<Integer, String> o1, Pair<Integer, String> o2) {
-                return o1.first - o2.first;
-            }
-        });
-
-        for (Pair<Integer, String> pre_cuisine : pre_cuisines){
-
+        cuisines = new ArrayList<>();
+        ArrayList<String> captions = (new KitchenTypesManager()).make_data_cuisines_sorted(view.getContext());
+        for (String caption : captions){
+            CheckBox cb = new CheckBox(view.getContext());
+            cb.setText(caption);
+            cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    CuisineReset(dish_cuisine_button);
+                }
+            });
+            cuisines.add(Pair.create(cb, caption));
+            dish_cuisine_container = (LinearLayout)view.findViewById(R.id.dish_cuisine_container);
+            dish_cuisine_container.addView(cb);
         }
     }
 

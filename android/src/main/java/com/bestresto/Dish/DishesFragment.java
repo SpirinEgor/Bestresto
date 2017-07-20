@@ -41,13 +41,15 @@ public class DishesFragment extends Fragment {
 
         Bundle extBundle = this.getArguments();
         if (extBundle != null){
-            ArrayList<String> quisine_params = extBundle.getStringArrayList("quisine_params");
+            ArrayList<String> cuisine_params = extBundle.getStringArrayList("сuisine_params");
             ArrayList<String> dish_params = extBundle.getStringArrayList("dish_params");
-            String dishtitle = extBundle.getString("dishtitle");
-            int dishprice = extBundle.getInt("price");
+            String dish_title = extBundle.getString("dish_title");
+            int dishprice = extBundle.getInt("dish_price");
+            Log.d("NAgaggg", cuisine_params.toString());
+            Log.d("NAgaggg", dish_title);
             DishManager dishManager = new DishManager();
             dishManager.openDb(view.getContext());
-            lv.setAdapter(dishManager.getFilteredAdapter(view.getContext(), dishtitle));
+            lv.setAdapter(dishManager.getFilteredAdapter(view.getContext(), dish_title));
             dishManager.closeDb();
         }
         else{

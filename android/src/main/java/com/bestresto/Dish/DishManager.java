@@ -53,7 +53,7 @@ public class DishManager implements ManagerInterface {
 
     public void addAllDb(final ArrayList<HashMap<String, Object>> data){
         this.cleanTable();
-        int itemPerThread = 300;
+        int itemPerThread = 250;
         int cnt = data.size() / itemPerThread + ((data.size() % itemPerThread > 0) ? 1: 0);
         ArrayList<Thread> threads = new ArrayList<>();
         for (int i = 0; i < cnt; ++i){

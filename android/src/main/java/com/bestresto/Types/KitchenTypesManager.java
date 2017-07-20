@@ -4,8 +4,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v4.util.Pair;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 
 import com.bestresto.ManagerInterface;
+import com.bestresto.R;
 import com.bestresto.data.DatabaseContract;
 import com.bestresto.data.dbHelper;
 
@@ -213,6 +218,39 @@ public class KitchenTypesManager implements ManagerInterface {
                 cursor.close();
             }
         }
+        return result;
+    }
+
+    public ArrayList<String> make_data_cuisines_sorted(Context context){
+        ArrayList<String> result = new ArrayList<>();
+        openDb(context);
+        String[] projection = {
+                DatabaseContract.KitchenTypesColumns.CAPTION,
+        };
+        Cursor cursor = db.query(
+                DatabaseContract.KitchenTypesColumns.TABLE_NAME,   // таблица
+                projection,            // столбцы
+                DatabaseContract.KitchenTypesColumns.ACTIVE + " = 1",                  // столбцы для условия WHERE
+                null,                  // значения для условия WHERE
+                null,                  // Don't group the rows
+                null,                  // Don't filter by row groups
+                DatabaseContract.KitchenTypesColumns.SORT + " ASC");
+        try {
+            // Узнаем индекс каждого столбца
+
+            int captionColumnIndex = cursor.getColumnIndex(DatabaseContract.KitchenTypesColumns.CAPTION);
+
+            while (cursor.moveToNext()) {
+                // Используем индекс для получения строки или числа
+                String currentCaption = cursor.getString(captionColumnIndex);
+                result.add(currentCaption);
+            }
+        }
+        finally {
+            // Всегда закрываем курсор после чтения
+            cursor.close();
+        }
+        closeDb();
         return result;
     }
 }
