@@ -127,16 +127,29 @@ public class DishManager implements ManagerInterface {
     }
 
     public ArrayList<HashMap<String, Object>> makeData
-            (HashMap<String, String> whenConditions, HashMap<String, String> orderByConditions, String[] columns){
+            (HashMap<String, String> whereConditions, HashMap<String, String> orderByConditions, String[] columns){
         ArrayList<HashMap<String, Object>> data = new ArrayList<>();
-        StringBuilder when = new StringBuilder();
-        for (Map.Entry<String, String> condition: whenConditions.entrySet()){
+        StringBuilder where = new StringBuilder();
+        for (Map.Entry<String, String> condition: whereConditions.entrySet()){
             String column = condition.getKey();
             String value = check(condition.getValue());
-            when.append(column).append(" = \"").append(value).append("\" AND ");
+            switch (column){
+                case DatabaseContract.DishesColumns.CAPTION: {
+                    where.append(column).append(" = \"").append(value).append("\" AND ");
+                    break;
+                }
+                case DatabaseContract.DishesColumns.PRICE: {
+                    where.append(column).append(" <= \"").append(value).append("\" AND ");
+                    break;
+                }
+                case DatabaseContract.DishesColumns.KITCHEN: {
+                    where.append(column).append(" % ").append(value).append(" = 0").append("\" AND ");
+                }
+
+            }
         }
-        if (!when.toString().equals("")){
-            when.delete(when.length() - 5, when.length());
+        if (!where.toString().equals("")){
+            where.delete(where.length() - 5, where.length());
         }
         StringBuilder order = new StringBuilder();
         for (Map.Entry<String, String> condition: orderByConditions.entrySet()){
@@ -150,7 +163,7 @@ public class DishManager implements ManagerInterface {
         Cursor cursor = db.query(
                 DatabaseContract.DishesColumns.TABLE_NAME,
                 columns,
-                (when.toString().equals("") ? null : when.toString()),
+                (where.toString().equals("") ? null : where.toString()),
                 null,
                 null,
                 null,
@@ -176,8 +189,8 @@ public class DishManager implements ManagerInterface {
     }
 
     ArrayAdapter getAdapterWithData(Context context,
-             HashMap<String, String> whenConditions, HashMap<String, String> orderByConditions, String[] columns){
-        return new CustomAdapter(context, makeData(whenConditions, orderByConditions, columns));
+             HashMap<String, String> whereConditions, HashMap<String, String> orderByConditions, String[] columns){
+        return new CustomAdapter(context, makeData(whereConditions, orderByConditions, columns));
     }
 
     private String check(String current){

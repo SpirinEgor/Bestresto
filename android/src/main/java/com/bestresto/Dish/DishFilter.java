@@ -128,7 +128,7 @@ public class DishFilter extends Fragment {
         b2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String title = dish_title.getText().toString();
+                String caption = dish_title.getText().toString();
                 int price;
                 try {
                     price = Integer.parseInt(dish_price.getText().toString());
@@ -221,7 +221,7 @@ public class DishFilter extends Fragment {
                 if (hotstarters.isChecked()) dish_params.add(getString(R.string.hotstarters));
                 if (garnish.isChecked()) dish_params.add(getString(R.string.garnish));
 
-                mCallback.onFilterSet(title, price, cuisine_params, dish_params);
+                mCallback.onFilterSet(caption, price, cuisine_params, dish_params);
             }
         });
 

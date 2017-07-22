@@ -34,7 +34,7 @@ public class RestaurantsFragment extends Fragment {
         View view = inflater.inflate(R.layout.rest_fragment_all, container, false);
         lv = (ListView) view.findViewById(R.id.listRestaurants);
 
-        HashMap<String, String> whenConditions = new HashMap<>();
+        HashMap<String, String> whereConditions = new HashMap<>();
         HashMap<String, String> orderByConditions = new HashMap<>();
         String[] columns = {
                 DatabaseContract.RestaurantsColumns.CAPTION,
@@ -45,7 +45,7 @@ public class RestaurantsFragment extends Fragment {
         };
         RestaurantManager restaurantManager = new RestaurantManager();
         restaurantManager.openDb(view.getContext());
-        lv.setAdapter(restaurantManager.getAdapterWithData(view.getContext(), whenConditions, orderByConditions, columns));
+        lv.setAdapter(restaurantManager.getAdapterWithData(view.getContext(), whereConditions, orderByConditions, columns));
         restaurantManager.closeDb();
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

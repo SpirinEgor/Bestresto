@@ -119,14 +119,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onFilterSet(String dish_title, int dish_price, ArrayList<String> cuisine_params, ArrayList<String> dish_params) {
+    public void onFilterSet(String dish_caption, int dish_price, ArrayList<String> cuisine_params, ArrayList<String> dish_params) {
         Bundle bundle = new Bundle();
         bundle.putStringArrayList("сuisine_params", cuisine_params);
         bundle.putStringArrayList("dish_params", dish_params);
-        bundle.putString("dish_title", dish_title);
+        bundle.putString("dish_caption", dish_caption);
         bundle.putInt("dish_price", dish_price);
-        Log.d("NAgaggg", cuisine_params.toString());
-        Log.d("NAgaggg", dish_title);
 
         getFragmentManager().popBackStack();
         getFragmentManager().popBackStack();

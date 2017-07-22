@@ -17,6 +17,7 @@ import android.widget.ListView;
 
 import com.bestresto.PagerActivity;
 import com.bestresto.R;
+import com.bestresto.Types.KitchenTypesManager;
 import com.bestresto.data.DatabaseContract;
 
 import java.util.ArrayList;
@@ -39,9 +40,25 @@ public class DishesFragment extends Fragment {
 
         lv = (ListView) view.findViewById(R.id.listDishes);
 
-        HashMap<String, String> whenConditions = new HashMap<>();
+        HashMap<String, String> whereConditions = new HashMap<>();
         HashMap<String, String> orderByConditions = new HashMap<>();
-        whenConditions.put(DatabaseContract.DishesColumns.ACTIVE, "1");
+        whereConditions.put(DatabaseContract.DishesColumns.ACTIVE, "1");
+        // getting bundle if exist открыть, потом закрыть бд
+        Bundle bundle = getArguments();
+        if (!(bundle == null)){
+            String caption = bundle.getString("dish_title");
+            if (!caption.equals("")) whereConditions.put(DatabaseContract.DishesColumns.CAPTION, caption);
+
+            Integer price = bundle.getInt("dish_price");
+            if (price != -1) whereConditions.put(DatabaseContract.DishesColumns.PRICE, price.toString());
+
+            ArrayList<String> dish_cuisines = bundle.getStringArrayList("dish_cuisines");
+            if (dish_cuisines.size() != 0){
+                Integer kitchen_number = (new KitchenTypesManager()).getKitchenNumberByNames(dish_cuisines);
+                whereConditions.put(DatabaseContract.DishesColumns.KITCHEN, kitchen_number.toString());
+            }
+        }
+        orderByConditions.put(DatabaseContract.DishesColumns.SORT, " ASC");
         String[] columns = {
                 DatabaseContract.DishesColumns.CAPTION,
                 DatabaseContract.DishesColumns.PRICE,
@@ -49,7 +66,7 @@ public class DishesFragment extends Fragment {
         };
         DishManager dishManager = new DishManager();
         dishManager.openDb(view.getContext());
-        lv.setAdapter(dishManager.getAdapterWithData(view.getContext(), whenConditions, orderByConditions, columns));
+        lv.setAdapter(dishManager.getAdapterWithData(view.getContext(), whereConditions, orderByConditions, columns));
         dishManager.closeDb();
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {

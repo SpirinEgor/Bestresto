@@ -53,31 +53,31 @@ public class PagerActivity extends FragmentActivity {
 
         DishManager dishManager = new DishManager();
         RestaurantManager restaurantManager = new RestaurantManager();
-        HashMap<String, String> whenConditions = new HashMap<>();
+        HashMap<String, String> whereConditions = new HashMap<>();
         HashMap<String, String> orderByConditions = new HashMap<>();
         String[] columns;
         switch (key) {
             case ALL_DISHES_TYPE:
-                whenConditions.put(DatabaseContract.DishesColumns.ACTIVE, "1");
+                whereConditions.put(DatabaseContract.DishesColumns.ACTIVE, "1");
                 columns = new String[]{
                         DatabaseContract.DishesColumns.CAPTION,
                         DatabaseContract.DishesColumns.PRICE,
                         DatabaseContract.DishesColumns.PICTURE
                 };
                 dishManager.openDb(this);
-                elements = dishManager.makeData(whenConditions, orderByConditions, columns);
+                elements = dishManager.makeData(whereConditions, orderByConditions, columns);
                 dishManager.closeDb();
                 break;
             case FIRST_DISHES_TYPE:
-                whenConditions.put(DatabaseContract.DishesColumns.ACTIVE, "1");
-                whenConditions.put(DatabaseContract.DishesColumns.FIRST_PAGE, "1");
+                whereConditions.put(DatabaseContract.DishesColumns.ACTIVE, "1");
+                whereConditions.put(DatabaseContract.DishesColumns.FIRST_PAGE, "1");
                 columns = new String[]{
                         DatabaseContract.DishesColumns.CAPTION,
                         DatabaseContract.DishesColumns.PRICE,
                         DatabaseContract.DishesColumns.PICTURE
                 };
                 dishManager.openDb(this);
-                elements = dishManager.makeData(whenConditions, orderByConditions, columns);
+                elements = dishManager.makeData(whereConditions, orderByConditions, columns);
                 dishManager.closeDb();
                 break;
             case RESTAURANTS_TYPE:
@@ -89,7 +89,7 @@ public class PagerActivity extends FragmentActivity {
                         DatabaseContract.RestaurantsColumns.ADDRESS,
                 };
                 restaurantManager.openDb(this);
-                elements = restaurantManager.makeData(whenConditions, orderByConditions, columns);
+                elements = restaurantManager.makeData(whereConditions, orderByConditions, columns);
                 restaurantManager.closeDb();
                 break;
             default:

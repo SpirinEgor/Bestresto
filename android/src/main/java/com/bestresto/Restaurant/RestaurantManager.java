@@ -119,10 +119,10 @@ public class RestaurantManager implements ManagerInterface {
     }
 
     public ArrayList<HashMap<String, Object>> makeData
-            (HashMap<String, String> whenConditions, HashMap<String, String> orderByConditions, String[] columns){
+            (HashMap<String, String> whereConditions, HashMap<String, String> orderByConditions, String[] columns){
         ArrayList<HashMap<String, Object>> data = new ArrayList<>();
         StringBuilder when = new StringBuilder();
-        for (Map.Entry<String, String> condition: whenConditions.entrySet()){
+        for (Map.Entry<String, String> condition: whereConditions.entrySet()){
             String column = condition.getKey();
             String value = check(condition.getValue());
             when.append(column).append(" = \"").append(value).append("\" AND ");
@@ -168,8 +168,8 @@ public class RestaurantManager implements ManagerInterface {
     }
 
     ArrayAdapter getAdapterWithData(Context context,
-                                    HashMap<String, String> whenConditions, HashMap<String, String> orderByConditions, String[] columns){
-        return new RestaurantManager.CustomAdapter(context, makeData(whenConditions, orderByConditions, columns));
+                                    HashMap<String, String> whereConditions, HashMap<String, String> orderByConditions, String[] columns){
+        return new RestaurantManager.CustomAdapter(context, makeData(whereConditions, orderByConditions, columns));
     }
 
     private String check(String current){

@@ -26,10 +26,10 @@ public class MainFragment extends Fragment{
         final View view = inflater.inflate(R.layout.fragment_main, container, false);
         LinearLayout dishes = (LinearLayout) view.findViewById(R.id.main_dishes_list);
 
-        HashMap<String, String> whenConditions = new HashMap<>();
+        HashMap<String, String> whereConditions = new HashMap<>();
         HashMap<String, String> orderByConditions = new HashMap<>();
-        whenConditions.put(DatabaseContract.DishesColumns.ACTIVE, "1");
-        whenConditions.put(DatabaseContract.DishesColumns.FIRST_PAGE, "1");
+        whereConditions.put(DatabaseContract.DishesColumns.ACTIVE, "1");
+        whereConditions.put(DatabaseContract.DishesColumns.FIRST_PAGE, "1");
         String[] columns = {
                 DatabaseContract.DishesColumns.CAPTION,
                 DatabaseContract.DishesColumns.PRICE,
@@ -37,7 +37,7 @@ public class MainFragment extends Fragment{
         };
         DishManager dishManager = new DishManager();
         dishManager.openDb(view.getContext());
-        ArrayList<HashMap<String, Object>> first_dishes_list = dishManager.makeData(whenConditions, orderByConditions, columns);
+        ArrayList<HashMap<String, Object>> first_dishes_list = dishManager.makeData(whereConditions, orderByConditions, columns);
         dishManager.closeDb();
 
         int position = 0;
