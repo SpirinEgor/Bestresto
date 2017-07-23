@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
         MainFragment mainFragment = new MainFragment();
         FragmentTransaction fTrans = getFragmentManager().beginTransaction();
         fTrans.replace(R.id.container, mainFragment);
@@ -121,7 +120,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFilterSet(String dish_caption, int dish_price, ArrayList<String> cuisine_params, ArrayList<String> dish_params) {
         Bundle bundle = new Bundle();
-        bundle.putStringArrayList("сuisine_params", cuisine_params);
+        bundle.putStringArrayList("cuisine_params", cuisine_params);
         bundle.putStringArrayList("dish_params", dish_params);
         bundle.putString("dish_caption", dish_caption);
         bundle.putInt("dish_price", dish_price);

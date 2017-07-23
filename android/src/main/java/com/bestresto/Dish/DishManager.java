@@ -134,18 +134,17 @@ public class DishManager implements ManagerInterface {
             String column = condition.getKey();
             String value = check(condition.getValue());
             switch (column){
-                case DatabaseContract.DishesColumns.CAPTION: {
-                    where.append(column).append(" = \"").append(value).append("\" AND ");
-                    break;
-                }
                 case DatabaseContract.DishesColumns.PRICE: {
-                    where.append(column).append(" <= \"").append(value).append("\" AND ");
+                    where.append(column).append(" <= ").append(value).append(" AND ");
                     break;
                 }
                 case DatabaseContract.DishesColumns.KITCHEN: {
-                    where.append(column).append(" % ").append(value).append(" = 0").append("\" AND ");
+                    where.append(column).append(" % ").append(value).append(" = 0").append(" AND ");
+                    break;
                 }
-
+                default:{
+                    where.append(column).append(" = ").append(value).append(" AND ");
+                }
             }
         }
         if (!where.toString().equals("")){

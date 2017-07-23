@@ -43,22 +43,26 @@ public class DishesFragment extends Fragment {
         HashMap<String, String> whereConditions = new HashMap<>();
         HashMap<String, String> orderByConditions = new HashMap<>();
         whereConditions.put(DatabaseContract.DishesColumns.ACTIVE, "1");
-        // getting bundle if exist открыть, потом закрыть бд
+        // getting bundle if exist
+        // open, then close db
         Bundle bundle = getArguments();
         if (!(bundle == null)){
-            String caption = bundle.getString("dish_title");
+            String caption = bundle.getString("dish_caption");
             if (!caption.equals("")) whereConditions.put(DatabaseContract.DishesColumns.CAPTION, caption);
 
             Integer price = bundle.getInt("dish_price");
             if (price != -1) whereConditions.put(DatabaseContract.DishesColumns.PRICE, price.toString());
 
-            ArrayList<String> dish_cuisines = bundle.getStringArrayList("dish_cuisines");
+            ArrayList<String> dish_cuisines = bundle.getStringArrayList("cuisine_params");
             if (dish_cuisines.size() != 0){
-                Integer kitchen_number = (new KitchenTypesManager()).getKitchenNumberByNames(dish_cuisines);
+                KitchenTypesManager ktm = new KitchenTypesManager();
+                ktm.openDb(view.getContext());
+                Integer kitchen_number = ktm.getKitchenNumberByNames(dish_cuisines);
                 whereConditions.put(DatabaseContract.DishesColumns.KITCHEN, kitchen_number.toString());
+                ktm.closeDb();
             }
         }
-        orderByConditions.put(DatabaseContract.DishesColumns.SORT, " ASC");
+        orderByConditions.put(DatabaseContract.DishesColumns.SORT, "ASC");
         String[] columns = {
                 DatabaseContract.DishesColumns.CAPTION,
                 DatabaseContract.DishesColumns.PRICE,

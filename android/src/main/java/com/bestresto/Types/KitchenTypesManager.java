@@ -201,7 +201,7 @@ public class KitchenTypesManager implements ManagerInterface {
                     DatabaseContract.KitchenTypesColumns.TABLE_NAME,   // таблица
                     projection,            // столбцы
                     DatabaseContract.KitchenTypesColumns.ACTIVE + " = 1" +
-                            " AND " + DatabaseContract.KitchenTypesColumns.CAPTION + " = " + name,                  // столбцы для условия WHERE
+                            " AND " + DatabaseContract.KitchenTypesColumns.CAPTION + " = \"" + name + "\"",                  // столбцы для условия WHERE
                     null,                  // значения для условия WHERE
                     null,                  // Don't group the rows
                     null,                  // Don't filter by row groups
