@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.util.Pair;
+import android.util.Log;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
@@ -189,8 +190,8 @@ public class KitchenTypesManager implements ManagerInterface {
         return result;
     }
 
-    public int getKitchenNumberByNames(ArrayList<String> names){
-        int result = 1;
+    public ArrayList<String> getKitchenNumbersByNames(ArrayList<String> names){
+        ArrayList<String> result = new ArrayList<>();
         for (String name: names){
             String[] projection = {
                     DatabaseContract.KitchenTypesColumns.CAPTION,
@@ -211,8 +212,8 @@ public class KitchenTypesManager implements ManagerInterface {
                 int primeColumnIndex = cursor.getColumnIndex(DatabaseContract.KitchenTypesColumns.PRIMEID);
                 while (cursor.moveToNext()) {
                     // Используем индекс для получения строки или числа
-                    int currentPrime = cursor.getInt(primeColumnIndex);
-                    result *= currentPrime;
+                    Integer currentPrime = cursor.getInt(primeColumnIndex);
+                    result.add(currentPrime.toString());
                 }
             }
             finally {

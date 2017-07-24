@@ -19,6 +19,7 @@ import com.bestresto.PagerActivity;
 import com.bestresto.R;
 import com.bestresto.Types.KitchenTypesManager;
 import com.bestresto.data.DatabaseContract;
+import com.bestresto.data.QueryConditions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,29 +41,27 @@ public class DishesFragment extends Fragment {
 
         lv = (ListView) view.findViewById(R.id.listDishes);
 
-        HashMap<String, String> whereConditions = new HashMap<>();
-        HashMap<String, String> orderByConditions = new HashMap<>();
-        whereConditions.put(DatabaseContract.DishesColumns.ACTIVE, "1");
+        QueryConditions queryConditions = new QueryConditions();
+        queryConditions.otherConditions.put(DatabaseContract.DishesColumns.ACTIVE, "1");
         // getting bundle if exist
         // open, then close db
         Bundle bundle = getArguments();
         if (!(bundle == null)){
             String caption = bundle.getString("dish_caption");
-            if (!caption.equals("")) whereConditions.put(DatabaseContract.DishesColumns.CAPTION, caption);
+            if (!caption.equals("")) queryConditions.otherConditions.put(DatabaseContract.DishesColumns.CAPTION, caption);
 
             Integer price = bundle.getInt("dish_price");
-            if (price != -1) whereConditions.put(DatabaseContract.DishesColumns.PRICE, price.toString());
+            if (price != -1) queryConditions.otherConditions.put(DatabaseContract.DishesColumns.PRICE, price.toString());
 
             ArrayList<String> dish_cuisines = bundle.getStringArrayList("cuisine_params");
             if (dish_cuisines.size() != 0){
                 KitchenTypesManager ktm = new KitchenTypesManager();
                 ktm.openDb(view.getContext());
-                Integer kitchen_number = ktm.getKitchenNumberByNames(dish_cuisines);
-                whereConditions.put(DatabaseContract.DishesColumns.KITCHEN, kitchen_number.toString());
+                queryConditions.kitchenConditions = ktm.getKitchenNumbersByNames(dish_cuisines);
                 ktm.closeDb();
             }
         }
-        orderByConditions.put(DatabaseContract.DishesColumns.SORT, "ASC");
+        queryConditions.orderByConditions.put(DatabaseContract.DishesColumns.SORT, "ASC");
         String[] columns = {
                 DatabaseContract.DishesColumns.CAPTION,
                 DatabaseContract.DishesColumns.PRICE,
@@ -70,7 +69,7 @@ public class DishesFragment extends Fragment {
         };
         DishManager dishManager = new DishManager();
         dishManager.openDb(view.getContext());
-        lv.setAdapter(dishManager.getAdapterWithData(view.getContext(), whereConditions, orderByConditions, columns));
+        lv.setAdapter(dishManager.getAdapterWithData(view.getContext(), queryConditions, columns));
         dishManager.closeDb();
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {

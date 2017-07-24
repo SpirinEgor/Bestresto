@@ -16,6 +16,7 @@ import com.bestresto.Dish.DishManager;
 import com.bestresto.Restaurant.DescriptionRestaurantFragment;
 import com.bestresto.Restaurant.RestaurantManager;
 import com.bestresto.data.DatabaseContract;
+import com.bestresto.data.QueryConditions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,31 +54,30 @@ public class PagerActivity extends FragmentActivity {
 
         DishManager dishManager = new DishManager();
         RestaurantManager restaurantManager = new RestaurantManager();
-        HashMap<String, String> whereConditions = new HashMap<>();
-        HashMap<String, String> orderByConditions = new HashMap<>();
+        QueryConditions queryConditions = new QueryConditions();
         String[] columns;
         switch (key) {
             case ALL_DISHES_TYPE:
-                whereConditions.put(DatabaseContract.DishesColumns.ACTIVE, "1");
+                queryConditions.otherConditions.put(DatabaseContract.DishesColumns.ACTIVE, "1");
                 columns = new String[]{
                         DatabaseContract.DishesColumns.CAPTION,
                         DatabaseContract.DishesColumns.PRICE,
                         DatabaseContract.DishesColumns.PICTURE
                 };
                 dishManager.openDb(this);
-                elements = dishManager.makeData(whereConditions, orderByConditions, columns);
+                elements = dishManager.makeData(queryConditions, columns);
                 dishManager.closeDb();
                 break;
             case FIRST_DISHES_TYPE:
-                whereConditions.put(DatabaseContract.DishesColumns.ACTIVE, "1");
-                whereConditions.put(DatabaseContract.DishesColumns.FIRST_PAGE, "1");
+                queryConditions.otherConditions.put(DatabaseContract.DishesColumns.ACTIVE, "1");
+                queryConditions.otherConditions.put(DatabaseContract.DishesColumns.FIRST_PAGE, "1");
                 columns = new String[]{
                         DatabaseContract.DishesColumns.CAPTION,
                         DatabaseContract.DishesColumns.PRICE,
                         DatabaseContract.DishesColumns.PICTURE
                 };
                 dishManager.openDb(this);
-                elements = dishManager.makeData(whereConditions, orderByConditions, columns);
+                elements = dishManager.makeData(queryConditions, columns);
                 dishManager.closeDb();
                 break;
             case RESTAURANTS_TYPE:
@@ -89,6 +89,8 @@ public class PagerActivity extends FragmentActivity {
                         DatabaseContract.RestaurantsColumns.ADDRESS,
                 };
                 restaurantManager.openDb(this);
+                HashMap<String, String> whereConditions = new HashMap<>();//rebuild to QueryConitions pattern!
+                HashMap<String, String> orderByConditions = new HashMap<>();
                 elements = restaurantManager.makeData(whereConditions, orderByConditions, columns);
                 restaurantManager.closeDb();
                 break;

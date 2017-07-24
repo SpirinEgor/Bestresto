@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.bestresto.data.DatabaseContract;
 import com.bestresto.Dish.DishManager;
+import com.bestresto.data.QueryConditions;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -26,10 +27,9 @@ public class MainFragment extends Fragment{
         final View view = inflater.inflate(R.layout.fragment_main, container, false);
         LinearLayout dishes = (LinearLayout) view.findViewById(R.id.main_dishes_list);
 
-        HashMap<String, String> whereConditions = new HashMap<>();
-        HashMap<String, String> orderByConditions = new HashMap<>();
-        whereConditions.put(DatabaseContract.DishesColumns.ACTIVE, "1");
-        whereConditions.put(DatabaseContract.DishesColumns.FIRST_PAGE, "1");
+        QueryConditions queryConditions = new QueryConditions();
+        queryConditions.otherConditions.put(DatabaseContract.DishesColumns.ACTIVE, "1");
+        queryConditions.otherConditions.put(DatabaseContract.DishesColumns.FIRST_PAGE, "1");
         String[] columns = {
                 DatabaseContract.DishesColumns.CAPTION,
                 DatabaseContract.DishesColumns.PRICE,
@@ -37,7 +37,7 @@ public class MainFragment extends Fragment{
         };
         DishManager dishManager = new DishManager();
         dishManager.openDb(view.getContext());
-        ArrayList<HashMap<String, Object>> first_dishes_list = dishManager.makeData(whereConditions, orderByConditions, columns);
+        ArrayList<HashMap<String, Object>> first_dishes_list = dishManager.makeData(queryConditions, columns);
         dishManager.closeDb();
 
         int position = 0;

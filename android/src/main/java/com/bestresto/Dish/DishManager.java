@@ -1,5 +1,6 @@
 package com.bestresto.Dish;
 
+import android.app.DownloadManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -20,6 +21,7 @@ import com.bestresto.R;
 import com.bestresto.Types.KitchenTypesManager;
 import com.bestresto.Types.RestaurantTypesManager;
 import com.bestresto.data.DatabaseContract;
+import com.bestresto.data.QueryConditions;
 import com.bestresto.data.dbHelper;
 import com.squareup.picasso.Picasso;
 import com.bestresto.ManagerInterface;
@@ -127,29 +129,39 @@ public class DishManager implements ManagerInterface {
     }
 
     public ArrayList<HashMap<String, Object>> makeData
-            (HashMap<String, String> whereConditions, HashMap<String, String> orderByConditions, String[] columns){
+            (QueryConditions queryConditions, String[] columns){
         ArrayList<HashMap<String, Object>> data = new ArrayList<>();
         StringBuilder where = new StringBuilder();
-        for (Map.Entry<String, String> condition: whereConditions.entrySet()){
-            String column = condition.getKey();
-            String value = check(condition.getValue());
-            switch (column){
-                case DatabaseContract.DishesColumns.PRICE: {
-                    where.append(column).append(" <= ").append(value).append(" AND ");
-                    break;
-                }
-                case DatabaseContract.DishesColumns.KITCHEN: {
-                    where.append(column).append(" % ").append(value).append(" = 0").append(" AND ");
-                    break;
-                }
-                default:{
-                    where.append(column).append(" = ").append(value).append(" AND ");
-                }
+
+        HashMap<String, String> otherConditions =  queryConditions.otherConditions;
+        for (Map.Entry<String, String> otherCondition: otherConditions.entrySet()){
+            String column = otherCondition.getKey();
+            String value = check(otherCondition.getValue());
+            if (column.equals(DatabaseContract.DishesColumns.PRICE)){
+                where.append(column).append(" <= ").append(value).append(" AND ");
+            }
+            else {
+                where.append(column).append(" = \"").append(value).append("\" AND ");
             }
         }
         if (!where.toString().equals("")){
             where.delete(where.length() - 5, where.length());
         }
+
+        ArrayList<String> kitchenConditions = queryConditions.kitchenConditions;
+        if (kitchenConditions.size() > 0){
+            if (!where.toString().equals("")) where.append(" AND (");
+            else where.append("( ");
+
+            for (String kitchenCondition: kitchenConditions){
+                where.append(DatabaseContract.DishesColumns.KITCHEN).append(" % ").append(kitchenCondition).append(" = 0").append(" OR ");
+            }
+            where.delete(where.length() - 4, where.length());
+            where.append(" )");
+        }
+
+        HashMap<String, String> orderByConditions = queryConditions.orderByConditions;
+        Log.d("ORDER", orderByConditions.toString());
         StringBuilder order = new StringBuilder();
         for (Map.Entry<String, String> condition: orderByConditions.entrySet()){
             String column = condition.getKey();
@@ -159,6 +171,8 @@ public class DishManager implements ManagerInterface {
         if (!order.toString().equals("")){
             order.delete(order.length() - 2, order.length());
         }
+        Log.d("WHERE_TAG", where.toString());
+        Log.d("ORDER_STRING", order.toString());
         Cursor cursor = db.query(
                 DatabaseContract.DishesColumns.TABLE_NAME,
                 columns,
@@ -188,8 +202,8 @@ public class DishManager implements ManagerInterface {
     }
 
     ArrayAdapter getAdapterWithData(Context context,
-             HashMap<String, String> whereConditions, HashMap<String, String> orderByConditions, String[] columns){
-        return new CustomAdapter(context, makeData(whereConditions, orderByConditions, columns));
+             QueryConditions queryConditions, String[] columns){
+        return new CustomAdapter(context, makeData(queryConditions, columns));
     }
 
     private String check(String current){

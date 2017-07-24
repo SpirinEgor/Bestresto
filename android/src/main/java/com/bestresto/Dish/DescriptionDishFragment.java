@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.bestresto.R;
 import com.bestresto.data.DatabaseContract;
+import com.bestresto.data.QueryConditions;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
@@ -43,11 +44,12 @@ public class DescriptionDishFragment extends android.support.v4.app.Fragment {
                 DatabaseContract.DishesColumns.GARANT,
                 DatabaseContract.DishesColumns.PARENT_ID
         };
-        whereConditions.put(DatabaseContract.DishesColumns.ACTIVE, "1");
-        whereConditions.put(DatabaseContract.DishesColumns.CAPTION, name);
+        QueryConditions queryConditions = new QueryConditions();
+        queryConditions.otherConditions.put(DatabaseContract.DishesColumns.ACTIVE, "1");
+        queryConditions.otherConditions.put(DatabaseContract.DishesColumns.CAPTION, name);
         DishManager dishManager = new DishManager();
         dishManager.openDb(view.getContext());
-        HashMap<String, Object> info = dishManager.makeData(whereConditions, orderByConditions, columns).get(0);
+        HashMap<String, Object> info = dishManager.makeData(queryConditions, columns).get(0);
         dishManager.closeDb();
 
         ImageView picture = (ImageView) view.findViewById(R.id.singleDish_picture);
