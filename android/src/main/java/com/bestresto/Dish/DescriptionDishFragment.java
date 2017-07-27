@@ -10,9 +10,10 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.bestresto.Database.DatabaseContract;
+import com.bestresto.Database.DatabaseGetter;
+import com.bestresto.Database.QueryConditions;
 import com.bestresto.R;
-import com.bestresto.data.DatabaseContract;
-import com.bestresto.data.QueryConditions;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
@@ -32,10 +33,11 @@ public class DescriptionDishFragment extends android.support.v4.app.Fragment {
         final View view = inflater.inflate(R.layout.dish_fragment_description, container, false);
 
         String name = getArguments().getString(DatabaseContract.DishesColumns.CAPTION);
-        HashMap<String, String> whereConditions = new HashMap<>();
-        HashMap<String, String> orderByConditions = new HashMap<>();
-        whereConditions.put(DatabaseContract.DishesColumns.ACTIVE, "1");
-        String[] columns = {
+
+        QueryConditions queryConditions = new QueryConditions();
+        queryConditions.setWhenCondition(DatabaseContract.DishesColumns.ACTIVE + " = 1 AND " +
+                                         DatabaseContract.DishesColumns.CAPTION + " = " + DatabaseGetter.prepare(name));
+        queryConditions.setColumns(new String[]{
                 DatabaseContract.DishesColumns.CAPTION,
                 DatabaseContract.DishesColumns.PRICE,
                 DatabaseContract.DishesColumns.PICTURE,
@@ -43,14 +45,10 @@ public class DescriptionDishFragment extends android.support.v4.app.Fragment {
                 DatabaseContract.DishesColumns.DESC,
                 DatabaseContract.DishesColumns.GARANT,
                 DatabaseContract.DishesColumns.PARENT_ID
-        };
-        QueryConditions queryConditions = new QueryConditions();
-        queryConditions.otherConditions.put(DatabaseContract.DishesColumns.ACTIVE, "1");
-        queryConditions.otherConditions.put(DatabaseContract.DishesColumns.CAPTION, name);
-        DishManager dishManager = new DishManager();
-        dishManager.openDb(view.getContext());
-        HashMap<String, Object> info = dishManager.makeData(queryConditions, columns).get(0);
-        dishManager.closeDb();
+        });
+        queryConditions.setTableName(DatabaseContract.DishesColumns.TABLE_NAME);
+
+        HashMap<String, Object> info = new DatabaseGetter(view.getContext()).makeData(queryConditions).get(0);
 
         ImageView picture = (ImageView) view.findViewById(R.id.singleDish_picture);
         RatingBar reiting = (RatingBar) view.findViewById(R.id.singleDish_rating);

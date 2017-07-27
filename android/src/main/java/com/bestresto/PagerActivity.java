@@ -11,12 +11,13 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.bestresto.Database.DatabaseContract;
+import com.bestresto.Database.DatabaseGetter;
+import com.bestresto.Database.QueryConditions;
 import com.bestresto.Dish.DescriptionDishFragment;
 import com.bestresto.Dish.DishManager;
 import com.bestresto.Restaurant.DescriptionRestaurantFragment;
 import com.bestresto.Restaurant.RestaurantManager;
-import com.bestresto.data.DatabaseContract;
-import com.bestresto.data.QueryConditions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,44 +56,38 @@ public class PagerActivity extends FragmentActivity {
         DishManager dishManager = new DishManager();
         RestaurantManager restaurantManager = new RestaurantManager();
         QueryConditions queryConditions = new QueryConditions();
-        String[] columns;
         switch (key) {
             case ALL_DISHES_TYPE:
-                queryConditions.otherConditions.put(DatabaseContract.DishesColumns.ACTIVE, "1");
-                columns = new String[]{
+                queryConditions.setWhenCondition(DatabaseContract.DishesColumns.ACTIVE + " = 1");
+                queryConditions.setColumns(new String[]{
                         DatabaseContract.DishesColumns.CAPTION,
                         DatabaseContract.DishesColumns.PRICE,
                         DatabaseContract.DishesColumns.PICTURE
-                };
-                dishManager.openDb(this);
-                elements = dishManager.makeData(queryConditions, columns);
-                dishManager.closeDb();
+                });
+                queryConditions.setTableName(DatabaseContract.DishesColumns.TABLE_NAME);
+                elements = new DatabaseGetter(this).makeData(queryConditions);
                 break;
             case FIRST_DISHES_TYPE:
-                queryConditions.otherConditions.put(DatabaseContract.DishesColumns.ACTIVE, "1");
-                queryConditions.otherConditions.put(DatabaseContract.DishesColumns.FIRST_PAGE, "1");
-                columns = new String[]{
+                queryConditions.setWhenCondition(DatabaseContract.DishesColumns.ACTIVE + " = 1 AND " +
+                                                 DatabaseContract.DishesColumns.FIRST_PAGE + " = 1");
+                queryConditions.setColumns(new String[]{
                         DatabaseContract.DishesColumns.CAPTION,
                         DatabaseContract.DishesColumns.PRICE,
                         DatabaseContract.DishesColumns.PICTURE
-                };
-                dishManager.openDb(this);
-                elements = dishManager.makeData(queryConditions, columns);
-                dishManager.closeDb();
+                });
+                queryConditions.setTableName(DatabaseContract.DishesColumns.TABLE_NAME);
+                elements = new DatabaseGetter(this).makeData(queryConditions);
                 break;
             case RESTAURANTS_TYPE:
-                columns = new String[]{
+                queryConditions.setColumns(new String[]{
                         DatabaseContract.RestaurantsColumns.CAPTION,
                         DatabaseContract.RestaurantsColumns.LOGO,
                         DatabaseContract.RestaurantsColumns.REITING,
                         DatabaseContract.RestaurantsColumns.KITCHEN,
                         DatabaseContract.RestaurantsColumns.ADDRESS,
-                };
-                restaurantManager.openDb(this);
-                HashMap<String, String> whereConditions = new HashMap<>();//rebuild to QueryConitions pattern!
-                HashMap<String, String> orderByConditions = new HashMap<>();
-                elements = restaurantManager.makeData(whereConditions, orderByConditions, columns);
-                restaurantManager.closeDb();
+                });
+                queryConditions.setTableName(DatabaseContract.RestaurantsColumns.TABLE_NAME);
+                elements = new DatabaseGetter(this).makeData(queryConditions);
                 break;
             default:
                 elements = new ArrayList<>();

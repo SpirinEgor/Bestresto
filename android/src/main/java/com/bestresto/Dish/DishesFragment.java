@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +14,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.bestresto.Database.DatabaseContract;
+import com.bestresto.Database.DatabaseGetter;
+import com.bestresto.Database.QueryConditions;
 import com.bestresto.PagerActivity;
 import com.bestresto.R;
 import com.bestresto.Types.KitchenTypesManager;
-import com.bestresto.data.DatabaseContract;
-import com.bestresto.data.QueryConditions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,35 +42,41 @@ public class DishesFragment extends Fragment {
         lv = (ListView) view.findViewById(R.id.listDishes);
 
         QueryConditions queryConditions = new QueryConditions();
-        queryConditions.otherConditions.put(DatabaseContract.DishesColumns.ACTIVE, "1");
         // getting bundle if exist
-        // open, then close db
         Bundle bundle = getArguments();
+        String whenCondition = DatabaseContract.DishesColumns.ACTIVE + " = 1";
         if (!(bundle == null)){
             String caption = bundle.getString("dish_caption");
-            if (!caption.equals("")) queryConditions.otherConditions.put(DatabaseContract.DishesColumns.CAPTION, caption);
-
+            if (caption != null && !caption.equals("")) {
+                whenCondition += " AND " + DatabaseContract.DishesColumns.CAPTION + " = " + DatabaseGetter.prepare(caption);
+            }
             Integer price = bundle.getInt("dish_price");
-            if (price != -1) queryConditions.otherConditions.put(DatabaseContract.DishesColumns.PRICE, price.toString());
-
+            if (price != -1) {
+                whenCondition += " AND " + DatabaseContract.DishesColumns.PRICE + " <= " + price;
+            }
             ArrayList<String> dish_cuisines = bundle.getStringArrayList("cuisine_params");
-            if (dish_cuisines.size() != 0){
+            if (dish_cuisines != null && dish_cuisines.size() != 0){
                 KitchenTypesManager ktm = new KitchenTypesManager();
-                ktm.openDb(view.getContext());
-                queryConditions.kitchenConditions = ktm.getKitchenNumbersByNames(dish_cuisines);
-                ktm.closeDb();
+                ArrayList<Integer> primeList = ktm.getKitchenNumbersByNames(dish_cuisines);
+                whenCondition += " AND (";
+                for (int prime: primeList) {
+                    whenCondition += DatabaseContract.DishesColumns.KITCHEN + " % " + prime + " = 0";
+                    if (prime != primeList.get(primeList.size() - 1)) {
+                        whenCondition += " OR ";
+                    }
+                }
+                whenCondition += ")";
             }
         }
-        queryConditions.orderByConditions.put(DatabaseContract.DishesColumns.SORT, "ASC");
-        String[] columns = {
+        queryConditions.setWhenCondition(whenCondition);
+        queryConditions.setOrderByCondition(DatabaseContract.DishesColumns.CREATEDATE + " DESC");
+        queryConditions.setColumns(new String[]{
                 DatabaseContract.DishesColumns.CAPTION,
                 DatabaseContract.DishesColumns.PRICE,
                 DatabaseContract.DishesColumns.PICTURE
-        };
-        DishManager dishManager = new DishManager();
-        dishManager.openDb(view.getContext());
-        lv.setAdapter(dishManager.getAdapterWithData(view.getContext(), queryConditions, columns));
-        dishManager.closeDb();
+        });
+        queryConditions.setTableName(DatabaseContract.DishesColumns.TABLE_NAME);
+        lv.setAdapter(DishManager.getAdapterWithData(view.getContext(), queryConditions));
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

@@ -1,120 +1,70 @@
 package com.bestresto.Types;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.v4.util.Pair;
-import android.util.Log;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.LinearLayout;
 
+import com.bestresto.Database.DatabaseContract;
+import com.bestresto.Database.DbHelper;
+import com.bestresto.Database.QueryConditions;
 import com.bestresto.ManagerInterface;
-import com.bestresto.R;
-import com.bestresto.data.DatabaseContract;
-import com.bestresto.data.dbHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class KitchenTypesManager implements ManagerInterface {
 
     private SQLiteDatabase db;
 
-    public void openDb(Context context){
-        dbHelper dbh = new dbHelper(context);
-        db = dbh.getWritableDatabase();
-    }
-
-    public void closeDb(){
-        db.close();
-    }
-
+    @Override
     public void cleanTable(){
-        dbHelper.createKitchenTypes(db);
+        DbHelper.createKitchenTypes(db);
         db.delete(DatabaseContract.KitchenTypesColumns.TABLE_NAME, null, null);
     }
 
+    @Override
     public void setDb(SQLiteDatabase db){
         this.db = db;
     }
 
+    private int currentPrimeNumber = 0;
+
+    @Override
     public void addAllDb(ArrayList<HashMap<String, Object>> data){
         this.cleanTable();
-        addDB(data);
-    }
-
-    private void addDB(ArrayList<HashMap<String, Object>> info){
         ArrayList<Integer> primeNumber = generatePrimeNumber();
         int i = 0;
-        for (HashMap<String, Object> type: info){
-            ContentValues values = new ContentValues();
-            values.put(DatabaseContract.KitchenTypesColumns.INDEXID,
-                    (type.get(DatabaseContract.KitchenTypesColumns.INDEXID) == null ? 0 : Integer.parseInt(type.get(DatabaseContract.KitchenTypesColumns.INDEXID).toString())));
-            values.put(DatabaseContract.KitchenTypesColumns.CAPTION,
-                    (type.get(DatabaseContract.DishesColumns.CAPTION) == null ? "" : type.get(DatabaseContract.DishesColumns.CAPTION).toString()));
-            values.put(DatabaseContract.KitchenTypesColumns.SORT,
-                    (type.get(DatabaseContract.KitchenTypesColumns.SORT) == null ? 0 : Integer.parseInt(type.get(DatabaseContract.KitchenTypesColumns.ACTIVE).toString())));
-            values.put(DatabaseContract.KitchenTypesColumns.ACTIVE,
-                    (type.get(DatabaseContract.KitchenTypesColumns.ACTIVE) == null ? 0 : Integer.parseInt(type.get(DatabaseContract.KitchenTypesColumns.ACTIVE).toString())));
-            values.put(DatabaseContract.KitchenTypesColumns.PRIMEID, primeNumber.get(i));
-            //Log.d(type.get(DatabaseContract.DishesColumns.CAPTION).toString(), String.valueOf(primeNumber.get(i)));
+        for (HashMap<String, Object> type: data){
+            currentPrimeNumber = primeNumber.get(i);
+            addDb(type);
             ++i;
-            long newRowId = db.insert(DatabaseContract.KitchenTypesColumns.TABLE_NAME, null, values);
         }
     }
 
-    public void addDb(HashMap<String, Object> data) {}
-
-    public int getKitchenNumber(String req){
-        ArrayList<Integer> kitchens = stringToArray(req);
-        int result = 1;
-        for (int kit: kitchens){
-            String[] projection = {
-                    DatabaseContract.KitchenTypesColumns.INDEXID,
-                    DatabaseContract.KitchenTypesColumns.PRIMEID,
-                    DatabaseContract.KitchenTypesColumns.ACTIVE
-            };
-            Cursor cursor = db.query(
-                    DatabaseContract.KitchenTypesColumns.TABLE_NAME,   // таблица
-                    projection,            // столбцы
-                    DatabaseContract.DishesColumns.ACTIVE + " = 1" +
-                            " AND " + DatabaseContract.DishesColumns.INDEXID + " = " + kit,                  // столбцы для условия WHERE
-                    null,                  // значения для условия WHERE
-                    null,                  // Don't group the rows
-                    null,                  // Don't filter by row groups
-                    null);
-            try {
-                // Узнаем индекс каждого столбца
-                int primeColumnIndex = cursor.getColumnIndex(DatabaseContract.KitchenTypesColumns.PRIMEID);
-                while (cursor.moveToNext()) {
-                    // Используем индекс для получения строки или числа
-                    int currentPrime = cursor.getInt(primeColumnIndex);
-                    result *= currentPrime;
-                }
-            }
-            finally {
-                cursor.close();
-            }
-        }
-        return result;
+    @Override
+    public void addDb(HashMap<String, Object> type) {
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.KitchenTypesColumns.INDEXID,
+                (type.get(DatabaseContract.KitchenTypesColumns.INDEXID) == null ? 0 : Integer.parseInt(type.get(DatabaseContract.KitchenTypesColumns.INDEXID).toString())));
+        values.put(DatabaseContract.KitchenTypesColumns.CAPTION,
+                (type.get(DatabaseContract.DishesColumns.CAPTION) == null ? "" : type.get(DatabaseContract.DishesColumns.CAPTION).toString()));
+        values.put(DatabaseContract.KitchenTypesColumns.SORT,
+                (type.get(DatabaseContract.KitchenTypesColumns.SORT) == null ? 0 : Integer.parseInt(type.get(DatabaseContract.KitchenTypesColumns.ACTIVE).toString())));
+        values.put(DatabaseContract.KitchenTypesColumns.ACTIVE,
+                (type.get(DatabaseContract.KitchenTypesColumns.ACTIVE) == null ? 0 : Integer.parseInt(type.get(DatabaseContract.KitchenTypesColumns.ACTIVE).toString())));
+        values.put(DatabaseContract.KitchenTypesColumns.PRIMEID, currentPrimeNumber);
+        //Log.d(type.get(DatabaseContract.DishesColumns.CAPTION).toString(), String.valueOf(primeNumber.get(i)));
+        long newRowId = db.insert(DatabaseContract.KitchenTypesColumns.TABLE_NAME, null, values);
     }
 
-    private ArrayList<Integer> generatePrimeNumber(){
-        int upNumber = 10000;
-        ArrayList<Integer> result = new ArrayList<Integer>();
-        boolean[] used = new boolean[upNumber];
-        for (int i = 2; i < upNumber; ++i){
-            if (!used[i]) {
-                result.add(i);
-                for (int j = i; j < upNumber; j += i) {
-                    used[j] = true;
-                }
-            }
+    @Override
+    public Object getValue(Cursor cursor, String column, int index) {
+        switch (column) {
+            case DatabaseContract.KitchenTypesColumns.CAPTION:
+                return cursor.getString(index);
+            default:
+                return cursor.getInt(index);
         }
-        return result;
     }
 
     private ArrayList<Integer> stringToArray(String str){
@@ -139,8 +89,64 @@ public class KitchenTypesManager implements ManagerInterface {
         return result;
     }
 
+    private ArrayList<Integer> prime(int num){
+        ArrayList<Integer> result = new ArrayList<>();
+        int up = num;
+        for (int i = 2; i * i <= up; ++i){
+            if (num % i == 0){
+                result.add(i);
+                while (num % i == 0)
+                    num /= i;
+            }
+        }
+        if (num != 1)
+            result.add(num);
+        return result;
+    }
+
+    public int getKitchenNumber(String req){
+        ArrayList<Integer> kitchensId = stringToArray(req);
+        int result = 1;
+
+        QueryConditions queryConditions = new QueryConditions();
+        queryConditions.setTableName(DatabaseContract.KitchenTypesColumns.TABLE_NAME);
+        queryConditions.setColumns(new String[]{
+                DatabaseContract.KitchenTypesColumns.PRIMEID
+        });
+        StringBuilder whenCondition = new StringBuilder(DatabaseContract.KitchenTypesColumns.ACTIVE + " = 1");
+        if (kitchensId.size() != 0) {
+            whenCondition.append(" AND (");
+            for (int curKitchenId: kitchensId) {
+                whenCondition.append("(").append(DatabaseContract.KitchenTypesColumns.INDEXID).append(" = ").
+                        append(curKitchenId).append(")");
+                if (curKitchenId != kitchensId.get(kitchensId.size() - 1)) {
+                    whenCondition.append(" OR ");
+                }
+            }
+            whenCondition.append(")");
+        }
+        queryConditions.setWhenCondition(whenCondition.toString());
+        
+        return result;
+    }
+
+    private ArrayList<Integer> generatePrimeNumber(){
+        int upNumber = 10000;
+        ArrayList<Integer> result = new ArrayList<Integer>();
+        boolean[] used = new boolean[upNumber];
+        for (int i = 2; i < upNumber; ++i){
+            if (!used[i]) {
+                result.add(i);
+                for (int j = i; j < upNumber; j += i) {
+                    used[j] = true;
+                }
+            }
+        }
+        return result;
+    }
+
     public String getKitchens(int num){
-        ArrayList<Integer> prime = simply(num);
+        ArrayList<Integer> prime = prime(num);
         String result = "";
         for (int curPrime: prime){
             String[] projection = {
@@ -175,23 +181,8 @@ public class KitchenTypesManager implements ManagerInterface {
         return result;
     }
 
-    private ArrayList<Integer> simply(int num){
+    public ArrayList<Integer> getKitchenNumbersByNames(ArrayList<String> names){
         ArrayList<Integer> result = new ArrayList<>();
-        int up = num;
-        for (int i = 2; i * i <= up; ++i){
-            if (num % i == 0){
-                result.add(i);
-                while (num % i == 0)
-                    num /= i;
-            }
-        }
-        if (num != 1)
-            result.add(num);
-        return result;
-    }
-
-    public ArrayList<String> getKitchenNumbersByNames(ArrayList<String> names){
-        ArrayList<String> result = new ArrayList<>();
         for (String name: names){
             String[] projection = {
                     DatabaseContract.KitchenTypesColumns.CAPTION,
@@ -213,7 +204,7 @@ public class KitchenTypesManager implements ManagerInterface {
                 while (cursor.moveToNext()) {
                     // Используем индекс для получения строки или числа
                     Integer currentPrime = cursor.getInt(primeColumnIndex);
-                    result.add(currentPrime.toString());
+                    result.add(currentPrime);
                 }
             }
             finally {
@@ -223,36 +214,5 @@ public class KitchenTypesManager implements ManagerInterface {
         return result;
     }
 
-    public ArrayList<String> make_data_cuisines_sorted(Context context){
-        ArrayList<String> result = new ArrayList<>();
-        openDb(context);
-        String[] projection = {
-                DatabaseContract.KitchenTypesColumns.CAPTION,
-        };
-        Cursor cursor = db.query(
-                DatabaseContract.KitchenTypesColumns.TABLE_NAME,   // таблица
-                projection,            // столбцы
-                DatabaseContract.KitchenTypesColumns.ACTIVE + " = 1",                  // столбцы для условия WHERE
-                null,                  // значения для условия WHERE
-                null,                  // Don't group the rows
-                null,                  // Don't filter by row groups
-                DatabaseContract.KitchenTypesColumns.SORT + " ASC");
-        try {
-            // Узнаем индекс каждого столбца
 
-            int captionColumnIndex = cursor.getColumnIndex(DatabaseContract.KitchenTypesColumns.CAPTION);
-
-            while (cursor.moveToNext()) {
-                // Используем индекс для получения строки или числа
-                String currentCaption = cursor.getString(captionColumnIndex);
-                result.add(currentCaption);
-            }
-        }
-        finally {
-            // Всегда закрываем курсор после чтения
-            cursor.close();
-        }
-        closeDb();
-        return result;
-    }
 }

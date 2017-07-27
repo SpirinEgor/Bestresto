@@ -14,41 +14,34 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bestresto.AddDbThread;
-import com.bestresto.Dish.DishManager;
+import com.bestresto.Database.DatabaseContract;
+import com.bestresto.Database.DatabaseGetter;
+import com.bestresto.Database.DbHelper;
+import com.bestresto.Database.QueryConditions;
 import com.bestresto.ManagerInterface;
 import com.bestresto.R;
 import com.bestresto.Types.KitchenTypesManager;
-import com.bestresto.Types.RestaurantTypesManager;
-import com.bestresto.data.DatabaseContract;
-import com.bestresto.data.dbHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class RestaurantManager implements ManagerInterface {
 
     private SQLiteDatabase db;
 
-    public void openDb(Context context){
-        dbHelper dbh = new dbHelper(context);
-        db = dbh.getWritableDatabase();
-    }
-
-    public void closeDb(){
-        db.close();
-    }
-
+    @Override
     public void cleanTable(){
-        dbHelper.createRestaurant(db);
+        DbHelper.createRestaurant(db);
         db.delete(DatabaseContract.RestaurantsColumns.TABLE_NAME, null, null);
     }
 
+    @Override
     public void setDb(SQLiteDatabase db){
         this.db = db;
     }
 
+    @Override
     public void addAllDb(ArrayList<HashMap<String, Object>> data){
         this.cleanTable();
         int itemPerThread = 250;
@@ -75,6 +68,7 @@ public class RestaurantManager implements ManagerInterface {
         }
     }
 
+    @Override
     synchronized public void addDb(HashMap<String, Object> rest){
         ContentValues values = new ContentValues();
         KitchenTypesManager kitchenTypesManager = new KitchenTypesManager();
@@ -118,75 +112,8 @@ public class RestaurantManager implements ManagerInterface {
         long newRowId = db.insert(DatabaseContract.RestaurantsColumns.TABLE_NAME, null, values);
     }
 
-    public ArrayList<HashMap<String, Object>> makeData
-            (HashMap<String, String> whereConditions, HashMap<String, String> orderByConditions, String[] columns){
-        ArrayList<HashMap<String, Object>> data = new ArrayList<>();
-        StringBuilder when = new StringBuilder();
-        for (Map.Entry<String, String> condition: whereConditions.entrySet()){
-            String column = condition.getKey();
-            String value = check(condition.getValue());
-            when.append(column).append(" = \"").append(value).append("\" AND ");
-        }
-        if (!when.toString().equals("")){
-            when.delete(when.length() - 5, when.length());
-        }
-        StringBuilder order = new StringBuilder();
-        for (Map.Entry<String, String> condition: orderByConditions.entrySet()){
-            String column = condition.getKey();
-            String value = check(condition.getValue());
-            order.append(column).append(" ").append(value).append(", ");
-        }
-        if (!order.toString().equals("")){
-            order.delete(order.length() - 2, order.length());
-        }
-        Cursor cursor = db.query(
-                DatabaseContract.RestaurantsColumns.TABLE_NAME,
-                columns,
-                (when.toString().equals("") ? null : when.toString()),
-                null,
-                null,
-                null,
-                (order.toString().equals("") ? null : order.toString())
-        );
-        try{
-            int[] index = new int[columns.length];
-            for (int i = 0; i < columns.length; ++i) {
-                index[i] = cursor.getColumnIndex(columns[i]);
-            }
-            while (cursor.moveToNext()){
-                HashMap<String, Object> cur = new HashMap<>();
-                for (int i = 0; i < columns.length; ++i){
-                    cur.put(columns[i], getValue(cursor, columns[i], index[i]));
-                }
-                data.add(cur);
-            }
-        }
-        finally {
-            cursor.close();
-        }
-        return  data;
-    }
-
-    ArrayAdapter getAdapterWithData(Context context,
-                                    HashMap<String, String> whereConditions, HashMap<String, String> orderByConditions, String[] columns){
-        return new RestaurantManager.CustomAdapter(context, makeData(whereConditions, orderByConditions, columns));
-    }
-
-    private String check(String current){
-        String result = "";
-        int prev = 0;
-        for (int i = 0; i < current.length(); ++i){
-            if (current.charAt(i) == '"'){
-                String tmp = current.substring(prev, i);
-                result = result.concat(tmp).concat("\"");
-                prev = i;
-            }
-        }
-        result = result.concat(current.substring(prev, current.length()));
-        return result;
-    }
-
-    private Object getValue(Cursor cursor, String column, int index){
+    @Override
+    public Object getValue(Cursor cursor, String column, int index){
         switch (column) {
             case DatabaseContract.RestaurantsColumns.MIN_PRICE:
             case DatabaseContract.RestaurantsColumns.MAX_PRICE:
@@ -202,7 +129,11 @@ public class RestaurantManager implements ManagerInterface {
         }
     }
 
-    private class CustomAdapter extends ArrayAdapter<HashMap<String, Object>> {
+    static ArrayAdapter getAdapterWithData(Context context, QueryConditions queryConditions){
+        return new RestaurantManager.CustomAdapter(context, new DatabaseGetter(context).makeData(queryConditions));
+    }
+
+    private static class CustomAdapter extends ArrayAdapter<HashMap<String, Object>> {
 
         private Context context;
         private CustomAdapter(Context context, ArrayList<HashMap<String, Object>> data) {

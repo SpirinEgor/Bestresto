@@ -4,11 +4,9 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.pdf.PdfDocument;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +14,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.bestresto.Database.DatabaseContract;
+import com.bestresto.Database.QueryConditions;
 import com.bestresto.PagerActivity;
 import com.bestresto.R;
-import com.bestresto.data.DatabaseContract;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class RestaurantsFragment extends Fragment {
@@ -34,19 +32,18 @@ public class RestaurantsFragment extends Fragment {
         View view = inflater.inflate(R.layout.rest_fragment_all, container, false);
         lv = (ListView) view.findViewById(R.id.listRestaurants);
 
-        HashMap<String, String> whereConditions = new HashMap<>();
-        HashMap<String, String> orderByConditions = new HashMap<>();
-        String[] columns = {
+        QueryConditions queryConditions= new QueryConditions();
+        queryConditions.setTableName(DatabaseContract.RestaurantsColumns.TABLE_NAME);
+        queryConditions.setColumns(new String[]{
                 DatabaseContract.RestaurantsColumns.CAPTION,
                 DatabaseContract.RestaurantsColumns.LOGO,
                 DatabaseContract.RestaurantsColumns.REITING,
                 DatabaseContract.RestaurantsColumns.KITCHEN,
                 DatabaseContract.RestaurantsColumns.ADDRESS,
-        };
-        RestaurantManager restaurantManager = new RestaurantManager();
-        restaurantManager.openDb(view.getContext());
-        lv.setAdapter(restaurantManager.getAdapterWithData(view.getContext(), whereConditions, orderByConditions, columns));
-        restaurantManager.closeDb();
+        });
+
+        lv.setAdapter(RestaurantManager.getAdapterWithData(view.getContext(), queryConditions));
+
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

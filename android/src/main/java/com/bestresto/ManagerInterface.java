@@ -1,15 +1,11 @@
 package com.bestresto;
 
-import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
-/**
- * Created by voudy on 18.07.17.
- */
 
 public interface ManagerInterface {
 
@@ -23,7 +19,6 @@ public interface ManagerInterface {
 
     public void cleanTable();
 
-    public void openDb(Context context);
+    public Object getValue(Cursor cursor, String column, int index);
 
-    public void closeDb();
 }

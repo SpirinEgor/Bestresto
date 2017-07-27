@@ -1,66 +1,70 @@
 package com.bestresto.Types;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.bestresto.Database.DatabaseContract;
+import com.bestresto.Database.DbHelper;
 import com.bestresto.ManagerInterface;
-import com.bestresto.data.DatabaseContract;
-import com.bestresto.data.dbHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class RestaurantTypesManager implements ManagerInterface {
 
     private SQLiteDatabase db;
 
-    public void openDb(Context context){
-        dbHelper dbh = new dbHelper(context);
-        db = dbh.getWritableDatabase();
-    }
-
-    public void closeDb(){
-        db.close();
-    }
-
+    @Override
     public void cleanTable(){
-        dbHelper.createRestaurantTypes(db);
+        DbHelper.createRestaurantTypes(db);
         db.delete(DatabaseContract.RestaurantTypesColumns.TABLE_NAME, null, null);
     }
 
+    @Override
     public void setDb(SQLiteDatabase db){
         this.db = db;
     }
 
+    private int currentPrimeNumber = 0;
+
+    @Override
     public void addAllDb(ArrayList<HashMap<String, Object>> data){
         this.cleanTable();
-        addDB(data);
-    }
-
-    private void addDB(ArrayList<HashMap<String, Object>> info){
         ArrayList<Integer> primeNumber = generatePrimeNumber();
         int i = 0;
-        for (HashMap<String, Object> type: info){
-            ContentValues values = new ContentValues();
-            values.put(DatabaseContract.RestaurantTypesColumns.INDEXID  ,
-                    (type.get(DatabaseContract.RestaurantTypesColumns.INDEXID) == null ? 0 : Integer.parseInt(type.get(DatabaseContract.RestaurantTypesColumns.INDEXID).toString())));
-            values.put(DatabaseContract.RestaurantTypesColumns.CAPTION,
-                    (type.get(DatabaseContract.DishesColumns.CAPTION) == null ? "" : type.get(DatabaseContract.DishesColumns.CAPTION).toString()));
-            values.put(DatabaseContract.RestaurantTypesColumns.SORT,
-                    (type.get(DatabaseContract.RestaurantTypesColumns.SORT) == null ? 0 : Integer.parseInt(type.get(DatabaseContract.RestaurantTypesColumns.ACTIVE).toString())));
-            values.put(DatabaseContract.RestaurantTypesColumns.ACTIVE,
-                    (type.get(DatabaseContract.RestaurantTypesColumns.ACTIVE) == null ? 0 : Integer.parseInt(type.get(DatabaseContract.RestaurantTypesColumns.ACTIVE).toString())));
-            values.put(DatabaseContract.RestaurantTypesColumns.PRIMEID, primeNumber.get(i));
-            //Log.d(type.get(DatabaseContract.DishesColumns.CAPTION).toString(), String.valueOf(primeNumber.get(i)));
+        for (HashMap<String, Object> type: data){
+            currentPrimeNumber = primeNumber.get(i);
+            addDb(type);
             ++i;
-            long newRowId = db.insert(DatabaseContract.RestaurantTypesColumns.TABLE_NAME, null, values);
         }
     }
 
-    public void addDb(HashMap<String, Object> data) {}
+    @Override
+    public void addDb(HashMap<String, Object> type) {
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.RestaurantTypesColumns.INDEXID  ,
+                (type.get(DatabaseContract.RestaurantTypesColumns.INDEXID) == null ? 0 : Integer.parseInt(type.get(DatabaseContract.RestaurantTypesColumns.INDEXID).toString())));
+        values.put(DatabaseContract.RestaurantTypesColumns.CAPTION,
+                (type.get(DatabaseContract.DishesColumns.CAPTION) == null ? "" : type.get(DatabaseContract.DishesColumns.CAPTION).toString()));
+        values.put(DatabaseContract.RestaurantTypesColumns.SORT,
+                (type.get(DatabaseContract.RestaurantTypesColumns.SORT) == null ? 0 : Integer.parseInt(type.get(DatabaseContract.RestaurantTypesColumns.ACTIVE).toString())));
+        values.put(DatabaseContract.RestaurantTypesColumns.ACTIVE,
+                (type.get(DatabaseContract.RestaurantTypesColumns.ACTIVE) == null ? 0 : Integer.parseInt(type.get(DatabaseContract.RestaurantTypesColumns.ACTIVE).toString())));
+        values.put(DatabaseContract.RestaurantTypesColumns.PRIMEID, currentPrimeNumber);
+        //Log.d(type.get(DatabaseContract.DishesColumns.CAPTION).toString(), String.valueOf(primeNumber.get(i)));
+        long newRowId = db.insert(DatabaseContract.RestaurantTypesColumns.TABLE_NAME, null, values);
+    }
+
+    @Override
+    public Object getValue(Cursor cursor, String column, int index) {
+        switch (column) {
+            case DatabaseContract.RestaurantTypesColumns.CAPTION:
+                return cursor.getString(index);
+            default:
+                return cursor.getInt(index);
+        }
+    }
 
     public int getRestaurantNumber(String req){
         ArrayList<Integer> kitchens = stringToArray(req);
@@ -181,36 +185,6 @@ public class RestaurantTypesManager implements ManagerInterface {
         }
         if (num != 1)
             result.add(num);
-        return result;
-    }
-
-    public ArrayList<String> make_data_restaurants_sorted(Context context){
-        ArrayList<String> result = new ArrayList<>();
-        openDb(context);
-        String[] projection = {
-            DatabaseContract.RestaurantTypesColumns.CAPTION
-        };
-
-        Cursor cursor = db.query(
-                DatabaseContract.RestaurantTypesColumns.TABLE_NAME,
-                projection,
-                DatabaseContract.RestaurantTypesColumns.ACTIVE + " = 1",
-                null,
-                null,
-                null,
-                DatabaseContract.RestaurantTypesColumns.SORT + " ASC"
-        );
-
-        try {
-            int currentCaption = cursor.getColumnIndex(DatabaseContract.RestaurantTypesColumns.CAPTION);
-            while (cursor.moveToNext()){
-                result.add(cursor.getString(currentCaption));
-            }
-        }
-        finally {
-            cursor.close();
-        }
-        closeDb();
         return result;
     }
 }

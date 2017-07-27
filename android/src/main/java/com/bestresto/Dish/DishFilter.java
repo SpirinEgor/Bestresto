@@ -2,8 +2,6 @@ package com.bestresto.Dish;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
@@ -19,14 +17,8 @@ import android.widget.ScrollView;
 
 import com.bestresto.R;
 import com.bestresto.Types.KitchenTypesManager;
-import com.bestresto.data.DatabaseContract;
-import com.bestresto.data.dbHelper;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
 
 /**
  * Created by sergey on 02.06.17.

@@ -1,4 +1,4 @@
-package com.bestresto.data;
+package com.bestresto.Database;
 
 import android.provider.BaseColumns;
 

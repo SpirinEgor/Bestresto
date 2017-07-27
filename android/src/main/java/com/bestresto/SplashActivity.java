@@ -9,11 +9,11 @@ import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bestresto.Database.DbHelper;
 import com.bestresto.Dish.DishManager;
 import com.bestresto.Restaurant.RestaurantManager;
 import com.bestresto.Types.KitchenTypesManager;
 import com.bestresto.Types.RestaurantTypesManager;
-import com.bestresto.data.dbHelper;
 
 import java.util.ArrayList;
 
@@ -59,8 +59,9 @@ public class SplashActivity extends AppCompatActivity{
         long startTime = System.currentTimeMillis();
         pBar = (ProgressBar) findViewById(R.id.progressBar);
         textView = (TextView)findViewById(R.id.textIndicator);
-        dbHelper dbh = new dbHelper(this);
-        SQLiteDatabase db = dbh.getWritableDatabase();
+
+        SQLiteDatabase db = new DbHelper(this).getWritableDatabase();
+
         try{
             ArrayList<Thread> threads = new ArrayList<>();
             for (int i = 0; i < requestsTypes.length; ++i){

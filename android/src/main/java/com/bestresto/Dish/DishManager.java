@@ -1,14 +1,11 @@
 package com.bestresto.Dish;
 
-import android.app.DownloadManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,19 +14,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bestresto.AddDbThread;
+import com.bestresto.Database.DatabaseContract;
+import com.bestresto.Database.DatabaseGetter;
+import com.bestresto.Database.DbHelper;
+import com.bestresto.Database.QueryConditions;
+import com.bestresto.ManagerInterface;
 import com.bestresto.R;
 import com.bestresto.Types.KitchenTypesManager;
 import com.bestresto.Types.RestaurantTypesManager;
-import com.bestresto.data.DatabaseContract;
-import com.bestresto.data.QueryConditions;
-import com.bestresto.data.dbHelper;
 import com.squareup.picasso.Picasso;
-import com.bestresto.ManagerInterface;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * Created by egor on 30.05.17.
@@ -40,24 +36,18 @@ public class DishManager implements ManagerInterface {
 
     private SQLiteDatabase db;
 
-    public void openDb(Context context){
-        dbHelper dbh = new dbHelper(context);
-        db = dbh.getWritableDatabase();
-    }
-
-    public void closeDb(){
-        db.close();
-    }
-
+    @Override
     public void cleanTable(){
-        dbHelper.createDish(db);
+        DbHelper.createDish(db);
         db.delete(DatabaseContract.DishesColumns.TABLE_NAME, null, null);
     }
 
+    @Override
     public void setDb(SQLiteDatabase db){
         this.db = db;
     }
 
+    @Override
     public void addAllDb(final ArrayList<HashMap<String, Object>> data){
         this.cleanTable();
         int itemPerThread = 250;
@@ -84,6 +74,7 @@ public class DishManager implements ManagerInterface {
         }
     }
 
+    @Override
     synchronized public void addDb(HashMap<String, Object> dish){
         ContentValues values = new ContentValues();
         KitchenTypesManager kitchenTypesManager = new KitchenTypesManager();
@@ -128,99 +119,8 @@ public class DishManager implements ManagerInterface {
         long newRowId = db.insert(DatabaseContract.DishesColumns.TABLE_NAME, null, values);
     }
 
-    public ArrayList<HashMap<String, Object>> makeData
-            (QueryConditions queryConditions, String[] columns){
-        ArrayList<HashMap<String, Object>> data = new ArrayList<>();
-        StringBuilder where = new StringBuilder();
-
-        HashMap<String, String> otherConditions =  queryConditions.otherConditions;
-        for (Map.Entry<String, String> otherCondition: otherConditions.entrySet()){
-            String column = otherCondition.getKey();
-            String value = check(otherCondition.getValue());
-            if (column.equals(DatabaseContract.DishesColumns.PRICE)){
-                where.append(column).append(" <= ").append(value).append(" AND ");
-            }
-            else {
-                where.append(column).append(" = \"").append(value).append("\" AND ");
-            }
-        }
-        if (!where.toString().equals("")){
-            where.delete(where.length() - 5, where.length());
-        }
-
-        ArrayList<String> kitchenConditions = queryConditions.kitchenConditions;
-        if (kitchenConditions.size() > 0){
-            if (!where.toString().equals("")) where.append(" AND (");
-            else where.append("( ");
-
-            for (String kitchenCondition: kitchenConditions){
-                where.append(DatabaseContract.DishesColumns.KITCHEN).append(" % ").append(kitchenCondition).append(" = 0").append(" OR ");
-            }
-            where.delete(where.length() - 4, where.length());
-            where.append(" )");
-        }
-
-        HashMap<String, String> orderByConditions = queryConditions.orderByConditions;
-        Log.d("ORDER", orderByConditions.toString());
-        StringBuilder order = new StringBuilder();
-        for (Map.Entry<String, String> condition: orderByConditions.entrySet()){
-            String column = condition.getKey();
-            String value = check(condition.getValue());
-            order.append(column).append(" ").append(value).append(", ");
-        }
-        if (!order.toString().equals("")){
-            order.delete(order.length() - 2, order.length());
-        }
-        Log.d("WHERE_TAG", where.toString());
-        Log.d("ORDER_STRING", order.toString());
-        Cursor cursor = db.query(
-                DatabaseContract.DishesColumns.TABLE_NAME,
-                columns,
-                (where.toString().equals("") ? null : where.toString()),
-                null,
-                null,
-                null,
-                (order.toString().equals("") ? null : order.toString())
-        );
-        try{
-            int[] index = new int[columns.length];
-            for (int i = 0; i < columns.length; ++i) {
-                index[i] = cursor.getColumnIndex(columns[i]);
-            }
-            while (cursor.moveToNext()){
-                HashMap<String, Object> cur = new HashMap<>();
-                for (int i = 0; i < columns.length; ++i){
-                    cur.put(columns[i], getValue(cursor, columns[i], index[i]));
-                }
-                data.add(cur);
-            }
-        }
-        finally {
-            cursor.close();
-        }
-        return  data;
-    }
-
-    ArrayAdapter getAdapterWithData(Context context,
-             QueryConditions queryConditions, String[] columns){
-        return new CustomAdapter(context, makeData(queryConditions, columns));
-    }
-
-    private String check(String current){
-        String result = "";
-        int prev = 0;
-        for (int i = 0; i < current.length(); ++i){
-            if (current.charAt(i) == '"'){
-                String tmp = current.substring(prev, i);
-                result = result.concat(tmp).concat("\"");
-                prev = i;
-            }
-        }
-        result = result.concat(current.substring(prev, current.length()));
-        return result;
-    }
-
-    private Object getValue(Cursor cursor, String column, int index){
+    @Override
+    public  Object getValue(Cursor cursor, String column, int index){
         switch (column) {
             case DatabaseContract.DishesColumns.INDEXID:
             case DatabaseContract.DishesColumns.PRICE:
@@ -243,7 +143,11 @@ public class DishManager implements ManagerInterface {
         }
     }
 
-    private class CustomAdapter extends ArrayAdapter<HashMap<String, Object>> {
+    static ArrayAdapter getAdapterWithData(Context context, QueryConditions queryConditions){
+        return new CustomAdapter(context, new DatabaseGetter(context).makeData(queryConditions));
+    }
+
+    private static class CustomAdapter extends ArrayAdapter<HashMap<String, Object>> {
 
         private Context context;
         CustomAdapter(Context context, ArrayList<HashMap<String, Object>> data) {

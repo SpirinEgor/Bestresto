@@ -1,6 +1,6 @@
 package com.bestresto;
 
-import com.bestresto.data.DatabaseContract;
+import com.bestresto.Database.DatabaseContract;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
