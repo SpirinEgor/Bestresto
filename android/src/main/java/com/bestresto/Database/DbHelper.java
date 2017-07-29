@@ -20,22 +20,22 @@ public class DbHelper extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        createDish(db);
-        createRestaurant(db);
-        createKitchenTypes(db);
-        createRestaurantTypes(db);
+        createDish();
+        createRestaurant();
+        createKitchenTypes();
+        createRestaurantTypes();
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + DatabaseContract.DishesColumns.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + DatabaseContract.RestaurantsColumns.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + DatabaseContract.KitchenTypesColumns.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + DatabaseContract.RestaurantTypesColumns.TABLE_NAME);
+        DatabaseWork.execSQL("DROP TABLE IF EXISTS " + DatabaseContract.DishesColumns.TABLE_NAME);
+        DatabaseWork.execSQL("DROP TABLE IF EXISTS " + DatabaseContract.RestaurantsColumns.TABLE_NAME);
+        DatabaseWork.execSQL("DROP TABLE IF EXISTS " + DatabaseContract.KitchenTypesColumns.TABLE_NAME);
+        DatabaseWork.execSQL("DROP TABLE IF EXISTS " + DatabaseContract.RestaurantTypesColumns.TABLE_NAME);
         onCreate(db);
     }
 
-    public static void createDish(SQLiteDatabase db){
+    private static void createDish(){
         String SQL = "CREATE TABLE IF NOT EXISTS " + DatabaseContract.DishesColumns.TABLE_NAME + " ("
                 + DatabaseContract.DishesColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + DatabaseContract.DishesColumns.INDEXID + " INTEGER NOT NULL, "
@@ -53,10 +53,10 @@ public class DbHelper extends SQLiteOpenHelper{
                 + DatabaseContract.DishesColumns.GARANT + " TEXT NOT NULL, "
                 + DatabaseContract.DishesColumns.SEARCHTAGS + " TEXT NOT NULL, "
                 + DatabaseContract.DishesColumns.CREATEDATE +" TEXT NOT NULL);";
-        db.execSQL(SQL);
+        DatabaseWork.execSQL(SQL);
     }
 
-    public static void createRestaurant(SQLiteDatabase db){
+    private static void createRestaurant(){
         String SQL = "CREATE TABLE IF NOT EXISTS " + DatabaseContract.RestaurantsColumns.TABLE_NAME + " ("
                 + DatabaseContract.RestaurantsColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + DatabaseContract.RestaurantsColumns.CAPTION + " TEXT NOT NULL, "
@@ -68,10 +68,10 @@ public class DbHelper extends SQLiteOpenHelper{
                 + DatabaseContract.RestaurantsColumns.MAX_PRICE + " INTEGER NOT NULL, "
                 + DatabaseContract.RestaurantsColumns.KITCHEN + " INTEGER NOT NULL, "
                 + DatabaseContract.RestaurantsColumns.ADDRESS + " TEXT NOT NULL);";
-        db.execSQL(SQL);
+        DatabaseWork.execSQL(SQL);
     }
 
-    public static void createKitchenTypes(SQLiteDatabase db){
+    private static void createKitchenTypes(){
         String SQL = "CREATE TABLE IF NOT EXISTS " + DatabaseContract.KitchenTypesColumns.TABLE_NAME + " ("
                 + DatabaseContract.KitchenTypesColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + DatabaseContract.KitchenTypesColumns.CAPTION + " TEXT NOT NULL, "
@@ -79,10 +79,10 @@ public class DbHelper extends SQLiteOpenHelper{
                 + DatabaseContract.KitchenTypesColumns.SORT + " INTEGER NOT NULL, "
                 + DatabaseContract.KitchenTypesColumns.PRIMEID + " INTEGER NOT NULL, "
                 + DatabaseContract.KitchenTypesColumns.ACTIVE + " TINYINT NOT NULL);";
-        db.execSQL(SQL);
+        DatabaseWork.execSQL(SQL);
     }
 
-    public static void createRestaurantTypes(SQLiteDatabase db){
+    private static void createRestaurantTypes(){
         String SQL = "CREATE TABLE IF NOT EXISTS " + DatabaseContract.RestaurantTypesColumns.TABLE_NAME + " ("
                 + DatabaseContract.RestaurantTypesColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + DatabaseContract.RestaurantTypesColumns.CAPTION + " TEXT NOT NULL, "
@@ -90,6 +90,19 @@ public class DbHelper extends SQLiteOpenHelper{
                 + DatabaseContract.RestaurantTypesColumns.SORT + " INTEGER NOT NULL, "
                 + DatabaseContract.RestaurantTypesColumns.PRIMEID + " INTEGER NOT NULL, "
                 + DatabaseContract.RestaurantTypesColumns.ACTIVE + " TINYINT NOT NULL);";
-        db.execSQL(SQL);
+        DatabaseWork.execSQL(SQL);
+    }
+
+    static void createTable(String tableName) {
+        switch (tableName) {
+            case DatabaseContract.DishesColumns.TABLE_NAME:
+                createDish();
+            case DatabaseContract.RestaurantsColumns.TABLE_NAME:
+                createRestaurant();
+            case DatabaseContract.KitchenTypesColumns.TABLE_NAME:
+                createKitchenTypes();
+            case  DatabaseContract.RestaurantTypesColumns.TABLE_NAME:
+                createRestaurantTypes();
+        }
     }
 }

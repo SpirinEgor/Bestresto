@@ -2,10 +2,10 @@ package com.bestresto.Types;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import com.bestresto.Database.DatabaseContract;
-import com.bestresto.Database.DbHelper;
+import com.bestresto.Database.DatabaseWork;
+import com.bestresto.Database.QueryConditions;
 import com.bestresto.ManagerInterface;
 
 import java.util.ArrayList;
@@ -13,24 +13,11 @@ import java.util.HashMap;
 
 public class RestaurantTypesManager implements ManagerInterface {
 
-    private SQLiteDatabase db;
-
-    @Override
-    public void cleanTable(){
-        DbHelper.createRestaurantTypes(db);
-        db.delete(DatabaseContract.RestaurantTypesColumns.TABLE_NAME, null, null);
-    }
-
-    @Override
-    public void setDb(SQLiteDatabase db){
-        this.db = db;
-    }
-
     private int currentPrimeNumber = 0;
 
     @Override
     public void addAllDb(ArrayList<HashMap<String, Object>> data){
-        this.cleanTable();
+        DatabaseWork.cleanTable(DatabaseContract.RestaurantTypesColumns.TABLE_NAME);
         ArrayList<Integer> primeNumber = generatePrimeNumber();
         int i = 0;
         for (HashMap<String, Object> type: data){
@@ -52,8 +39,8 @@ public class RestaurantTypesManager implements ManagerInterface {
         values.put(DatabaseContract.RestaurantTypesColumns.ACTIVE,
                 (type.get(DatabaseContract.RestaurantTypesColumns.ACTIVE) == null ? 0 : Integer.parseInt(type.get(DatabaseContract.RestaurantTypesColumns.ACTIVE).toString())));
         values.put(DatabaseContract.RestaurantTypesColumns.PRIMEID, currentPrimeNumber);
-        //Log.d(type.get(DatabaseContract.DishesColumns.CAPTION).toString(), String.valueOf(primeNumber.get(i)));
-        long newRowId = db.insert(DatabaseContract.RestaurantTypesColumns.TABLE_NAME, null, values);
+
+        DatabaseWork.insertContentValue(DatabaseContract.RestaurantTypesColumns.TABLE_NAME, values);
     }
 
     @Override
@@ -64,40 +51,6 @@ public class RestaurantTypesManager implements ManagerInterface {
             default:
                 return cursor.getInt(index);
         }
-    }
-
-    public int getRestaurantNumber(String req){
-        ArrayList<Integer> kitchens = stringToArray(req);
-        int result = 1;
-        for (int kit: kitchens){
-            String[] projection = {
-                    DatabaseContract.RestaurantTypesColumns.INDEXID,
-                    DatabaseContract.RestaurantTypesColumns.PRIMEID,
-                    DatabaseContract.RestaurantTypesColumns.ACTIVE
-            };
-            Cursor cursor = db.query(
-                    DatabaseContract.RestaurantTypesColumns.TABLE_NAME,   // таблица
-                    projection,            // столбцы
-                    DatabaseContract.DishesColumns.ACTIVE + " = 1" +
-                            " AND " + DatabaseContract.DishesColumns.INDEXID + " = " + kit,                  // столбцы для условия WHERE
-                    null,                  // значения для условия WHERE
-                    null,                  // Don't group the rows
-                    null,                  // Don't filter by row groups
-                    null);
-            try {
-                // Узнаем индекс каждого столбца
-                int primeColumnIndex = cursor.getColumnIndex(DatabaseContract.RestaurantTypesColumns.PRIMEID);
-                while (cursor.moveToNext()) {
-                    // Используем индекс для получения строки или числа
-                    int currentPrime = cursor.getInt(primeColumnIndex);
-                    result *= currentPrime;
-                }
-            }
-            finally {
-                cursor.close();
-            }
-        }
-        return result;
     }
 
     private ArrayList<Integer> generatePrimeNumber(){
@@ -137,43 +90,7 @@ public class RestaurantTypesManager implements ManagerInterface {
         return result;
     }
 
-    public String getRestaurants(int num){
-        ArrayList<Integer> prime = simply(num);
-        String result = "";
-        for (int curPrime: prime){
-            String[] projection = {
-                    DatabaseContract.RestaurantTypesColumns.CAPTION,
-                    DatabaseContract.RestaurantTypesColumns.PRIMEID,
-                    DatabaseContract.RestaurantTypesColumns.ACTIVE
-            };
-            Cursor cursor = db.query(
-                    DatabaseContract.RestaurantTypesColumns.TABLE_NAME,   // таблица
-                    projection,            // столбцы
-                    DatabaseContract.RestaurantTypesColumns.ACTIVE + " = 1" +
-                            " AND " + DatabaseContract.RestaurantTypesColumns.PRIMEID + " = " + curPrime,                  // столбцы для условия WHERE
-                    null,                  // значения для условия WHERE
-                    null,                  // Don't group the rows
-                    null,                  // Don't filter by row groups
-                    null);
-            try {
-                // Узнаем индекс каждого столбца
-                int captionColumnIndex = cursor.getColumnIndex(DatabaseContract.RestaurantTypesColumns.CAPTION);
-                while (cursor.moveToNext()) {
-                    // Используем индекс для получения строки или числа
-                    String currentCaption = cursor.getString(captionColumnIndex);
-                    result += currentCaption + ", ";
-                }
-            }
-            finally {
-                cursor.close();
-            }
-        }
-        if (!result.equals(""))
-            result = result.substring(0, result.length() - 2);
-        return result;
-    }
-
-    private ArrayList<Integer> simply(int num){
+    private ArrayList<Integer> prime(int num){
         ArrayList<Integer> result = new ArrayList<>();
         int up = num;
         for (int i = 2; i * i <= up; ++i){
@@ -187,4 +104,64 @@ public class RestaurantTypesManager implements ManagerInterface {
             result.add(num);
         return result;
     }
+
+    public int getRestaurantNumber(String req){
+        ArrayList<Integer> kitchens = stringToArray(req);
+
+        QueryConditions queryConditions = new QueryConditions();
+        queryConditions.setTableName(DatabaseContract.RestaurantTypesColumns.TABLE_NAME);
+        queryConditions.setColumns(new String[]{ DatabaseContract.RestaurantTypesColumns.PRIMEID });
+        StringBuilder whereCondition = new StringBuilder(DatabaseContract.RestaurantTypesColumns.ACTIVE + " = 1");
+        if (kitchens.size() > 0) {
+            whereCondition.append(" AND (");
+            for (int kitchen: kitchens) {
+                whereCondition.append("(").append(DatabaseContract.DishesColumns.INDEXID).append(" = ").append(kitchen).append(")");
+                if (kitchen != kitchens.get(kitchens.size() - 1)) {
+                    whereCondition.append(" OR ");
+                }
+            }
+            whereCondition.append(")");
+        }
+        queryConditions.setWhereCondition(whereCondition.toString());
+        ArrayList<HashMap<String, Object>> data = DatabaseWork.makeData(queryConditions);
+
+        int result = 1;
+        for (HashMap<String, Object> singleType: data) {
+            result *= Integer.parseInt(singleType.get(DatabaseContract.RestaurantTypesColumns.PRIMEID).toString());
+        }
+        return result;
+    }
+
+    public String getRestaurants(int num){
+        ArrayList<Integer> primes = prime(num);
+
+        QueryConditions queryConditions = new QueryConditions();
+        queryConditions.setTableName(DatabaseContract.RestaurantTypesColumns.TABLE_NAME);
+        queryConditions.setColumns(new String[]{ DatabaseContract.RestaurantTypesColumns.CAPTION });
+        StringBuilder whereCondition = new StringBuilder(DatabaseContract.RestaurantTypesColumns.ACTIVE + " = 1");
+        if (primes.size() > 0) {
+            whereCondition.append(" AND (");
+            for (int prime: primes) {
+                whereCondition.append("(").append(DatabaseContract.RestaurantTypesColumns.PRIMEID).append(" = ").
+                        append(prime).append(")");
+                if (prime != primes.get(primes.size() - 1)) {
+                    whereCondition.append(" OR ");
+                }
+            }
+            whereCondition.append(")");
+        }
+        queryConditions.setWhereCondition(whereCondition.toString());
+        ArrayList<HashMap<String, Object>> data = DatabaseWork.makeData(queryConditions);
+
+        StringBuilder result = new StringBuilder();
+        HashMap<String, Object> last = data.get(data.size() - 1);
+        for (HashMap<String, Object> singleType: data) {
+            result.append(singleType.get(DatabaseContract.RestaurantTypesColumns.CAPTION).toString());
+            if (!singleType.equals(last)) {
+                result.append(", ");
+            }
+        }
+        return result.toString();
+    }
+
 }

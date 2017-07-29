@@ -3,12 +3,12 @@ package com.bestresto.Database;
 public class QueryConditions{
 
     private String tableName = "";
-    private String whenCondition = "";
+    private String whereCondition = "";
     private String orderByCondition = "";
     private String[] columns = {};
 
-    String getWhenCondition() {
-        return whenCondition;
+    String getWhereCondition() {
+        return whereCondition;
     }
 
     String getOrderByCondition() {
@@ -23,8 +23,8 @@ public class QueryConditions{
         return tableName;
     }
 
-    public void setWhenCondition(String whenCondition) {
-        this.whenCondition = whenCondition;
+    public void setWhereCondition(String whereCondition) {
+        this.whereCondition = whereCondition;
     }
 
     public void setOrderByCondition(String orderByCondition) {

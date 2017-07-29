@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bestresto.Database.DatabaseContract;
-import com.bestresto.Database.DatabaseGetter;
+import com.bestresto.Database.DatabaseWork;
 import com.bestresto.Database.QueryConditions;
 import com.squareup.picasso.Picasso;
 
@@ -28,7 +28,7 @@ public class MainFragment extends Fragment{
         LinearLayout dishes = (LinearLayout) view.findViewById(R.id.main_dishes_list);
 
         QueryConditions queryConditions = new QueryConditions();
-        queryConditions.setWhenCondition(DatabaseContract.DishesColumns.ACTIVE + " = 1 AND " +
+        queryConditions.setWhereCondition(DatabaseContract.DishesColumns.ACTIVE + " = 1 AND " +
                                          DatabaseContract.DishesColumns.FIRST_PAGE + " = 1");
         queryConditions.setColumns(new String[]{
                 DatabaseContract.DishesColumns.CAPTION,
@@ -37,7 +37,7 @@ public class MainFragment extends Fragment{
         });
         queryConditions.setTableName(DatabaseContract.DishesColumns.TABLE_NAME);
 
-        ArrayList<HashMap<String, Object>> first_dishes_list = new DatabaseGetter(view.getContext()).makeData(queryConditions);
+        ArrayList<HashMap<String, Object>> first_dishes_list = DatabaseWork.makeData(queryConditions);
 
         int position = 0;
         for (final HashMap<String, Object> dish : first_dishes_list) {

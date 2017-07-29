@@ -1,5 +1,6 @@
 package com.bestresto.Database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -16,12 +17,12 @@ import java.util.HashMap;
  * Created by voudy on 27.07.17.
  */
 
-public class DatabaseGetter {
+public class DatabaseWork {
 
     private static SQLiteDatabase db;
 
-    public DatabaseGetter(Context context) {
-        db = new DbHelper(context).getReadableDatabase();
+    public DatabaseWork(Context context) {
+        db = new DbHelper(context).getWritableDatabase();
     }
 
     private static Object getValue(Cursor cursor, String column, int index, String tableName) {
@@ -39,13 +40,13 @@ public class DatabaseGetter {
         }
     }
 
-    public ArrayList<HashMap<String, Object>> makeData(QueryConditions queryConditions) {
+    public static synchronized ArrayList<HashMap<String, Object>> makeData(QueryConditions queryConditions) {
         ArrayList<HashMap<String, Object>> data = new ArrayList<>();
         String[] columns = queryConditions.getColumns();
         Cursor cursor = db.query(
                 queryConditions.getTableName(),
                 columns,
-                (queryConditions.getWhenCondition().equals("") ? null : queryConditions.getWhenCondition()),
+                (queryConditions.getWhereCondition().equals("") ? null : queryConditions.getWhereCondition()),
                 null,
                 null,
                 null,
@@ -83,6 +84,19 @@ public class DatabaseGetter {
         }
         result = result.concat(current.substring(prev, current.length()));
         return result;
+    }
+
+    public static synchronized void insertContentValue(String tableName, ContentValues values) {
+        db.insert(tableName, null, values);
+    }
+
+    public static synchronized void cleanTable(String tableName) {
+        DbHelper.createTable(tableName);
+        db.delete(tableName, null, null);
+    }
+
+    static synchronized void execSQL(String req) {
+        db.execSQL(req);
     }
 
 }

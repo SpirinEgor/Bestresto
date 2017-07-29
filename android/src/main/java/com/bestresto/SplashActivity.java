@@ -1,7 +1,6 @@
 package com.bestresto;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +8,7 @@ import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.bestresto.Database.DbHelper;
+import com.bestresto.Database.DatabaseWork;
 import com.bestresto.Dish.DishManager;
 import com.bestresto.Restaurant.RestaurantManager;
 import com.bestresto.Types.KitchenTypesManager;
@@ -60,12 +59,11 @@ public class SplashActivity extends AppCompatActivity{
         pBar = (ProgressBar) findViewById(R.id.progressBar);
         textView = (TextView)findViewById(R.id.textIndicator);
 
-        SQLiteDatabase db = new DbHelper(this).getWritableDatabase();
+        new DatabaseWork(this);
 
         try{
             ArrayList<Thread> threads = new ArrayList<>();
             for (int i = 0; i < requestsTypes.length; ++i){
-                managerTypes[i].setDb(db);
                 threads.add(new RequestThread(requestsTypes[i], managerTypes[i]));
             }
             for (Thread thread: threads){
@@ -76,7 +74,6 @@ public class SplashActivity extends AppCompatActivity{
             }
             threads = new ArrayList<>();
             for (int i = 0; i < requestsData.length; ++i){
-                managerData[i].setDb(db);
                 threads.add(new RequestThread(requestsData[i], managerData[i]));
             }
             for (Thread thread: threads){
@@ -87,7 +84,6 @@ public class SplashActivity extends AppCompatActivity{
             }
         }
         catch (Exception ignored){}
-        db.close();
         long timeSpent = System.currentTimeMillis() - startTime;
         Log.d("time", String.valueOf(timeSpent));
         Intent intent = new Intent(this, MainActivity.class);   //Start MainActivity

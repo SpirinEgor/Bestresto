@@ -12,7 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.bestresto.Database.DatabaseContract;
-import com.bestresto.Database.DatabaseGetter;
+import com.bestresto.Database.DatabaseWork;
 import com.bestresto.Database.QueryConditions;
 import com.bestresto.Dish.DescriptionDishFragment;
 import com.bestresto.Dish.DishManager;
@@ -58,17 +58,17 @@ public class PagerActivity extends FragmentActivity {
         QueryConditions queryConditions = new QueryConditions();
         switch (key) {
             case ALL_DISHES_TYPE:
-                queryConditions.setWhenCondition(DatabaseContract.DishesColumns.ACTIVE + " = 1");
+                queryConditions.setWhereCondition(DatabaseContract.DishesColumns.ACTIVE + " = 1");
                 queryConditions.setColumns(new String[]{
                         DatabaseContract.DishesColumns.CAPTION,
                         DatabaseContract.DishesColumns.PRICE,
                         DatabaseContract.DishesColumns.PICTURE
                 });
                 queryConditions.setTableName(DatabaseContract.DishesColumns.TABLE_NAME);
-                elements = new DatabaseGetter(this).makeData(queryConditions);
+                elements = DatabaseWork.makeData(queryConditions);
                 break;
             case FIRST_DISHES_TYPE:
-                queryConditions.setWhenCondition(DatabaseContract.DishesColumns.ACTIVE + " = 1 AND " +
+                queryConditions.setWhereCondition(DatabaseContract.DishesColumns.ACTIVE + " = 1 AND " +
                                                  DatabaseContract.DishesColumns.FIRST_PAGE + " = 1");
                 queryConditions.setColumns(new String[]{
                         DatabaseContract.DishesColumns.CAPTION,
@@ -76,7 +76,7 @@ public class PagerActivity extends FragmentActivity {
                         DatabaseContract.DishesColumns.PICTURE
                 });
                 queryConditions.setTableName(DatabaseContract.DishesColumns.TABLE_NAME);
-                elements = new DatabaseGetter(this).makeData(queryConditions);
+                elements = DatabaseWork.makeData(queryConditions);
                 break;
             case RESTAURANTS_TYPE:
                 queryConditions.setColumns(new String[]{
@@ -87,7 +87,7 @@ public class PagerActivity extends FragmentActivity {
                         DatabaseContract.RestaurantsColumns.ADDRESS,
                 });
                 queryConditions.setTableName(DatabaseContract.RestaurantsColumns.TABLE_NAME);
-                elements = new DatabaseGetter(this).makeData(queryConditions);
+                elements = DatabaseWork.makeData(queryConditions);
                 break;
             default:
                 elements = new ArrayList<>();

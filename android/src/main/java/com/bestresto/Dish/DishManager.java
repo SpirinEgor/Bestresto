@@ -3,7 +3,6 @@ package com.bestresto.Dish;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -15,8 +14,7 @@ import android.widget.TextView;
 
 import com.bestresto.AddDbThread;
 import com.bestresto.Database.DatabaseContract;
-import com.bestresto.Database.DatabaseGetter;
-import com.bestresto.Database.DbHelper;
+import com.bestresto.Database.DatabaseWork;
 import com.bestresto.Database.QueryConditions;
 import com.bestresto.ManagerInterface;
 import com.bestresto.R;
@@ -34,22 +32,9 @@ import java.util.HashMap;
 
 public class DishManager implements ManagerInterface {
 
-    private SQLiteDatabase db;
-
-    @Override
-    public void cleanTable(){
-        DbHelper.createDish(db);
-        db.delete(DatabaseContract.DishesColumns.TABLE_NAME, null, null);
-    }
-
-    @Override
-    public void setDb(SQLiteDatabase db){
-        this.db = db;
-    }
-
     @Override
     public void addAllDb(final ArrayList<HashMap<String, Object>> data){
-        this.cleanTable();
+        DatabaseWork.cleanTable(DatabaseContract.DishesColumns.TABLE_NAME);
         int itemPerThread = 250;
         int cnt = data.size() / itemPerThread + ((data.size() % itemPerThread > 0) ? 1: 0);
         ArrayList<Thread> threads = new ArrayList<>();
@@ -59,7 +44,6 @@ public class DishManager implements ManagerInterface {
                 curData.add(data.get(j));
             }
             DishManager curManager = new DishManager();
-            curManager.setDb(this.db);
             threads.add(new AddDbThread(curData, curManager));
         }
         for (Thread thread: threads){
@@ -75,12 +59,10 @@ public class DishManager implements ManagerInterface {
     }
 
     @Override
-    synchronized public void addDb(HashMap<String, Object> dish){
+    public void addDb(HashMap<String, Object> dish){
         ContentValues values = new ContentValues();
         KitchenTypesManager kitchenTypesManager = new KitchenTypesManager();
-        kitchenTypesManager.setDb(this.db);
         RestaurantTypesManager restaurantTypesManager = new RestaurantTypesManager();
-        restaurantTypesManager.setDb(this.db);
         values.put(DatabaseContract.DishesColumns.INDEXID,
                 (dish.get(DatabaseContract.DishesColumns.INDEXID) == null ? 0 : Integer.parseInt(dish.get(DatabaseContract.DishesColumns.INDEXID).toString())));
         values.put(DatabaseContract.DishesColumns.PARENT_ID,
@@ -116,7 +98,7 @@ public class DishManager implements ManagerInterface {
                 (dish.get(DatabaseContract.DishesColumns.SEARCHTAGS) == null ? "" : dish.get(DatabaseContract.DishesColumns.SEARCHTAGS).toString()));
         values.put(DatabaseContract.DishesColumns.CREATEDATE,
                 (dish.get(DatabaseContract.DishesColumns.CREATEDATE) == null ? "" : dish.get(DatabaseContract.DishesColumns.CREATEDATE).toString()));
-        long newRowId = db.insert(DatabaseContract.DishesColumns.TABLE_NAME, null, values);
+        DatabaseWork.insertContentValue(DatabaseContract.DishesColumns.TABLE_NAME, values);
     }
 
     @Override
@@ -132,11 +114,9 @@ public class DishManager implements ManagerInterface {
                 return cursor.getFloat(index);
             case DatabaseContract.DishesColumns.KITCHEN:
                 KitchenTypesManager kitchenTypesManager = new KitchenTypesManager();
-                kitchenTypesManager.setDb(this.db);
-                return kitchenTypesManager.getKitchens(cursor.getInt(index));
+                return kitchenTypesManager.getKitchensName(cursor.getInt(index));
             case DatabaseContract.DishesColumns.PARENT_ID:
                 RestaurantTypesManager restaurantTypesManager = new RestaurantTypesManager();
-                restaurantTypesManager.setDb(this.db);
                 return restaurantTypesManager.getRestaurants(cursor.getInt(index));
             default:
                 return cursor.getString(index);
@@ -144,7 +124,7 @@ public class DishManager implements ManagerInterface {
     }
 
     static ArrayAdapter getAdapterWithData(Context context, QueryConditions queryConditions){
-        return new CustomAdapter(context, new DatabaseGetter(context).makeData(queryConditions));
+        return new CustomAdapter(context, DatabaseWork.makeData(queryConditions));
     }
 
     private static class CustomAdapter extends ArrayAdapter<HashMap<String, Object>> {

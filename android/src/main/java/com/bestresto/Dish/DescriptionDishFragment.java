@@ -11,7 +11,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bestresto.Database.DatabaseContract;
-import com.bestresto.Database.DatabaseGetter;
+import com.bestresto.Database.DatabaseWork;
 import com.bestresto.Database.QueryConditions;
 import com.bestresto.R;
 import com.squareup.picasso.Picasso;
@@ -35,8 +35,8 @@ public class DescriptionDishFragment extends android.support.v4.app.Fragment {
         String name = getArguments().getString(DatabaseContract.DishesColumns.CAPTION);
 
         QueryConditions queryConditions = new QueryConditions();
-        queryConditions.setWhenCondition(DatabaseContract.DishesColumns.ACTIVE + " = 1 AND " +
-                                         DatabaseContract.DishesColumns.CAPTION + " = " + DatabaseGetter.prepare(name));
+        queryConditions.setWhereCondition(DatabaseContract.DishesColumns.ACTIVE + " = 1 AND " +
+                                         DatabaseContract.DishesColumns.CAPTION + " = " + DatabaseWork.prepare(name));
         queryConditions.setColumns(new String[]{
                 DatabaseContract.DishesColumns.CAPTION,
                 DatabaseContract.DishesColumns.PRICE,
@@ -48,7 +48,7 @@ public class DescriptionDishFragment extends android.support.v4.app.Fragment {
         });
         queryConditions.setTableName(DatabaseContract.DishesColumns.TABLE_NAME);
 
-        HashMap<String, Object> info = new DatabaseGetter(view.getContext()).makeData(queryConditions).get(0);
+        HashMap<String, Object> info = DatabaseWork.makeData(queryConditions).get(0);
 
         ImageView picture = (ImageView) view.findViewById(R.id.singleDish_picture);
         RatingBar reiting = (RatingBar) view.findViewById(R.id.singleDish_rating);

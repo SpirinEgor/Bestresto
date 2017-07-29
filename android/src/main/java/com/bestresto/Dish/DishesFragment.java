@@ -15,7 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.bestresto.Database.DatabaseContract;
-import com.bestresto.Database.DatabaseGetter;
+import com.bestresto.Database.DatabaseWork;
 import com.bestresto.Database.QueryConditions;
 import com.bestresto.PagerActivity;
 import com.bestresto.R;
@@ -48,7 +48,7 @@ public class DishesFragment extends Fragment {
         if (!(bundle == null)){
             String caption = bundle.getString("dish_caption");
             if (caption != null && !caption.equals("")) {
-                whenCondition += " AND " + DatabaseContract.DishesColumns.CAPTION + " = " + DatabaseGetter.prepare(caption);
+                whenCondition += " AND " + DatabaseContract.DishesColumns.CAPTION + " = " + DatabaseWork.prepare(caption);
             }
             Integer price = bundle.getInt("dish_price");
             if (price != -1) {
@@ -68,7 +68,7 @@ public class DishesFragment extends Fragment {
                 whenCondition += ")";
             }
         }
-        queryConditions.setWhenCondition(whenCondition);
+        queryConditions.setWhereCondition(whenCondition);
         queryConditions.setOrderByCondition(DatabaseContract.DishesColumns.CREATEDATE + " DESC");
         queryConditions.setColumns(new String[]{
                 DatabaseContract.DishesColumns.CAPTION,

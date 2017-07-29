@@ -10,7 +10,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bestresto.Database.DatabaseContract;
-import com.bestresto.Database.DatabaseGetter;
+import com.bestresto.Database.DatabaseWork;
 import com.bestresto.Database.QueryConditions;
 import com.bestresto.R;
 import com.squareup.picasso.Picasso;
@@ -26,7 +26,7 @@ public class DescriptionRestaurantFragment extends android.support.v4.app.Fragme
         String name = getArguments().getString(DatabaseContract.RestaurantsColumns.CAPTION);
 
         QueryConditions queryConditions = new QueryConditions();
-        queryConditions.setWhenCondition(DatabaseContract.RestaurantsColumns.CAPTION + " = " + DatabaseGetter.prepare(name));
+        queryConditions.setWhereCondition(DatabaseContract.RestaurantsColumns.CAPTION + " = " + DatabaseWork.prepare(name));
         queryConditions.setColumns(new String[]{
                 DatabaseContract.RestaurantsColumns.CAPTION,
                 DatabaseContract.RestaurantsColumns.URL,
@@ -39,7 +39,7 @@ public class DescriptionRestaurantFragment extends android.support.v4.app.Fragme
                 DatabaseContract.RestaurantsColumns.ADDRESS,
         });
         queryConditions.setTableName(DatabaseContract.RestaurantsColumns.TABLE_NAME);
-        HashMap<String, Object> info = new DatabaseGetter(view.getContext()).makeData(queryConditions).get(0);
+        HashMap<String, Object> info = DatabaseWork.makeData(queryConditions).get(0);
 
         ImageView logo = (ImageView) view.findViewById(R.id.singleRestaurant_logo);
         RatingBar rating = (RatingBar) view.findViewById(R.id.singleRestaurant_rating);
