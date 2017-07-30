@@ -63,10 +63,15 @@ public class RestaurantsFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RestaurantFilter filter = new RestaurantFilter();
-                fTrans.replace(R.id.container, filter);
-                fTrans.addToBackStack(null);
-                fTrans.commit();
+//                RestaurantFilter filter = new RestaurantFilter();
+//                fTrans.replace(R.id.container, filter);
+//                fTrans.addToBackStack(null);
+//                fTrans.commit();
+                RestaurantFilterDialog myDialog = new RestaurantFilterDialog();
+                myDialog.show(getFragmentManager(), "tag");
+
+
+
             }
 
         });

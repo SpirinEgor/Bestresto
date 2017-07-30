@@ -15,10 +15,16 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
+import com.bestresto.Database.DatabaseContract;
+import com.bestresto.Database.DatabaseWork;
+import com.bestresto.Database.QueryConditions;
 import com.bestresto.R;
 import com.bestresto.Types.KitchenTypesManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by sergey on 02.06.17.
@@ -383,18 +389,24 @@ public class DishFilter extends Fragment {
 
     private void SetCuisineCheckboxes(View view){
         cuisines = new ArrayList<>();
-        ArrayList<String> captions = (new KitchenTypesManager()).make_data_cuisines_sorted(view.getContext());
-        for (String caption : captions){
+        dish_cuisine_container = (LinearLayout)view.findViewById(R.id.dish_cuisine_container);
+
+        QueryConditions queryConditions = new QueryConditions();
+        queryConditions.setTableName(DatabaseContract.KitchenTypesColumns.TABLE_NAME);
+        queryConditions.setColumns(new String[] {DatabaseContract.KitchenTypesColumns.CAPTION});
+        queryConditions.setWhereCondition(DatabaseContract.KitchenTypesColumns.ACTIVE + " = 1");
+        queryConditions.setOrderByCondition(DatabaseContract.KitchenTypesColumns.SORT + " ASC");
+        ArrayList<HashMap<String, Object>> captions = DatabaseWork.makeData(queryConditions);
+        for (Map<String, Object> caption : captions){
             CheckBox cb = new CheckBox(view.getContext());
-            cb.setText(caption);
+            cb.setText(caption.get(DatabaseContract.KitchenTypesColumns.CAPTION).toString());
             cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     CuisineReset(dish_cuisine_button);
                 }
             });
-            cuisines.add(Pair.create(cb, caption));
-            dish_cuisine_container = (LinearLayout)view.findViewById(R.id.dish_cuisine_container);
+            cuisines.add(Pair.create(cb, caption.get(DatabaseContract.KitchenTypesColumns.CAPTION).toString()));
             dish_cuisine_container.addView(cb);
         }
     }

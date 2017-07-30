@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,12 +57,11 @@ public class DishesFragment extends Fragment {
             }
             ArrayList<String> dish_cuisines = bundle.getStringArrayList("cuisine_params");
             if (dish_cuisines != null && dish_cuisines.size() != 0){
-                KitchenTypesManager ktm = new KitchenTypesManager();
-                ArrayList<Integer> primeList = ktm.getKitchenNumbersByNames(dish_cuisines);
+                ArrayList<String> primeList = KitchenTypesManager.getKitchenNumbersByNames(dish_cuisines);
                 whenCondition += " AND (";
-                for (int prime: primeList) {
+                for (String prime: primeList) {
                     whenCondition += DatabaseContract.DishesColumns.KITCHEN + " % " + prime + " = 0";
-                    if (prime != primeList.get(primeList.size() - 1)) {
+                    if (!prime.equals(primeList.get(primeList.size() - 1))) {
                         whenCondition += " OR ";
                     }
                 }

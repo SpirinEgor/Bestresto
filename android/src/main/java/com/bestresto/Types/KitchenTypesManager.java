@@ -2,6 +2,7 @@ package com.bestresto.Types;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.util.Log;
 
 import com.bestresto.Database.DatabaseContract;
 import com.bestresto.Database.DatabaseWork;
@@ -166,6 +167,18 @@ public class KitchenTypesManager implements ManagerInterface {
             }
         }
         return result.toString();
+    }
+
+    public static ArrayList<String> getKitchenNumbersByNames(ArrayList<String> kitchens){
+        ArrayList<String> result = new ArrayList<>();
+        for (String kitchen : kitchens){
+                    QueryConditions qCond = new QueryConditions();
+                    qCond.setTableName(DatabaseContract.KitchenTypesColumns.TABLE_NAME);
+                    qCond.setWhereCondition(DatabaseContract.KitchenTypesColumns.CAPTION + " = " + DatabaseWork.prepare(kitchen));
+                    qCond.setColumns(new String[] {DatabaseContract.KitchenTypesColumns.PRIMEID});
+                    result.add(DatabaseWork.makeData(qCond).get(0).get(DatabaseContract.KitchenTypesColumns.PRIMEID).toString());
+        }
+        return result;
     }
 
 }

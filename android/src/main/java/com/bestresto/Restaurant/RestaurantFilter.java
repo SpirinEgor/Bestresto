@@ -15,12 +15,17 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 
+import com.bestresto.Database.DatabaseContract;
+import com.bestresto.Database.DatabaseWork;
+import com.bestresto.Database.QueryConditions;
 import com.bestresto.R;
 import com.bestresto.Types.KitchenTypesManager;
 import com.bestresto.Types.RestaurantTypesManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * Created by sergey on 30.06.17.
@@ -210,36 +215,48 @@ public class RestaurantFilter extends Fragment {
 
     private void SetCuisineCheckboxes(View view){
         cuisines = new ArrayList<>();
-        ArrayList<String> captions = (new KitchenTypesManager()).make_data_cuisines_sorted(view.getContext());
-        rest_cuisine_container = (LinearLayout)view.findViewById(R.id.rest_cuisine_container);
-        for (String caption : captions){
+        rest_cuisine_container = (LinearLayout)view.findViewById(R.id.dish_cuisine_container);
+
+        QueryConditions queryConditions = new QueryConditions();
+        queryConditions.setTableName(DatabaseContract.KitchenTypesColumns.TABLE_NAME);
+        queryConditions.setColumns(new String[] {DatabaseContract.KitchenTypesColumns.CAPTION});
+        queryConditions.setWhereCondition(DatabaseContract.KitchenTypesColumns.ACTIVE + " = 1");
+        queryConditions.setOrderByCondition(DatabaseContract.KitchenTypesColumns.SORT + " ASC");
+        ArrayList<HashMap<String, Object>> captions = DatabaseWork.makeData(queryConditions);
+        for (Map<String, Object> caption : captions){
             CheckBox cb = new CheckBox(view.getContext());
-            cb.setText(caption);
+            cb.setText(caption.get(DatabaseContract.KitchenTypesColumns.CAPTION).toString());
             cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     CuisineReset(rest_cuisine_button);
                 }
             });
-            cuisines.add(Pair.create(cb, caption));
+            cuisines.add(Pair.create(cb, caption.get(DatabaseContract.KitchenTypesColumns.CAPTION).toString()));
             rest_cuisine_container.addView(cb);
         }
     }
 
     private  void SetRestaurantCheckBoxes(View view){
         resttypes = new ArrayList<>();
-        ArrayList<String> captions = (new RestaurantTypesManager()).make_data_restaurants_sorted(view.getContext());
         rest_type_container = (LinearLayout)view.findViewById(R.id.rest_type_container);
-        for (String caption : captions){
+
+        QueryConditions queryConditions = new QueryConditions();
+        queryConditions.setTableName(DatabaseContract.RestaurantTypesColumns.TABLE_NAME);
+        queryConditions.setColumns(new String[] {DatabaseContract.RestaurantTypesColumns.CAPTION});
+        queryConditions.setWhereCondition(DatabaseContract.RestaurantTypesColumns.ACTIVE + " = 1");
+        queryConditions.setOrderByCondition(DatabaseContract.RestaurantTypesColumns.SORT + " ASC");
+        ArrayList<HashMap<String, Object>> captions = DatabaseWork.makeData(queryConditions);
+        for (Map<String, Object> caption : captions){
             CheckBox cb = new CheckBox(view.getContext());
-            cb.setText(caption);
+            cb.setText(caption.get(DatabaseContract.RestaurantTypesColumns.CAPTION).toString());
             cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     RestTypeReset(rest_type_button);
                 }
             });
-            resttypes.add(Pair.create(cb, caption));
+            resttypes.add(Pair.create(cb, caption.get(DatabaseContract.RestaurantTypesColumns.CAPTION).toString()));
             rest_type_container.addView(cb);
         }
     }
