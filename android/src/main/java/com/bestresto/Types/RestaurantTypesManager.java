@@ -122,6 +122,7 @@ public class RestaurantTypesManager implements ManagerInterface {
             }
             whereCondition.append(")");
         }
+        else return -1;
         queryConditions.setWhereCondition(whereCondition.toString());
         ArrayList<HashMap<String, Object>> data = DatabaseWork.makeData(queryConditions);
 
@@ -153,6 +154,7 @@ public class RestaurantTypesManager implements ManagerInterface {
         queryConditions.setWhereCondition(whereCondition.toString());
         ArrayList<HashMap<String, Object>> data = DatabaseWork.makeData(queryConditions);
 
+        if (data.size() == 0) { return ""; }
         StringBuilder result = new StringBuilder();
         HashMap<String, Object> last = data.get(data.size() - 1);
         for (HashMap<String, Object> singleType: data) {

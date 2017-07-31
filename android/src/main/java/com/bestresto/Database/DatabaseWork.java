@@ -44,7 +44,7 @@ public class DatabaseWork {
     public static synchronized ArrayList<HashMap<String, Object>> makeData(QueryConditions queryConditions) {
         ArrayList<HashMap<String, Object>> data = new ArrayList<>();
         String[] columns = queryConditions.getColumns();
-        //Log.e("WHERE", queryConditions.getTableName()+ " " + queryConditions.getWhereCondition());
+        Log.e("WHERE", queryConditions.getTableName()+ " " + queryConditions.getWhereCondition());
         Cursor cursor = db.query(
                 queryConditions.getTableName(),
                 columns,

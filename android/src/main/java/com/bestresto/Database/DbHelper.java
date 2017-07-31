@@ -52,7 +52,7 @@ public class DbHelper extends SQLiteOpenHelper{
                 + DatabaseContract.DishesColumns.REITING + " FLOAT NOT NULL, "
                 + DatabaseContract.DishesColumns.GARANT + " TEXT NOT NULL, "
                 + DatabaseContract.DishesColumns.SEARCHTAGS + " TEXT NOT NULL, "
-                + DatabaseContract.DishesColumns.CREATEDATE +" TEXT NOT NULL);";
+                + DatabaseContract.DishesColumns.CREATEDATE +" DATE NOT NULL);";
         DatabaseWork.execSQL(SQL);
     }
 

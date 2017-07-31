@@ -127,6 +127,7 @@ public class KitchenTypesManager implements ManagerInterface {
             }
             whenCondition.append(")");
         }
+        else return -1;
         queryConditions.setWhereCondition(whenCondition.toString());
         ArrayList<HashMap<String, Object>> data = DatabaseWork.makeData(queryConditions);
 
@@ -158,6 +159,7 @@ public class KitchenTypesManager implements ManagerInterface {
         queryConditions.setWhereCondition(whereCondition.toString());
         ArrayList<HashMap<String, Object>> data = DatabaseWork.makeData(queryConditions);
 
+        if (data.size() == 0) { return ""; }
         StringBuilder result = new StringBuilder();
         HashMap<String, Object> lastType = data.get(data.size() - 1);
         for (HashMap<String, Object> singleType: data) {

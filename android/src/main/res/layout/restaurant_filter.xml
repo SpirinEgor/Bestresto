@@ -11,17 +11,11 @@
 
         <EditText
             android:id="@+id/restaurant_title"
-            android:layout_width="275sp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
-            android:hint="Название ресторана"/>
+            android:hint="Название ресторана" />
 
-        <Button
-            android:id="@+id/rest_button_find"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:text="Найти!"/>
     </LinearLayout>
 
     <Button
@@ -33,7 +27,7 @@
     <ScrollView
         android:id="@+id/rest_cuisine_view"
         android:layout_width="match_parent"
-        android:layout_height="275sp"
+        android:layout_height="250sp"
         android:visibility="gone"
         android:background="@drawable/borders">
 
@@ -137,7 +131,7 @@
     <ScrollView
         android:id="@+id/rest_type_view"
         android:layout_width="match_parent"
-        android:layout_height="275sp"
+        android:layout_height="250sp"
         android:visibility="gone"
         android:background="@drawable/borders">
 
@@ -163,7 +157,7 @@
     <ScrollView
         android:id="@+id/features_view"
         android:layout_width="match_parent"
-        android:layout_height="275sp"
+        android:layout_height="240sp"
         android:visibility="gone"
         android:background="@drawable/borders">
 

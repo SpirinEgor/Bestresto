@@ -1,13 +1,15 @@
 package com.bestresto.Dish;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -18,20 +20,21 @@ import android.widget.ScrollView;
 import com.bestresto.Database.DatabaseContract;
 import com.bestresto.Database.DatabaseWork;
 import com.bestresto.Database.QueryConditions;
+import com.bestresto.FilterListener;
 import com.bestresto.R;
-import com.bestresto.Types.KitchenTypesManager;
+import com.bestresto.Restaurant.RestaurantFilterDialog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
- * Created by sergey on 02.06.17.
- * Filter
+ * Created by sergey on 31.07.17.
  */
 
-public class DishFilter extends Fragment {
+public class DishFilterDialog extends DialogFragment {
+    FilterListener mCallback;
+    Context parentContext;
     CheckBox salads, breakfasts, hotstarters, garnish, soups, starters, grill, maincourses, desserts;
 
     ArrayList<Pair<CheckBox, String>> cuisines, dishtypes;
@@ -42,11 +45,24 @@ public class DishFilter extends Fragment {
     EditText dish_price;
     LinearLayout dish_cuisine_container;
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    public void AttachFragment(Fragment fragment, Context context) {
+        try {
+            mCallback = (FilterListener) fragment;
+            parentContext = context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(fragment.toString()
+                    + " must implement FilterListener");
+        }
 
-        final View view = inflater.inflate(R.layout.dish_filter, container, false);
+    }
+
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        // Get the layout inflater
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        final View view = inflater.inflate(R.layout.dish_filter, null);
+
 
         dish_title = (EditText)view.findViewById(R.id.dish_title);
         dish_price = (EditText)view.findViewById(R.id.dish_price);
@@ -82,9 +98,7 @@ public class DishFilter extends Fragment {
         });
 
         SetCuisineCheckboxes(view);
-
-        ///////////////////////////////////////////////////////////////////////
-
+        ////////////////////////////////////////////////////////////////////////////////
         dishtypes = new ArrayList<>();
         breakfasts = (CheckBox)view.findViewById(R.id.breakfasts);
         dishtypes.add(Pair.create(breakfasts, getString(R.string.breakfasts)));
@@ -104,108 +118,6 @@ public class DishFilter extends Fragment {
         dishtypes.add(Pair.create(maincourses, getString(R.string.maincourses)));
         grill = (CheckBox)view.findViewById(R.id.grill);
         dishtypes.add(Pair.create(grill, getString(R.string.grill)));
-
-//        Button b2 = (Button)view.findViewById(R.id.filter_button_find);
-//        b2.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String caption = dish_title.getText().toString();
-//                int price;
-//                try {
-//                    price = Integer.parseInt(dish_price.getText().toString());
-//                }
-//                catch (NumberFormatException e){
-//                    price=-1;
-//                }
-//
-//                ArrayList<String> cuisine_params = new ArrayList<String>();
-//                for (Pair<CheckBox, String> cuisine:cuisines) {
-//                    if (cuisine.first.isChecked()) cuisine_params.add(cuisine.second);
-//                }
-//
-//                ArrayList<String> dish_params = new ArrayList<String>();
-//                if (salads.isChecked()){
-//                    dish_params.add(getString(R.string.salads));
-//                    CheckBox salads_vegetables = (CheckBox)view.findViewById(R.id.salads_vegetables);
-//                    if (salads_vegetables.isChecked()) dish_params.add(getString(R.string.vegetables));
-//                    CheckBox salads_ofmeat = (CheckBox)view.findViewById(R.id.salads_ofmeat);
-//                    if (salads_ofmeat.isChecked()) dish_params.add(getString(R.string.ofmeat));
-//                    CheckBox salads_fish = (CheckBox)view.findViewById(R.id.salads_fish);
-//                    if (salads_fish.isChecked()) dish_params.add(getString(R.string.fish));
-//                    CheckBox salads_bird = (CheckBox)view.findViewById(R.id.salads_bird);
-//                    if (salads_bird.isChecked()) dish_params.add(getString(R.string.bird));
-//                    CheckBox salads_seaproducts = (CheckBox)view.findViewById(R.id.salads_seaproducts);
-//                    if (salads_seaproducts.isChecked()) dish_params.add(getString(R.string.seaproducts));
-//                }
-//
-//                if (starters.isChecked()){
-//                    dish_params.add(getString(R.string.starters));
-//                    CheckBox starters_other = (CheckBox)view.findViewById(R.id.starters_other);
-//                    if (starters_other.isChecked()) dish_params.add(getString(R.string.other));
-//                    CheckBox starters_cheese = (CheckBox)view.findViewById(R.id.starters_cheese);
-//                    if (starters_cheese.isChecked()) dish_params.add(getString(R.string.cheese));
-//                    CheckBox starters_meat = (CheckBox)view.findViewById(R.id.starters_meat);
-//                    if (starters_meat.isChecked()) dish_params.add(getString(R.string.meat));
-//                }
-//
-//                if (soups.isChecked()){
-//                    dish_params.add(getString(R.string.soups));
-//                    CheckBox soups_fish = (CheckBox)view.findViewById(R.id.soups_fish);
-//                    if (soups_fish.isChecked()) dish_params.add(getString(R.string.fish));
-//                    CheckBox soups_vegetables = (CheckBox)view.findViewById(R.id.soups_vegetables);
-//                    if (soups_vegetables.isChecked()) dish_params.add(getString(R.string.vegetables));
-//                    CheckBox soups_ofmeat = (CheckBox)view.findViewById(R.id.soups_ofmeat);
-//                    if (soups_ofmeat.isChecked()) dish_params.add(getString(R.string.ofmeat));
-//                    CheckBox soups_seaproducts = (CheckBox)view.findViewById(R.id.soups_seaproducts);
-//                    if (soups_seaproducts.isChecked()) dish_params.add(getString(R.string.seaproducts));
-//                }
-//
-//                if (maincourses.isChecked()){
-//                    dish_params.add(getString(R.string.maincourses));
-//                    CheckBox maincourses_meat = (CheckBox)view.findViewById(R.id.maincourses_meat);
-//                    if (maincourses_meat.isChecked()) dish_params.add(getString(R.string.meat));
-//                    CheckBox maincourses_seaproducts = (CheckBox)view.findViewById(R.id.maincourses_seaproducts);
-//                    if (maincourses_seaproducts.isChecked()) dish_params.add(getString(R.string.seaproducts));
-//                    CheckBox maincourses_bird = (CheckBox)view.findViewById(R.id.maincourses_bird);
-//                    if (maincourses_bird.isChecked()) dish_params.add(getString(R.string.bird));
-//                    CheckBox maincourses_fish = (CheckBox)view.findViewById(R.id.maincourses_fish);
-//                    if (maincourses_fish.isChecked()) dish_params.add(getString(R.string.fish));
-//
-//                }
-//
-//                if (grill.isChecked()){
-//                    dish_params.add(getString(R.string.grill));
-//                    CheckBox grill_meat = (CheckBox)view.findViewById(R.id.grill_meat);
-//                    if (grill_meat.isChecked()) dish_params.add(getString(R.string.meat));
-//                    CheckBox grill_fish = (CheckBox)view.findViewById(R.id.grill_fish);
-//                    if (grill_fish.isChecked()) dish_params.add(getString(R.string.fish));
-//                    CheckBox grill_seaproducts = (CheckBox)view.findViewById(R.id.grill_seaproducts);
-//                    if (grill_seaproducts.isChecked()) dish_params.add(getString(R.string.seaproducts));
-//                    CheckBox grill_bird = (CheckBox)view.findViewById(R.id.grill_bird);
-//                    if (grill_bird.isChecked()) dish_params.add(getString(R.string.bird));
-//                }
-//
-//                if (desserts.isChecked()){
-//                    dish_params.add(getString(R.string.desserts));
-//                    CheckBox desserts_jelly = (CheckBox)view.findViewById(R.id.desserts_jelly);
-//                    if (desserts_jelly.isChecked()) dish_params.add(getString(R.string.jelly));
-//                    CheckBox desserts_icecream = (CheckBox)view.findViewById(R.id.desserts_icecream);
-//                    if (desserts_icecream.isChecked()) dish_params.add(getString(R.string.icecream));
-//                    CheckBox desserts_cakes = (CheckBox)view.findViewById(R.id.desserts_cakes);
-//                    if (desserts_cakes.isChecked()) dish_params.add(getString(R.string.cakes));
-//                    CheckBox desserts_others = (CheckBox)view.findViewById(R.id.desserts_other);
-//                    if (desserts_others.isChecked()) dish_params.add(getString(R.string.other));
-//
-//                }
-//
-//                if (breakfasts.isChecked()) dish_params.add(getString(R.string.breakfasts));
-//                if (hotstarters.isChecked()) dish_params.add(getString(R.string.hotstarters));
-//                if (garnish.isChecked()) dish_params.add(getString(R.string.garnish));
-//
-//                mCallback.onFilterSet(caption, price, cuisine_params, dish_params);
-//            }
-//        });
-
 
         breakfasts.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -367,7 +279,26 @@ public class DishFilter extends Fragment {
         });
 
 
-        return view;
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        // Inflate and set the layout for the dialog
+        // Pass null as the parent view because its going in the dialog layout
+        builder.setView(view)
+                // Add action buttons
+                .setPositiveButton("Найти", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        mCallback.SetNewData(CollectUserFilterSettings(), parentContext);
+                    }
+                })
+                .setNegativeButton("Назад", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        DishFilterDialog.this.getDialog().cancel();
+                    }
+                });
+        return builder.create();
+
     }
 
     private void SetCuisineCheckboxes(View view){
@@ -433,5 +364,26 @@ public class DishFilter extends Fragment {
         }
         if (result.equals("")) result="Тип блюда";
         dish_type_button.setText(result);
+    }
+
+    private Bundle CollectUserFilterSettings(){
+        Bundle bundle = new Bundle();
+        String caption = dish_title.getText().toString();
+        bundle.putString("dish_caption", caption);
+        int price;
+        try {
+            price = Integer.parseInt(dish_price.getText().toString());
+        }
+        catch (NumberFormatException e){
+            price=-1;
+        }
+        bundle.putInt("dish_price", price);
+        ArrayList<String> cuisine_params = new ArrayList<String>();
+        for (Pair<CheckBox, String> cuisine:cuisines) {
+            if (cuisine.first.isChecked()) cuisine_params.add(cuisine.second);
+        }
+        bundle.putStringArrayList("kitchen_params", cuisine_params);
+
+        return bundle;
     }
 }

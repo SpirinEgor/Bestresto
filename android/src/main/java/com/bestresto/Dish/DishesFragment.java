@@ -18,6 +18,7 @@ import android.widget.ListView;
 import com.bestresto.Database.DatabaseContract;
 import com.bestresto.Database.DatabaseWork;
 import com.bestresto.Database.QueryConditions;
+import com.bestresto.FilterListener;
 import com.bestresto.PagerActivity;
 import com.bestresto.R;
 import com.bestresto.Types.KitchenTypesManager;
@@ -30,75 +31,29 @@ import java.util.HashMap;
  * make adapter of all dishes
  */
 
-public class DishesFragment extends Fragment {
+public class DishesFragment extends Fragment
+                            implements FilterListener{
 
     FloatingActionButton fab;
     ListView lv;
+    Fragment currentFragment;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dish_fragment_all, container, false);
-
+        final View view = inflater.inflate(R.layout.dish_fragment_all, container, false);
+        currentFragment = this;
         lv = (ListView) view.findViewById(R.id.listDishes);
+        SetNewData(null, view.getContext());
 
-        QueryConditions queryConditions = new QueryConditions();
-        // getting bundle if exist
-        Bundle bundle = getArguments();
-        String whenCondition = DatabaseContract.DishesColumns.ACTIVE + " = 1";
-        if (!(bundle == null)){
-            String caption = bundle.getString("dish_caption");
-            if (caption != null && !caption.equals("")) {
-                whenCondition += " AND " + DatabaseContract.DishesColumns.CAPTION + " = " + DatabaseWork.prepare(caption);
-            }
-            Integer price = bundle.getInt("dish_price");
-            if (price != -1) {
-                whenCondition += " AND " + DatabaseContract.DishesColumns.PRICE + " <= " + price;
-            }
-            ArrayList<String> dish_cuisines = bundle.getStringArrayList("cuisine_params");
-            if (dish_cuisines != null && dish_cuisines.size() != 0){
-                ArrayList<String> primeList = KitchenTypesManager.getKitchenNumbersByNames(dish_cuisines);
-                whenCondition += " AND (";
-                for (String prime: primeList) {
-                    whenCondition += DatabaseContract.DishesColumns.KITCHEN + " % " + prime + " = 0";
-                    if (!prime.equals(primeList.get(primeList.size() - 1))) {
-                        whenCondition += " OR ";
-                    }
-                }
-                whenCondition += ")";
-            }
-        }
-        queryConditions.setWhereCondition(whenCondition);
-        queryConditions.setOrderByCondition(DatabaseContract.DishesColumns.CREATEDATE + " DESC");
-        queryConditions.setColumns(new String[]{
-                DatabaseContract.DishesColumns.CAPTION,
-                DatabaseContract.DishesColumns.PRICE,
-                DatabaseContract.DishesColumns.PICTURE
-        });
-        queryConditions.setTableName(DatabaseContract.DishesColumns.TABLE_NAME);
-        lv.setAdapter(DishManager.getAdapterWithData(view.getContext(), queryConditions));
-
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                HashMap<String, Object> dish = (HashMap) lv.getItemAtPosition(position);
-                Intent i = new Intent(getActivity(), PagerActivity.class);
-                i.putExtra(DatabaseContract.DishesColumns.INDEXID,
-                        position);
-                i.putExtra(PagerActivity.KEY_TYPE_LIST, PagerActivity.ALL_DISHES_TYPE);
-                startActivityForResult(i, 1);
-            }
-        });
         final FragmentTransaction fTrans = getFragmentManager().beginTransaction();
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DishFilter filter = new DishFilter();
-                fTrans.replace(R.id.container, filter);
-                fTrans.addToBackStack(null);
-                fTrans.commit();
+                DishFilterDialog dishFilterDialog = new DishFilterDialog();
+                dishFilterDialog.AttachFragment(currentFragment, view.getContext());
+                dishFilterDialog.show(getFragmentManager(), "tag");
             }
 
         });
@@ -126,4 +81,55 @@ public class DishesFragment extends Fragment {
         getActivity().setTitle("Блюда");
     }
 
+
+    @Override
+    public void SetNewData(Bundle bundle, Context context) {
+        QueryConditions queryConditions = new QueryConditions();
+        String whenCondition = DatabaseContract.DishesColumns.ACTIVE + " = 1";
+        // getting bundle if exist
+        if (!(bundle == null)){
+            String caption = bundle.getString("dish_caption");
+            if (caption != null && !caption.equals("")) {
+                whenCondition += " AND " + DatabaseContract.DishesColumns.CAPTION + " = " + DatabaseWork.prepare(caption);
+            }
+            Integer price = bundle.getInt("dish_price");
+            if (price != -1) {
+                whenCondition += " AND " + DatabaseContract.DishesColumns.PRICE + " <= " + price;
+            }
+            ArrayList<String> dish_cuisines = bundle.getStringArrayList("kitchen_params");
+            if (dish_cuisines != null && dish_cuisines.size() != 0){
+                ArrayList<String> primeList = KitchenTypesManager.getKitchenNumbersByNames(dish_cuisines);
+                whenCondition += " AND (";
+                for (String prime: primeList) {
+                    whenCondition += DatabaseContract.DishesColumns.KITCHEN + " % " + prime + " = 0";
+                    if (!prime.equals(primeList.get(primeList.size() - 1))) {
+                        whenCondition += " OR ";
+                    }
+                }
+                whenCondition += ")";
+            }
+        }
+        queryConditions.setWhereCondition(whenCondition);
+        queryConditions.setOrderByCondition(DatabaseContract.DishesColumns.CREATEDATE + " ASC");
+        queryConditions.setColumns(new String[]{
+                DatabaseContract.DishesColumns.CAPTION,
+                DatabaseContract.DishesColumns.PRICE,
+                DatabaseContract.DishesColumns.PICTURE
+        });
+        queryConditions.setTableName(DatabaseContract.DishesColumns.TABLE_NAME);
+        lv.setAdapter(DishManager.getAdapterWithData(context, queryConditions));
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                HashMap<String, Object> dish = (HashMap) lv.getItemAtPosition(position);
+                Intent i = new Intent(getActivity(), PagerActivity.class);
+                i.putExtra(DatabaseContract.DishesColumns.INDEXID,
+                        position);
+                i.putExtra(PagerActivity.KEY_TYPE_LIST, PagerActivity.ALL_DISHES_TYPE);
+                startActivityForResult(i, 1);
+            }
+        });
+    }
 }

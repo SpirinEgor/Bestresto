@@ -14,17 +14,11 @@
 
         <EditText
             android:id="@+id/dish_title"
-            android:layout_width="275sp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
-            android:hint="Название блюда"/>
+            android:hint="Название блюда" />
 
-        <Button
-            android:id="@+id/filter_button_find"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:text="Найти!"/>
     </LinearLayout>
     <EditText
         android:id="@+id/dish_price"

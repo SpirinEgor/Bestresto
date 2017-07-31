@@ -19,7 +19,7 @@ import com.bestresto.Restaurant.RestaurantsFragment;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, DishFilter.FilterListener {
+        implements NavigationView.OnNavigationItemSelectedListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,23 +117,4 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public void onFilterSet(String dish_caption, int dish_price, ArrayList<String> cuisine_params, ArrayList<String> dish_params) {
-        Bundle bundle = new Bundle();
-        bundle.putStringArrayList("cuisine_params", cuisine_params);
-        bundle.putStringArrayList("dish_params", dish_params);
-        bundle.putString("dish_caption", dish_caption);
-        bundle.putInt("dish_price", dish_price);
-
-        getFragmentManager().popBackStack();
-        getFragmentManager().popBackStack();
-        FragmentTransaction fTrans = getFragmentManager().beginTransaction();
-        DishesFragment dishesFragment = new DishesFragment();
-        dishesFragment.setArguments(bundle);
-        fTrans.replace(R.id.container, dishesFragment, "DISH_FRAGMENT_TAG");
-        fTrans.addToBackStack(null);
-        fTrans.commit();
-
-
-    }
 }

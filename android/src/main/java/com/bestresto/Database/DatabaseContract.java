@@ -6,7 +6,7 @@ import android.provider.BaseColumns;
  * Created by sergey on 29.05.17.
  */
 
-public final class DatabaseContract {
+public final class  DatabaseContract {
 
     public static final class DishesColumns implements BaseColumns {
         public final static String TABLE_NAME = "Dishes";
