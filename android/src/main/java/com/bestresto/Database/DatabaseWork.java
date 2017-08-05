@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.bestresto.Dish.DishManager;
 import com.bestresto.Restaurant.RestaurantManager;
@@ -44,7 +43,7 @@ public class DatabaseWork {
     public static synchronized ArrayList<HashMap<String, Object>> makeData(QueryConditions queryConditions) {
         ArrayList<HashMap<String, Object>> data = new ArrayList<>();
         String[] columns = queryConditions.getColumns();
-        Log.e("WHERE", queryConditions.getTableName()+ " " + queryConditions.getWhereCondition());
+        // Log.e("WHERE", queryConditions.getTableName()+ " " + queryConditions.getWhereCondition());
         Cursor cursor = db.query(
                 queryConditions.getTableName(),
                 columns,
@@ -97,7 +96,7 @@ public class DatabaseWork {
         db.delete(tableName, null, null);
     }
 
-    static synchronized void execSQL(String req) {
+    public static synchronized void execSQL(String req) {
         db.execSQL(req);
     }
 

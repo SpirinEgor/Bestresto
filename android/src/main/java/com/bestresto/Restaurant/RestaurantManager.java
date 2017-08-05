@@ -1,6 +1,5 @@
 package com.bestresto.Restaurant;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
@@ -12,7 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bestresto.AddDbThread;
 import com.bestresto.Database.DatabaseContract;
 import com.bestresto.Database.DatabaseWork;
 import com.bestresto.Database.QueryConditions;
@@ -29,70 +27,51 @@ public class RestaurantManager implements ManagerInterface {
     @Override
     public void addAllDb(ArrayList<HashMap<String, Object>> data){
         DatabaseWork.cleanTable(DatabaseContract.RestaurantsColumns.TABLE_NAME);
-        int itemPerThread = 250;
-        int cnt = data.size() / itemPerThread + ((data.size() % itemPerThread > 0) ? 1: 0);
-        ArrayList<Thread> threads = new ArrayList<>();
-        for (int i = 0; i < cnt; ++i){
-            final ArrayList<HashMap<String, Object>> curData = new ArrayList<>();
-            for (int j = i * itemPerThread; j < Math.min((i + 1) * itemPerThread, data.size()); ++j){
-                curData.add(data.get(j));
-            }
-            RestaurantManager curManager = new RestaurantManager();
-            threads.add(new AddDbThread(curData, curManager));
-        }
-        for (Thread thread: threads){
-            thread.start();
-        }
-        for (Thread thread: threads){
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        StringBuilder SQLScript = new StringBuilder("INSERT INTO " + DatabaseContract.RestaurantsColumns.TABLE_NAME + " (" +
+                DatabaseContract.RestaurantsColumns.CAPTION + ", " +
+                DatabaseContract.RestaurantsColumns.URL + ", " +
+                DatabaseContract.RestaurantsColumns.LOGO + ", " +
+                DatabaseContract.RestaurantsColumns.REITING + ", " +
+                DatabaseContract.RestaurantsColumns.TIP + ", " +
+                DatabaseContract.RestaurantsColumns.MIN_PRICE + ", " +
+                DatabaseContract.RestaurantsColumns.MAX_PRICE + ", " +
+                DatabaseContract.RestaurantsColumns.KITCHEN + ", " +
+                DatabaseContract.RestaurantsColumns.ADDRESS + ") VALUES ");
+        for (HashMap<String, Object> rest: data) {
+            SQLScript.append(createStringForSQLScript(rest));
+            if (rest.equals(data.get(data.size() - 1))) {
+                SQLScript.append(";");
+            } else {
+                SQLScript.append(", ");
             }
         }
+        DatabaseWork.execSQL(SQLScript.toString());
     }
 
     @Override
-    public void addDb(HashMap<String, Object> rest){
-        ContentValues values = new ContentValues();
+    public String createStringForSQLScript(HashMap<String, Object> rest) {
         KitchenTypesManager kitchenTypesManager = new KitchenTypesManager();
-        values.put(DatabaseContract.RestaurantsColumns.CAPTION,
-                (rest.get(DatabaseContract.RestaurantsColumns.CAPTION) == null ?
-                        "" : rest.get(DatabaseContract.RestaurantsColumns.CAPTION).toString()));
-
-        values.put(DatabaseContract.RestaurantsColumns.URL,
-                (rest.get(DatabaseContract.RestaurantsColumns.URL) == null ?
-                        "" : rest.get(DatabaseContract.RestaurantsColumns.URL).toString()));
-
-        values.put(DatabaseContract.RestaurantsColumns.LOGO,
-                (rest.get(DatabaseContract.RestaurantsColumns.LOGO) == null ?
-                        "" : rest.get(DatabaseContract.RestaurantsColumns.LOGO).toString()));
-
-        values.put(DatabaseContract.RestaurantsColumns.REITING,
-                (rest.get(DatabaseContract.RestaurantsColumns.REITING) == null ?
-                        0.0 : Float.parseFloat(rest.get(DatabaseContract.RestaurantsColumns.REITING).toString())));
-
-        values.put(DatabaseContract.RestaurantsColumns.TIP,
-                (rest.get(DatabaseContract.RestaurantsColumns.TIP) == null ?
-                        "" : rest.get(DatabaseContract.RestaurantsColumns.TIP).toString()));
-
-        values.put(DatabaseContract.RestaurantsColumns.MIN_PRICE,
-                (rest.get(DatabaseContract.RestaurantsColumns.MIN_PRICE) == null ?
-                        0 : Integer.parseInt(rest.get(DatabaseContract.RestaurantsColumns.MIN_PRICE).toString())));
-
-        values.put(DatabaseContract.RestaurantsColumns.MAX_PRICE,
-                (rest.get(DatabaseContract.RestaurantsColumns.MAX_PRICE) == null ?
-                        0 : Integer.parseInt(rest.get(DatabaseContract.RestaurantsColumns.MAX_PRICE).toString())));
-
-        values.put(DatabaseContract.RestaurantsColumns.KITCHEN,
-                (rest.get(DatabaseContract.RestaurantsColumns.KITCHEN) == null ?
-                        0 : kitchenTypesManager.getKitchenNumber(rest.get(DatabaseContract.RestaurantsColumns.KITCHEN).toString())));
-
-        values.put(DatabaseContract.RestaurantsColumns.ADDRESS,
-                (rest.get(DatabaseContract.RestaurantsColumns.ADDRESS) == null ?
-                        "" : rest.get(DatabaseContract.RestaurantsColumns.ADDRESS).toString()));
-
-        DatabaseWork.insertContentValue(DatabaseContract.RestaurantsColumns.TABLE_NAME, values);
+        String result = "(";
+        result += DatabaseWork.prepare(rest.get(DatabaseContract.RestaurantsColumns.CAPTION) == null ?
+                "" : rest.get(DatabaseContract.RestaurantsColumns.CAPTION).toString()) + ", ";
+        result += DatabaseWork.prepare(rest.get(DatabaseContract.RestaurantsColumns.URL) == null ?
+                "" : rest.get(DatabaseContract.RestaurantsColumns.URL).toString()) + ", ";
+        result += DatabaseWork.prepare(rest.get(DatabaseContract.RestaurantsColumns.LOGO) == null ?
+                "" : rest.get(DatabaseContract.RestaurantsColumns.LOGO).toString()) + ", ";
+        result += (rest.get(DatabaseContract.RestaurantsColumns.REITING) == null ?
+                0.0 : Float.parseFloat(rest.get(DatabaseContract.RestaurantsColumns.REITING).toString())) + ", ";
+        result += DatabaseWork.prepare(rest.get(DatabaseContract.RestaurantsColumns.TIP) == null ?
+                "" : rest.get(DatabaseContract.RestaurantsColumns.TIP).toString()) + ", ";
+        result += (rest.get(DatabaseContract.RestaurantsColumns.MIN_PRICE) == null ?
+                0 : Integer.parseInt(rest.get(DatabaseContract.RestaurantsColumns.MIN_PRICE).toString())) + ", ";
+        result += (rest.get(DatabaseContract.RestaurantsColumns.MAX_PRICE) == null ?
+                0 : Integer.parseInt(rest.get(DatabaseContract.RestaurantsColumns.MAX_PRICE).toString())) + ", ";
+        result += (rest.get(DatabaseContract.RestaurantsColumns.KITCHEN) == null ?
+                0 : kitchenTypesManager.getKitchenNumber(rest.get(DatabaseContract.RestaurantsColumns.KITCHEN).toString())) + ", ";
+        result += DatabaseWork.prepare(rest.get(DatabaseContract.RestaurantsColumns.ADDRESS) == null ?
+                "" : rest.get(DatabaseContract.RestaurantsColumns.ADDRESS).toString());
+        result += ")";
+        return result;
     }
 
     @Override

@@ -1,11 +1,9 @@
 package com.bestresto.Dish;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bestresto.AddDbThread;
 import com.bestresto.Database.DatabaseContract;
 import com.bestresto.Database.DatabaseWork;
 import com.bestresto.Database.QueryConditions;
@@ -34,72 +31,72 @@ import java.util.HashMap;
 public class DishManager implements ManagerInterface {
 
     @Override
-    public void addAllDb(final ArrayList<HashMap<String, Object>> data){
+    public void addAllDb(final ArrayList<HashMap<String, Object>> data) {
         DatabaseWork.cleanTable(DatabaseContract.DishesColumns.TABLE_NAME);
-        int itemPerThread = 250;
-        int cnt = data.size() / itemPerThread + ((data.size() % itemPerThread > 0) ? 1: 0);
-        ArrayList<Thread> threads = new ArrayList<>();
-        for (int i = 0; i < cnt; ++i){
-            final ArrayList<HashMap<String, Object>> curData = new ArrayList<>();
-            for (int j = i * itemPerThread; j < Math.min((i + 1) * itemPerThread, data.size()); ++j) {
-                curData.add(data.get(j));
+        StringBuilder SQLScript = new StringBuilder("INSERT INTO " + DatabaseContract.DishesColumns.TABLE_NAME + " (" +
+                DatabaseContract.DishesColumns.INDEXID + ", " +
+                DatabaseContract.DishesColumns.PARENT_ID + ", " +
+                DatabaseContract.DishesColumns.ACTIVE+ ", " +
+                DatabaseContract.DishesColumns.CAPTION + ", " +
+                DatabaseContract.DishesColumns.KITCHEN + ", " +
+                DatabaseContract.DishesColumns.PRICE + ", " +
+                DatabaseContract.DishesColumns.DESC + ", " +
+                DatabaseContract.DishesColumns.FIRST_PAGE + ", " +
+                DatabaseContract.DishesColumns.PICTURE + ", " +
+                DatabaseContract.DishesColumns.DOPPIC + ", " +
+                DatabaseContract.DishesColumns.SORT + ", " +
+                DatabaseContract.DishesColumns.REITING + ", " +
+                DatabaseContract.DishesColumns.GARANT + ", " +
+                DatabaseContract.DishesColumns.SEARCHTAGS + ", " +
+                DatabaseContract.DishesColumns.CREATEDATE + ") VALUES ");
+        for (HashMap<String, Object> dish: data) {
+            SQLScript.append(createStringForSQLScript(dish));
+            if (dish.equals(data.get(data.size() - 1))) {
+                SQLScript.append(";");
+            } else {
+                SQLScript.append(", ");
             }
-            DishManager curManager = new DishManager();
-            threads.add(new AddDbThread(curData, curManager));
         }
-        for (Thread thread: threads){
-            thread.start();
-        }
-        for (Thread thread: threads){
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        DatabaseWork.execSQL(SQLScript.toString());
     }
 
     @Override
-    public void addDb(HashMap<String, Object> dish){
-        ContentValues values = new ContentValues();
+    public String createStringForSQLScript(HashMap<String, Object> dish) {
         KitchenTypesManager kitchenTypesManager = new KitchenTypesManager();
         RestaurantTypesManager restaurantTypesManager = new RestaurantTypesManager();
-        values.put(DatabaseContract.DishesColumns.INDEXID,
-                (dish.get(DatabaseContract.DishesColumns.INDEXID) == null ? 0 : Integer.parseInt(dish.get(DatabaseContract.DishesColumns.INDEXID).toString())));
-        values.put(DatabaseContract.DishesColumns.PARENT_ID,
-                (dish.get(DatabaseContract.DishesColumns.PARENT_ID) == null ? -1 :
-                        restaurantTypesManager.getRestaurantNumber(dish.get(DatabaseContract.DishesColumns.PARENT_ID).toString())));
-        values.put(DatabaseContract.DishesColumns.ACTIVE,
-                (dish.get(DatabaseContract.DishesColumns.ACTIVE) == null ? 0 :
-                        dish.get(DatabaseContract.DishesColumns.ACTIVE).toString().equals("yes") ? 1: 0));
-        values.put(DatabaseContract.DishesColumns.CAPTION,
-                (dish.get(DatabaseContract.DishesColumns.CAPTION) == null ? "" : dish.get(DatabaseContract.DishesColumns.CAPTION).toString()));
-        values.put(DatabaseContract.DishesColumns.KITCHEN,
-                (dish.get(DatabaseContract.DishesColumns.KITCHEN) == null ? -1 :
-                        kitchenTypesManager.getKitchenNumber(dish.get(DatabaseContract.DishesColumns.KITCHEN).toString())));
-        values.put(DatabaseContract.DishesColumns.PRICE,
-                (dish.get(DatabaseContract.DishesColumns.PRICE) == null ? 0 : Integer.parseInt(dish.get(DatabaseContract.DishesColumns.PRICE).toString())));
-        values.put(DatabaseContract.DishesColumns.DESC,
-                (dish.get(DatabaseContract.DishesColumns.DESC) == null ? "" : dish.get(DatabaseContract.DishesColumns.DESC).toString()));
-        values.put(DatabaseContract.DishesColumns.FIRST_PAGE,
-                (dish.get(DatabaseContract.DishesColumns.FIRST_PAGE) == null ? 0 :
-                        dish.get(DatabaseContract.DishesColumns.FIRST_PAGE).toString().equals("yes") ? 1: 0));
-        values.put(DatabaseContract.DishesColumns.PICTURE,
-                (dish.get(DatabaseContract.DishesColumns.PICTURE) == null ? "" : dish.get(DatabaseContract.DishesColumns.PICTURE).toString()));
-        values.put(DatabaseContract.DishesColumns.DOPPIC,
-                (dish.get(DatabaseContract.DishesColumns.DOPPIC) == null ? "" : dish.get(DatabaseContract.DishesColumns.DOPPIC).toString()));
-        values.put(DatabaseContract.DishesColumns.SORT,
-                (dish.get(DatabaseContract.DishesColumns.SORT) == null ? 0 : Integer.parseInt(dish.get(DatabaseContract.DishesColumns.SORT).toString())));
-        values.put(DatabaseContract.DishesColumns.REITING,
-                (dish.get(DatabaseContract.DishesColumns.REITING) == null || dish.get(DatabaseContract.DishesColumns.REITING).equals("")
-                        ? 0.0 : Float.parseFloat(dish.get(DatabaseContract.DishesColumns.REITING).toString())));
-        values.put(DatabaseContract.DishesColumns.GARANT,
-                (dish.get(DatabaseContract.DishesColumns.GARANT) == null ? "" : dish.get(DatabaseContract.DishesColumns.GARANT).toString()));
-        values.put(DatabaseContract.DishesColumns.SEARCHTAGS,
-                (dish.get(DatabaseContract.DishesColumns.SEARCHTAGS) == null ? "" : dish.get(DatabaseContract.DishesColumns.SEARCHTAGS).toString()));
-        values.put(DatabaseContract.DishesColumns.CREATEDATE,
-                (dish.get(DatabaseContract.DishesColumns.CREATEDATE) == null ? "" : dish.get(DatabaseContract.DishesColumns.CREATEDATE).toString()));
-        DatabaseWork.insertContentValue(DatabaseContract.DishesColumns.TABLE_NAME, values);
+        String result = "(";
+        result += (dish.get(DatabaseContract.DishesColumns.INDEXID) == null ? 0 :
+                Integer.parseInt(dish.get(DatabaseContract.DishesColumns.INDEXID).toString())) + ", ";
+        result += (dish.get(DatabaseContract.DishesColumns.PARENT_ID) == null ? -1 :
+                restaurantTypesManager.getRestaurantNumber(dish.get(DatabaseContract.DishesColumns.PARENT_ID).toString())) + ", ";
+        result += (dish.get(DatabaseContract.DishesColumns.ACTIVE) == null ? 0 :
+                dish.get(DatabaseContract.DishesColumns.ACTIVE).toString().equals("yes") ? 1: 0) + ", ";
+        result += DatabaseWork.prepare(dish.get(DatabaseContract.DishesColumns.CAPTION) == null ? "" :
+                dish.get(DatabaseContract.DishesColumns.CAPTION).toString()) + ", ";
+        result += (dish.get(DatabaseContract.DishesColumns.KITCHEN) == null ? -1 :
+                kitchenTypesManager.getKitchenNumber(dish.get(DatabaseContract.DishesColumns.KITCHEN).toString())) + ", ";
+        result += (dish.get(DatabaseContract.DishesColumns.PRICE) == null ? 0 :
+                Integer.parseInt(dish.get(DatabaseContract.DishesColumns.PRICE).toString())) + ", ";
+        result += DatabaseWork.prepare(dish.get(DatabaseContract.DishesColumns.DESC) == null ? "" :
+                dish.get(DatabaseContract.DishesColumns.DESC).toString()) + ", ";
+        result += (dish.get(DatabaseContract.DishesColumns.FIRST_PAGE) == null ? 0 :
+                dish.get(DatabaseContract.DishesColumns.FIRST_PAGE).toString().equals("yes") ? 1: 0) + ", ";
+        result += DatabaseWork.prepare(dish.get(DatabaseContract.DishesColumns.PICTURE) == null ? "" :
+                dish.get(DatabaseContract.DishesColumns.PICTURE).toString()) + ", ";
+        result += DatabaseWork.prepare(dish.get(DatabaseContract.DishesColumns.DOPPIC) == null ? "" :
+                dish.get(DatabaseContract.DishesColumns.DOPPIC).toString()) + ", ";
+        result += (dish.get(DatabaseContract.DishesColumns.SORT) == null ? 0 :
+                Integer.parseInt(dish.get(DatabaseContract.DishesColumns.SORT).toString())) + ", ";
+        result += (dish.get(DatabaseContract.DishesColumns.REITING) == null || dish.get(DatabaseContract.DishesColumns.REITING).equals("")
+                ? 0.0 : Float.parseFloat(dish.get(DatabaseContract.DishesColumns.REITING).toString())) + ", ";
+        result += DatabaseWork.prepare(dish.get(DatabaseContract.DishesColumns.GARANT) == null ? "" :
+                dish.get(DatabaseContract.DishesColumns.GARANT).toString()) + ", ";
+        result += DatabaseWork.prepare(dish.get(DatabaseContract.DishesColumns.SEARCHTAGS) == null ? "" :
+                dish.get(DatabaseContract.DishesColumns.SEARCHTAGS).toString()) +", ";
+        result += DatabaseWork.prepare(dish.get(DatabaseContract.DishesColumns.CREATEDATE) == null ? "" :
+                dish.get(DatabaseContract.DishesColumns.CREATEDATE).toString());
+        result += ")";
+        return result;
     }
 
     @Override

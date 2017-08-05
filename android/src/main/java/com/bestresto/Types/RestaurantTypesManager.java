@@ -1,6 +1,5 @@
 package com.bestresto.Types;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 
 import com.bestresto.Database.DatabaseContract;
@@ -18,29 +17,37 @@ public class RestaurantTypesManager implements ManagerInterface {
     @Override
     public void addAllDb(ArrayList<HashMap<String, Object>> data){
         DatabaseWork.cleanTable(DatabaseContract.RestaurantTypesColumns.TABLE_NAME);
-        ArrayList<Integer> primeNumber = generatePrimeNumber();
-        int i = 0;
-        for (HashMap<String, Object> type: data){
-            currentPrimeNumber = primeNumber.get(i);
-            addDb(type);
-            ++i;
+        StringBuilder SQLScript = new StringBuilder("INSERT INTO " + DatabaseContract.RestaurantTypesColumns.TABLE_NAME + " (" +
+                DatabaseContract.RestaurantTypesColumns.INDEXID + ", " +
+                DatabaseContract.RestaurantTypesColumns.CAPTION + ", " +
+                DatabaseContract.RestaurantTypesColumns.SORT + ", " +
+                DatabaseContract.RestaurantTypesColumns.ACTIVE + ", " +
+                DatabaseContract.RestaurantTypesColumns.PRIMEID + ") VALUES ");
+        for (HashMap<String, Object> type: data) {
+            SQLScript.append(createStringForSQLScript(type));
+            if (type.equals(data.get(data.size() - 1))) {
+                SQLScript.append(";");
+            } else {
+                SQLScript.append(", ");
+            }
         }
+        DatabaseWork.execSQL(SQLScript.toString());
     }
 
     @Override
-    public void addDb(HashMap<String, Object> type) {
-        ContentValues values = new ContentValues();
-        values.put(DatabaseContract.RestaurantTypesColumns.INDEXID  ,
-                (type.get(DatabaseContract.RestaurantTypesColumns.INDEXID) == null ? 0 : Integer.parseInt(type.get(DatabaseContract.RestaurantTypesColumns.INDEXID).toString())));
-        values.put(DatabaseContract.RestaurantTypesColumns.CAPTION,
-                (type.get(DatabaseContract.DishesColumns.CAPTION) == null ? "" : type.get(DatabaseContract.DishesColumns.CAPTION).toString()));
-        values.put(DatabaseContract.RestaurantTypesColumns.SORT,
-                (type.get(DatabaseContract.RestaurantTypesColumns.SORT) == null ? 0 : Integer.parseInt(type.get(DatabaseContract.RestaurantTypesColumns.ACTIVE).toString())));
-        values.put(DatabaseContract.RestaurantTypesColumns.ACTIVE,
-                (type.get(DatabaseContract.RestaurantTypesColumns.ACTIVE) == null ? 0 : Integer.parseInt(type.get(DatabaseContract.RestaurantTypesColumns.ACTIVE).toString())));
-        values.put(DatabaseContract.RestaurantTypesColumns.PRIMEID, currentPrimeNumber);
-
-        DatabaseWork.insertContentValue(DatabaseContract.RestaurantTypesColumns.TABLE_NAME, values);
+    public String createStringForSQLScript(HashMap<String, Object> type) {
+        String result = "(";
+        result += (type.get(DatabaseContract.RestaurantTypesColumns.INDEXID) == null ? 0 :
+                Integer.parseInt(type.get(DatabaseContract.RestaurantTypesColumns.INDEXID).toString())) + ", ";
+        result += DatabaseWork.prepare(type.get(DatabaseContract.RestaurantTypesColumns.CAPTION) == null ? "" :
+                type.get(DatabaseContract.RestaurantTypesColumns.CAPTION).toString()) + ", ";
+        result += (type.get(DatabaseContract.RestaurantTypesColumns.SORT) == null ? 0 :
+                Integer.parseInt(type.get(DatabaseContract.RestaurantTypesColumns.SORT).toString())) + ", ";
+        result += (type.get(DatabaseContract.RestaurantTypesColumns.ACTIVE) == null ? 0 :
+                Integer.parseInt(type.get(DatabaseContract.RestaurantTypesColumns.ACTIVE).toString())) + ", ";
+        result += currentPrimeNumber;
+        result += ")";
+        return result;
     }
 
     @Override
