@@ -66,7 +66,7 @@ public class RestaurantFilterDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View view = inflater.inflate(R.layout.restaurant_filter, null);
+        final View view = inflater.inflate(R.layout.rest_filter, null);
 
         rest_caption = (EditText)view.findViewById(R.id.restaurant_title);
         //HERE SHOULD BE SETTINGS FOR SPINNER

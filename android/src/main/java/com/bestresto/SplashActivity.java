@@ -2,7 +2,6 @@ package com.bestresto;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ProgressBar;
@@ -16,51 +15,48 @@ import com.bestresto.Types.RestaurantTypesManager;
 
 import java.util.ArrayList;
 
-/**
- * Created by sergey on 20.06.17.
- */
-
 public class SplashActivity extends AppCompatActivity{
 
     ProgressBar pBar;
     TextView textView;
-    final String server = "http://www.bestresto.ru/api/";
-
-    final String dishesAllRequest = "foods/foods.php?all";
-    final String restaurantsAllRequest = "rest/rest.php?all";
-    final String kitchenTypesRequest = "types/types.php?kitchenTypes";
-    final String restaurantTypesRequest = "types/types.php?restTypes";
-
-    final String[] requestsTypes = {
-            kitchenTypesRequest,
-            restaurantTypesRequest,
-    };
-
-    final ManagerInterface[] managerTypes = {
-            new KitchenTypesManager(),
-            new RestaurantTypesManager(),
-    };
-
-    final String[] requestsData = {
-            dishesAllRequest,
-            restaurantsAllRequest,
-    };
-
-    final ManagerInterface[] managerData = {
-            new DishManager(),
-            new RestaurantManager(),
-    };
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.splash);
+        setContentView(R.layout.activity_splash);
+
         long startTime = System.currentTimeMillis();
-        pBar = (ProgressBar) findViewById(R.id.progressBar);
         textView = (TextView)findViewById(R.id.textIndicator);
-
         new DatabaseWork(this);
+        getData();
+        long timeSpent = System.currentTimeMillis() - startTime;
+        Log.d("time", String.valueOf(timeSpent));
+        Intent intent = new Intent(this, MainActivity.class);   //Start MainActivity
+        startActivity(intent);
+        finish();
+    }
 
+    private void getData() {
+        final String dishesAllRequest = "foods/foods.php?all";
+        final String restaurantsAllRequest = "rest/rest.php?all";
+        final String kitchenTypesRequest = "types/types.php?kitchenTypes";
+        final String restaurantTypesRequest = "types/types.php?restTypes";
+        final String[] requestsTypes = {
+                kitchenTypesRequest,
+                restaurantTypesRequest,
+        };
+        final ManagerInterface[] managerTypes = {
+                new KitchenTypesManager(),
+                new RestaurantTypesManager(),
+        };
+        final String[] requestsData = {
+                dishesAllRequest,
+                restaurantsAllRequest,
+        };
+        final ManagerInterface[] managerData = {
+                new DishManager(),
+                new RestaurantManager(),
+        };
         try{
             ArrayList<Thread> threads = new ArrayList<>();
             for (int i = 0; i < requestsTypes.length; ++i){
@@ -84,12 +80,6 @@ public class SplashActivity extends AppCompatActivity{
             }
         }
         catch (Exception ignored){}
-        long timeSpent = System.currentTimeMillis() - startTime;
-        Log.d("time", String.valueOf(timeSpent));
-        Intent intent = new Intent(this, MainActivity.class);   //Start MainActivity
-        startActivity(intent);
-        finish();
     }
-
 
 }

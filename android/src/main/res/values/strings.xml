@@ -77,9 +77,9 @@
     <string name="back">назад</string>
 
     <string name="under1000">до 1000 руб.</string>
-    <string name="from1000">1000 - 2000 руб.</string>
-    <string name="from2000">2000 - 3500 руб.</string>
-    <string name="from3500">3500 - 5000 руб.</string>
+    <string name="from1000">1000 – 2000 руб.</string>
+    <string name="from2000">2000 – 3500 руб.</string>
+    <string name="from3500">3500 – 5000 руб.</string>
     <string name="over5000">свыше 5000 руб.</string>
     
     <string name="restaurant">Ресторан</string>
@@ -122,5 +122,5 @@
     <string name="refresh_dishes">Обновляем список блюд…</string>
     <string name="refresh_restaurants">Обновляем список ресторанов…</string>
     <string name="split">split</string>
-    <string name="refresh_bd">обновляем базу данных...</string>
+    <string name="refresh_bd">обновляем базу данных…</string>
 </resources>

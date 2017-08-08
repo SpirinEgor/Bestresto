@@ -87,13 +87,9 @@ public class DatabaseWork {
         return result;
     }
 
-    public static synchronized void insertContentValue(String tableName, ContentValues values) {
-        db.insert(tableName, null, values);
-    }
-
     public static synchronized void cleanTable(String tableName) {
+        execSQL("DROP TABLE IF EXISTS " + tableName);
         DbHelper.createTable(tableName);
-        db.delete(tableName, null, null);
     }
 
     public static synchronized void execSQL(String req) {

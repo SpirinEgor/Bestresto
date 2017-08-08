@@ -19,12 +19,9 @@ import com.bestresto.Database.DatabaseContract;
 import com.bestresto.Database.DatabaseWork;
 import com.bestresto.Database.QueryConditions;
 import com.bestresto.R;
-import com.bestresto.Types.KitchenTypesManager;
-import com.bestresto.Types.RestaurantTypesManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 
 /**
@@ -51,7 +48,7 @@ public class RestaurantFilter extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.restaurant_filter, container, false);
+        final View view = inflater.inflate(R.layout.rest_filter, container, false);
 
         rating_from = (Spinner)view.findViewById(R.id.restaurant_rating_from);
         rating_to = (Spinner)view.findViewById(R.id.restaurant_rating_to);
