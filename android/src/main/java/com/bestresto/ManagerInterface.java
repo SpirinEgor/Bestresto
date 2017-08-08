@@ -10,7 +10,7 @@ public interface ManagerInterface {
 
     public void addAllDb(ArrayList<HashMap<String, Object>> data);
 
-    public void addDb(HashMap<String, Object> data);
+    public String createStringForSQLScript(HashMap<String, Object> data);
 
     public Object getValue(Cursor cursor, String column, int index);
 

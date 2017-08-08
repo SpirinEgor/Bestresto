@@ -1,8 +1,6 @@
 package com.bestresto.Types;
 
-import android.content.ContentValues;
 import android.database.Cursor;
-import android.util.Log;
 
 import com.bestresto.Database.DatabaseContract;
 import com.bestresto.Database.DatabaseWork;
@@ -19,29 +17,37 @@ public class KitchenTypesManager implements ManagerInterface {
     @Override
     public void addAllDb(ArrayList<HashMap<String, Object>> data){
         DatabaseWork.cleanTable(DatabaseContract.KitchenTypesColumns.TABLE_NAME);
-        ArrayList<Integer> primeNumber = generatePrimeNumber();
-        int i = 0;
-        for (HashMap<String, Object> type: data){
-            currentPrimeNumber = primeNumber.get(i);
-            addDb(type);
-            ++i;
+        StringBuilder SQLScript = new StringBuilder("INSERT INTO " + DatabaseContract.KitchenTypesColumns.TABLE_NAME + " (" +
+                DatabaseContract.KitchenTypesColumns.INDEXID + ", " +
+                DatabaseContract.KitchenTypesColumns.CAPTION + ", " +
+                DatabaseContract.KitchenTypesColumns.SORT + ", " +
+                DatabaseContract.KitchenTypesColumns.ACTIVE + ", " +
+                DatabaseContract.KitchenTypesColumns.PRIMEID + ") VALUES ");
+        for (HashMap<String, Object> type: data) {
+            SQLScript.append(createStringForSQLScript(type));
+            if (type.equals(data.get(data.size() - 1))) {
+                SQLScript.append(";");
+            } else {
+                SQLScript.append(", ");
+            }
         }
+        DatabaseWork.execSQL(SQLScript.toString());
     }
 
     @Override
-    public void addDb(HashMap<String, Object> type) {
-        ContentValues values = new ContentValues();
-        values.put(DatabaseContract.KitchenTypesColumns.INDEXID,
-                (type.get(DatabaseContract.KitchenTypesColumns.INDEXID) == null ? 0 : Integer.parseInt(type.get(DatabaseContract.KitchenTypesColumns.INDEXID).toString())));
-        values.put(DatabaseContract.KitchenTypesColumns.CAPTION,
-                (type.get(DatabaseContract.DishesColumns.CAPTION) == null ? "" : type.get(DatabaseContract.DishesColumns.CAPTION).toString()));
-        values.put(DatabaseContract.KitchenTypesColumns.SORT,
-                (type.get(DatabaseContract.KitchenTypesColumns.SORT) == null ? 0 : Integer.parseInt(type.get(DatabaseContract.KitchenTypesColumns.ACTIVE).toString())));
-        values.put(DatabaseContract.KitchenTypesColumns.ACTIVE,
-                (type.get(DatabaseContract.KitchenTypesColumns.ACTIVE) == null ? 0 : Integer.parseInt(type.get(DatabaseContract.KitchenTypesColumns.ACTIVE).toString())));
-        values.put(DatabaseContract.KitchenTypesColumns.PRIMEID, currentPrimeNumber);
-        //Log.d(type.get(DatabaseContract.DishesColumns.CAPTION).toString(), String.valueOf(primeNumber.get(i)));
-        DatabaseWork.insertContentValue(DatabaseContract.KitchenTypesColumns.TABLE_NAME, values);
+    public String createStringForSQLScript(HashMap<String, Object> type) {
+        String result = "(";
+        result += (type.get(DatabaseContract.KitchenTypesColumns.INDEXID) == null ? 0 :
+                Integer.parseInt(type.get(DatabaseContract.KitchenTypesColumns.INDEXID).toString())) + ", ";
+        result += DatabaseWork.prepare(type.get(DatabaseContract.KitchenTypesColumns.CAPTION) == null ? "" :
+                type.get(DatabaseContract.KitchenTypesColumns.CAPTION).toString()) + ", ";
+        result += (type.get(DatabaseContract.KitchenTypesColumns.SORT) == null ? 0 :
+                Integer.parseInt(type.get(DatabaseContract.KitchenTypesColumns.SORT).toString())) + ", ";
+        result += (type.get(DatabaseContract.KitchenTypesColumns.ACTIVE) == null ? 0 :
+                Integer.parseInt(type.get(DatabaseContract.KitchenTypesColumns.ACTIVE).toString())) + ", ";
+        result += currentPrimeNumber;
+        result += ")";
+        return result;
     }
 
     @Override
