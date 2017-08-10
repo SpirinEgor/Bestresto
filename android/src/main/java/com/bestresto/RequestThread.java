@@ -23,7 +23,7 @@ public class RequestThread extends Thread {
         this.curManager = curManager;
     }
 
-    private synchronized void putToDb(ArrayList<HashMap<String, Object>> data){
+    private void putToDb(ArrayList<HashMap<String, Object>> data){
         curManager.addAllDb(data);
     }
 

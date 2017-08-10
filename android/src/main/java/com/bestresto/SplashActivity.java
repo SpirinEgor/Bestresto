@@ -1,11 +1,13 @@
 package com.bestresto;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bestresto.Database.DatabaseWork;
 import com.bestresto.Dish.DishManager;
@@ -17,23 +19,29 @@ import java.util.ArrayList;
 
 public class SplashActivity extends AppCompatActivity{
 
-    ProgressBar pBar;
-    TextView textView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
 
         long startTime = System.currentTimeMillis();
-        textView = (TextView)findViewById(R.id.textIndicator);
         new DatabaseWork(this);
-        getData();
+        if (isOnline()) {
+            getData();
+        } else {
+            Toast.makeText(this, R.string.no_internet, Toast.LENGTH_LONG).show();
+        }
         long timeSpent = System.currentTimeMillis() - startTime;
         Log.d("time", String.valueOf(timeSpent));
         Intent intent = new Intent(this, MainActivity.class);   //Start MainActivity
         startActivity(intent);
         finish();
+    }
+
+    private boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     private void getData() {
@@ -81,5 +89,4 @@ public class SplashActivity extends AppCompatActivity{
         }
         catch (Exception ignored){}
     }
-
 }

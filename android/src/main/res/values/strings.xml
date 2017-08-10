@@ -116,11 +116,6 @@
     <string name="livesports">Спортивные трансляции</string>
     <string name="homecuisine">Домашняя кухня</string>
 
-    
-
-    <string name="connect_to_server">Соединяем с сервером…</string>
-    <string name="refresh_dishes">Обновляем список блюд…</string>
-    <string name="refresh_restaurants">Обновляем список ресторанов…</string>
     <string name="split">split</string>
-    <string name="refresh_bd">обновляем базу данных…</string>
+    <string name="no_internet">Нет интернет соеденения, используются старые данные</string>
 </resources>

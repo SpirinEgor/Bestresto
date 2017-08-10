@@ -23,7 +23,10 @@ public class KitchenTypesManager implements ManagerInterface {
                 DatabaseContract.KitchenTypesColumns.SORT + ", " +
                 DatabaseContract.KitchenTypesColumns.ACTIVE + ", " +
                 DatabaseContract.KitchenTypesColumns.PRIMEID + ") VALUES ");
+        ArrayList<Integer> primeNumber = generatePrimeNumber();
+        int i = 0;
         for (HashMap<String, Object> type: data) {
+            currentPrimeNumber = primeNumber.get(i++);
             SQLScript.append(createStringForSQLScript(type));
             if (type.equals(data.get(data.size() - 1))) {
                 SQLScript.append(";");

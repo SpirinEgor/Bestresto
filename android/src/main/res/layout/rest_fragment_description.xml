@@ -60,16 +60,6 @@
             android:layout_height="1dp"
             android:background="@android:color/darker_gray" />
 
-    <!--&lt;!&ndash;<ImageView&ndash;&gt;-->
-            <!--android:id="@+id/separator"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--app:srcCompat="@drawable/separator"-->
-            <!--android:layout_below="@+id/singleRestaurant_rating"-->
-            <!--android:layout_alignParentLeft="true"-->
-            <!--android:layout_alignParentStart="true"-->
-            <!--android:layout_marginTop="71dp" />-->
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
