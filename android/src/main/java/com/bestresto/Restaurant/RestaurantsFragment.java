@@ -72,12 +72,12 @@ public class RestaurantsFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().setTitle("Рестораны");
+        getActivity().setTitle(getString(R.string.RestauranFragmentTitle));
     }
 
     @Override
     public void SetNewData(Bundle bundle, Context context) {
-        QueryConditions queryConditions= new QueryConditions();
+        final QueryConditions queryConditions= new QueryConditions();
         queryConditions.setTableName(DatabaseContract.RestaurantsColumns.TABLE_NAME);
         queryConditions.setColumns(new String[]{
                 DatabaseContract.RestaurantsColumns.CAPTION,
@@ -119,12 +119,10 @@ public class RestaurantsFragment extends Fragment
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                HashMap<String, Object> rest = (HashMap) lv.getItemAtPosition(position);
                 Intent i = new Intent(getActivity(), PagerActivity.class);
 
                 i.putExtra(DatabaseContract.DishesColumns.INDEXID, position);
-                i.putExtra(PagerActivity.KEY_TYPE_LIST, PagerActivity.RESTAURANTS_TYPE);
-                i.putExtra(PagerActivity.KEY_DISH_OR_REST, PagerActivity.RESTAURANT_CONSTANT);
+                i.putExtra(QueryConditions.TAG, queryConditions);
 
                 startActivityForResult(i, 1);
             }

@@ -1,11 +1,37 @@
 package com.bestresto.Database;
 
-public class QueryConditions{
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class QueryConditions implements Parcelable{
+
+    public static final String TAG = "QueryCondition";
 
     private String tableName = "";
     private String whereCondition = "";
     private String orderByCondition = "";
     private String[] columns = {};
+
+    public QueryConditions(){}
+
+    protected QueryConditions(Parcel in) {
+        tableName = in.readString();
+        whereCondition = in.readString();
+        orderByCondition = in.readString();
+        columns = in.createStringArray();
+    }
+
+    public static final Creator<QueryConditions> CREATOR = new Creator<QueryConditions>() {
+        @Override
+        public QueryConditions createFromParcel(Parcel in) {
+            return new QueryConditions(in);
+        }
+
+        @Override
+        public QueryConditions[] newArray(int size) {
+            return new QueryConditions[size];
+        }
+    };
 
     String getWhereCondition() {
         return whereCondition;
@@ -19,7 +45,7 @@ public class QueryConditions{
         return columns;
     }
 
-    String getTableName() {
+    public String getTableName() {
         return tableName;
     }
 
@@ -37,5 +63,18 @@ public class QueryConditions{
 
     public void setTableName(String tableName) {
         this.tableName = tableName;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(tableName);
+        dest.writeString(whereCondition);
+        dest.writeString(orderByCondition);
+        dest.writeStringArray(columns);
     }
 }

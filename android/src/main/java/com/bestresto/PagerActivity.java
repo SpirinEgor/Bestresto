@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -29,18 +30,11 @@ import java.util.HashMap;
 
 public class PagerActivity extends FragmentActivity {
 
-    public static final String KEY_TYPE_LIST = "type_list";
-    public static final String KEY_DISH_OR_REST = "dish_or_rest";
+    private final String TAG = "PagerActivity";
 
-    public static final int ALL_DISHES_TYPE = 1;
-    public static final int FIRST_DISHES_TYPE = 2;
-    public static final int RESTAURANTS_TYPE = 3;
-
-    public static final int DISH_CONSTANT = 1111;
-    public static final int RESTAURANT_CONSTANT = 2222;
-
-    ViewPager viewPager;
-    ArrayList<HashMap<String, Object>> elements;
+    private ViewPager viewPager;
+    private ArrayList<HashMap<String, Object>> elements;
+    private QueryConditions queryConditions;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,48 +44,8 @@ public class PagerActivity extends FragmentActivity {
         viewPager.setId(R.id.viewPager);
         setContentView(viewPager);
 
-        int key = getIntent().getIntExtra(KEY_TYPE_LIST, ALL_DISHES_TYPE);
-        final int dishOrRest = getIntent().getIntExtra(KEY_DISH_OR_REST, DISH_CONSTANT);
-
-        DishManager dishManager = new DishManager();
-        RestaurantManager restaurantManager = new RestaurantManager();
-        QueryConditions queryConditions = new QueryConditions();
-        switch (key) {
-            case ALL_DISHES_TYPE:
-                queryConditions.setWhereCondition(DatabaseContract.DishesColumns.ACTIVE + " = 1");
-                queryConditions.setColumns(new String[]{
-                        DatabaseContract.DishesColumns.CAPTION,
-                        DatabaseContract.DishesColumns.PRICE,
-                        DatabaseContract.DishesColumns.PICTURE
-                });
-                queryConditions.setTableName(DatabaseContract.DishesColumns.TABLE_NAME);
-                elements = DatabaseWork.makeData(queryConditions);
-                break;
-            case FIRST_DISHES_TYPE:
-                queryConditions.setWhereCondition(DatabaseContract.DishesColumns.ACTIVE + " = 1 AND " +
-                                                 DatabaseContract.DishesColumns.FIRST_PAGE + " = 1");
-                queryConditions.setColumns(new String[]{
-                        DatabaseContract.DishesColumns.CAPTION,
-                        DatabaseContract.DishesColumns.PRICE,
-                        DatabaseContract.DishesColumns.PICTURE
-                });
-                queryConditions.setTableName(DatabaseContract.DishesColumns.TABLE_NAME);
-                elements = DatabaseWork.makeData(queryConditions);
-                break;
-            case RESTAURANTS_TYPE:
-                queryConditions.setColumns(new String[]{
-                        DatabaseContract.RestaurantsColumns.CAPTION,
-                        DatabaseContract.RestaurantsColumns.LOGO,
-                        DatabaseContract.RestaurantsColumns.REITING,
-                        DatabaseContract.RestaurantsColumns.KITCHEN,
-                        DatabaseContract.RestaurantsColumns.ADDRESS,
-                });
-                queryConditions.setTableName(DatabaseContract.RestaurantsColumns.TABLE_NAME);
-                elements = DatabaseWork.makeData(queryConditions);
-                break;
-            default:
-                elements = new ArrayList<>();
-        }
+        queryConditions = getIntent().getParcelableExtra(QueryConditions.TAG);
+        elements = DatabaseWork.makeData(queryConditions);
 
         FragmentManager fm = getSupportFragmentManager();
         viewPager.setAdapter(new FragmentStatePagerAdapter(fm) {
@@ -100,7 +54,7 @@ public class PagerActivity extends FragmentActivity {
 
                 HashMap<String, Object> element = elements.get(position);
 
-                if (dishOrRest == DISH_CONSTANT)
+                if (queryConditions.getTableName().compareTo(DatabaseContract.DishesColumns.TABLE_NAME) == 0)
                     return DescriptionDishFragment.newInstance
                         (element.get(DatabaseContract.DishesColumns.CAPTION).toString());
 
@@ -123,7 +77,6 @@ public class PagerActivity extends FragmentActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_pager_activity, menu);
         return true;
-
     }
 
     @Override

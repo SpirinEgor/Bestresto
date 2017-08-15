@@ -78,13 +78,13 @@ public class DishesFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().setTitle("Блюда");
+        getActivity().setTitle(getString(R.string.DishFragmentTitle));
     }
 
 
     @Override
     public void SetNewData(Bundle bundle, Context context) {
-        QueryConditions queryConditions = new QueryConditions();
+        final QueryConditions queryConditions = new QueryConditions();
         String whenCondition = DatabaseContract.DishesColumns.ACTIVE + " = 1";
         // getting bundle if exist
         if (!(bundle == null)){
@@ -117,17 +117,18 @@ public class DishesFragment extends Fragment
                 DatabaseContract.DishesColumns.PICTURE
         });
         queryConditions.setTableName(DatabaseContract.DishesColumns.TABLE_NAME);
+        final ArrayList<HashMap<String, Object>> filter_data = DatabaseWork.makeData(queryConditions);
         lv.setAdapter(DishManager.getAdapterWithData(context, queryConditions));
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                HashMap<String, Object> dish = (HashMap) lv.getItemAtPosition(position);
                 Intent i = new Intent(getActivity(), PagerActivity.class);
-                i.putExtra(DatabaseContract.DishesColumns.INDEXID,
-                        position);
-                i.putExtra(PagerActivity.KEY_TYPE_LIST, PagerActivity.ALL_DISHES_TYPE);
+
+                i.putExtra(QueryConditions.TAG, queryConditions);
+                i.putExtra(DatabaseContract.DishesColumns.INDEXID, position);
+
                 startActivityForResult(i, 1);
             }
         });

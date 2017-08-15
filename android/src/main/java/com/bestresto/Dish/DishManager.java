@@ -128,9 +128,16 @@ public class DishManager implements ManagerInterface {
     private static class CustomAdapter extends ArrayAdapter<HashMap<String, Object>> {
 
         private Context context;
+        private ArrayList<HashMap<String, Object>> data;
+
         CustomAdapter(Context context, ArrayList<HashMap<String, Object>> data) {
             super(context, R.layout.dish_listitem, data);
+            this.data = data;
             this.context = context;
+        }
+
+        public ArrayList<HashMap<String, Object>> getData() {
+            return data;
         }
 
         @NonNull

@@ -27,7 +27,7 @@ public class MainFragment extends Fragment{
         final View view = inflater.inflate(R.layout.fragment_main, container, false);
         LinearLayout dishes = (LinearLayout) view.findViewById(R.id.main_dishes_list);
 
-        QueryConditions queryConditions = new QueryConditions();
+        final QueryConditions queryConditions = new QueryConditions();
         queryConditions.setWhereCondition(DatabaseContract.DishesColumns.ACTIVE + " = 1 AND " +
                                          DatabaseContract.DishesColumns.FIRST_PAGE + " = 1");
         queryConditions.setColumns(new String[]{
@@ -58,9 +58,8 @@ public class MainFragment extends Fragment{
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(getActivity(), PagerActivity.class);
-                    i.putExtra(DatabaseContract.DishesColumns.INDEXID,
-                            current_position).toString();
-                    i.putExtra(PagerActivity.KEY_TYPE_LIST, PagerActivity.FIRST_DISHES_TYPE);
+                    i.putExtra(DatabaseContract.DishesColumns.INDEXID, current_position).toString();
+                    i.putExtra(QueryConditions.TAG, queryConditions);
                     startActivity(i);
                 }
             });
@@ -74,6 +73,6 @@ public class MainFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().setTitle("Bestresto");
+        getActivity().setTitle(getString(R.string.MainFragmentTitle));
     }
 }
