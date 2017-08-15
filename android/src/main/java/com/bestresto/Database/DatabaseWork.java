@@ -89,7 +89,7 @@ public class DatabaseWork {
 
     public static synchronized void cleanTable(String tableName) {
         execSQL("DROP TABLE IF EXISTS " + tableName);
-        DbHelper.createTable(tableName);
+        DbHelper.createTable(tableName, db);
     }
 
     public static synchronized void execSQL(String req) {

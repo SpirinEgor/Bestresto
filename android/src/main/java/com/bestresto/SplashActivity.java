@@ -22,9 +22,9 @@ public class SplashActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        long startTime = System.currentTimeMillis();
         new DatabaseWork(this);
+        long startTime = System.currentTimeMillis();
+
         if (isOnline()) {
             getData();
         } else {
