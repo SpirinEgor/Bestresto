@@ -118,4 +118,8 @@
 
     <string name="split">split</string>
     <string name="no_internet">Нет интернет соеденения, используются старые данные</string>
+    <string name="load_data">Загрузка данных...</string>
+    <string name="DishFragmentTitle">Блюда</string>
+    <string name="RestauranFragmentTitle">Рестораны</string>
+    <string name="MainFragmentTitle">Bestresto</string>
 </resources>
