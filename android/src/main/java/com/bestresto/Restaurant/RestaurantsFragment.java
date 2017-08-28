@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -39,6 +40,30 @@ public class RestaurantsFragment extends Fragment
         final View view = inflater.inflate(R.layout.rest_fragment_all, container, false);
         currentFragment = this;
         lv = (ListView) view.findViewById(R.id.listRestaurants);
+        lv.setOnScrollListener(new AbsListView.OnScrollListener() {
+            private int mLastFirstVisibleItem;
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem,
+                                 int visibleItemCount, int totalItemCount) {
+
+                if(mLastFirstVisibleItem<firstVisibleItem)
+                {
+                    fab.setVisibility(View.GONE);
+                }
+                if(mLastFirstVisibleItem>firstVisibleItem)
+                {
+                    fab.setVisibility(View.VISIBLE);
+                }
+                mLastFirstVisibleItem=firstVisibleItem;
+
+            }
+        });
+
         SetNewData(null, view.getContext());
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
